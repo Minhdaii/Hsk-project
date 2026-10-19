@@ -1,0 +1,689 @@
+[
+ {
+  "level": 1,
+  "title": "Câu chữ 是 (shì)",
+  "pattern": "Chủ ngữ + 是 + danh từ",
+  "explanation": "Dùng 是 để nối chủ ngữ với danh từ, tương đương \"là\" trong tiếng Việt. Phủ định là 不是.",
+  "notes": "Trước tính từ không dùng 是: nói 她很高, không nói 她是高.",
+  "examples": [
+   {
+    "zh": "我 是 老师 。",
+    "vi": "Tôi là giáo viên."
+   },
+   {
+    "zh": "他 不 是 学生 。",
+    "vi": "Anh ấy không phải là học sinh."
+   },
+   {
+    "zh": "这 是 我 的 书 。",
+    "vi": "Đây là sách của tôi."
+   }
+  ]
+ },
+ {
+  "level": 1,
+  "title": "Câu hỏi với 吗 (ma)",
+  "pattern": "Câu trần thuật + 吗 ?",
+  "explanation": "Thêm 吗 vào cuối câu trần thuật để tạo câu hỏi có/không. Trả lời bằng cách lặp lại động từ hoặc dùng 不.",
+  "notes": "Không dùng 吗 cùng lúc với từ để hỏi như 什么, 谁.",
+  "examples": [
+   {
+    "zh": "你 是 学生 吗 ?",
+    "vi": "Bạn là học sinh à?"
+   },
+   {
+    "zh": "你 喜欢 喝 茶 吗 ?",
+    "vi": "Bạn có thích uống trà không?"
+   }
+  ]
+ },
+ {
+  "level": 1,
+  "title": "Phủ định với 不 và 没",
+  "pattern": "不 + động từ / tính từ ;  没(有) + động từ",
+  "explanation": "不 phủ định thói quen, ý muốn, tương lai và tính từ. 没 phủ định việc đã xảy ra hoặc chưa xảy ra trong quá khứ, và phủ định của 有 là 没有.",
+  "notes": "Không nói 不有, phải nói 没有.",
+  "examples": [
+   {
+    "zh": "我 不 去 。",
+    "vi": "Tôi không đi."
+   },
+   {
+    "zh": "我 没 吃 饭 。",
+    "vi": "Tôi chưa ăn cơm."
+   },
+   {
+    "zh": "我 没有 钱 。",
+    "vi": "Tôi không có tiền."
+   }
+  ]
+ },
+ {
+  "level": 1,
+  "title": "Câu chữ 有 (yǒu)",
+  "pattern": "Chủ ngữ + 有 + tân ngữ",
+  "explanation": "有 biểu thị sở hữu hoặc tồn tại, nghĩa là \"có\". Phủ định là 没有.",
+  "notes": null,
+  "examples": [
+   {
+    "zh": "我 有 一 个 哥哥 。",
+    "vi": "Tôi có một người anh trai."
+   },
+   {
+    "zh": "他 没有 手机 。",
+    "vi": "Anh ấy không có điện thoại."
+   }
+  ]
+ },
+ {
+  "level": 1,
+  "title": "Trợ từ 的 (de) chỉ sở hữu",
+  "pattern": "Định ngữ + 的 + trung tâm ngữ",
+  "explanation": "的 nối từ chỉ sở hữu hoặc tính chất với danh từ, giống \"của\". Với quan hệ rất thân thiết (gia đình) hoặc tổ chức có thể lược 的.",
+  "notes": "Có thể nói 我的书, còn 我妈妈 thường lược 的.",
+  "examples": [
+   {
+    "zh": "这 是 我 的 手机 。",
+    "vi": "Đây là điện thoại của tôi."
+   },
+   {
+    "zh": "我 妈妈 是 老师 。",
+    "vi": "Mẹ tôi là giáo viên."
+   }
+  ]
+ },
+ {
+  "level": 1,
+  "title": "Đại từ nghi vấn",
+  "pattern": "Dùng 什么, 谁, 哪, 几, 多少, 怎么 đúng vị trí của thành phần cần hỏi",
+  "explanation": "Trong tiếng Trung, từ để hỏi đứng đúng vị trí của câu trả lời, không cần đảo trật tự câu. Không thêm 吗.",
+  "notes": "几 hỏi số lượng nhỏ (dưới 10), 多少 hỏi số lượng bất kỳ.",
+  "examples": [
+   {
+    "zh": "你 叫 什么 名字 ?",
+    "vi": "Bạn tên là gì?"
+   },
+   {
+    "zh": "他 是 谁 ?",
+    "vi": "Anh ấy là ai?"
+   },
+   {
+    "zh": "这 个 多少 钱 ?",
+    "vi": "Cái này bao nhiêu tiền?"
+   }
+  ]
+ },
+ {
+  "level": 1,
+  "title": "Lượng từ",
+  "pattern": "Số từ + lượng từ + danh từ",
+  "explanation": "Giữa số từ và danh từ phải có lượng từ. 个 là lượng từ phổ biến nhất, 本 dùng cho sách, 杯 cho cốc đồ uống. Khi đếm số lượng thì dùng 两 thay cho 二.",
+  "notes": "Nói 两个人, không nói 二个人.",
+  "examples": [
+   {
+    "zh": "我 有 三 本 书 。",
+    "vi": "Tôi có ba quyển sách."
+   },
+   {
+    "zh": "请 给 我 两 杯 水 。",
+    "vi": "Làm ơn cho tôi hai cốc nước."
+   }
+  ]
+ },
+ {
+  "level": 1,
+  "title": "Giới từ 在 chỉ nơi chốn",
+  "pattern": "Chủ ngữ + 在 + địa điểm + động từ",
+  "explanation": "在 đứng trước địa điểm và đứng trước động từ để chỉ nơi xảy ra hành động. 在 cũng có thể là động từ nghĩa là \"ở\".",
+  "notes": null,
+  "examples": [
+   {
+    "zh": "我 在 家 吃 饭 。",
+    "vi": "Tôi ăn cơm ở nhà."
+   },
+   {
+    "zh": "他 在 学校 。",
+    "vi": "Anh ấy ở trường."
+   }
+  ]
+ },
+ {
+  "level": 1,
+  "title": "Trạng từ 很 trước tính từ",
+  "pattern": "Chủ ngữ + 很 + tính từ",
+  "explanation": "Tính từ làm vị ngữ thường đi với 很 (không nhất thiết mang nghĩa \"rất\"). Không dùng 是 trước tính từ.",
+  "notes": null,
+  "examples": [
+   {
+    "zh": "今天 天气 很 好 。",
+    "vi": "Hôm nay thời tiết rất đẹp."
+   },
+   {
+    "zh": "他 的 孩子 很 小 。",
+    "vi": "Con của anh ấy còn nhỏ."
+   }
+  ]
+ },
+ {
+  "level": 1,
+  "title": "Trạng từ 也 và 都",
+  "pattern": "Chủ ngữ + 也 / 都 + động từ",
+  "explanation": "也 nghĩa là \"cũng\", 都 nghĩa là \"đều\". Cả hai đứng trước động từ hoặc tính từ. Khi dùng chung thì 也 đứng trước 都.",
+  "notes": null,
+  "examples": [
+   {
+    "zh": "我 也 是 学生 。",
+    "vi": "Tôi cũng là học sinh."
+   },
+   {
+    "zh": "我们 都 是 学生 。",
+    "vi": "Chúng tôi đều là học sinh."
+   },
+   {
+    "zh": "他们 也 都 去 。",
+    "vi": "Họ cũng đều đi."
+   }
+  ]
+ },
+ {
+  "level": 1,
+  "title": "Trợ từ 了 (le) chỉ hoàn thành",
+  "pattern": "Động từ + 了 (+ tân ngữ) ;  Câu + 了",
+  "explanation": "了 sau động từ nói hành động đã hoàn thành. 了 cuối câu nói sự việc đã thay đổi hoặc có trạng thái mới.",
+  "notes": "Phủ định hoàn thành dùng 没, và bỏ 了: 我没吃早饭.",
+  "examples": [
+   {
+    "zh": "我 吃 了 早饭 。",
+    "vi": "Tôi đã ăn sáng rồi."
+   },
+   {
+    "zh": "现在 八 点 了 。",
+    "vi": "Bây giờ tám giờ rồi."
+   },
+   {
+    "zh": "天气 冷 了 。",
+    "vi": "Trời lạnh rồi."
+   }
+  ]
+ },
+ {
+  "level": 1,
+  "title": "Câu hỏi chính phản",
+  "pattern": "Động từ + 不 + động từ ?",
+  "explanation": "Lặp lại động từ hoặc tính từ ở dạng khẳng định + phủ định để hỏi. Mang nghĩa \"có ... không\".",
+  "notes": "Không dùng thêm 吗 trong dạng câu hỏi này.",
+  "examples": [
+   {
+    "zh": "你 去 不 去 ?",
+    "vi": "Bạn có đi không?"
+   },
+   {
+    "zh": "他 是 不 是 老师 ?",
+    "vi": "Anh ấy có phải giáo viên không?"
+   }
+  ]
+ },
+ {
+  "level": 1,
+  "title": "Động từ năng nguyện 想, 会, 能, 可以",
+  "pattern": "Chủ ngữ + 想 / 会 / 能 / 可以 + động từ",
+  "explanation": "想: muốn. 会: biết (do học được) hoặc sẽ. 能: có thể (khả năng, điều kiện). 可以: được phép. Phủ định thường là 不想, 不会, 不能, 不可以.",
+  "notes": null,
+  "examples": [
+   {
+    "zh": "我 想 去 北京 。",
+    "vi": "Tôi muốn đi Bắc Kinh."
+   },
+   {
+    "zh": "我 会 说 汉语 。",
+    "vi": "Tôi biết nói tiếng Hán."
+   },
+   {
+    "zh": "你 能 帮 我 吗 ?",
+    "vi": "Bạn có thể giúp tôi không?"
+   }
+  ]
+ },
+ {
+  "level": 1,
+  "title": "Câu hỏi rút gọn với 呢 (ne)",
+  "pattern": "Danh từ / đại từ + 呢 ?",
+  "explanation": "Dùng 呢 để hỏi lại cùng một câu hỏi cho đối tượng khác, nghĩa là \"còn ... thì sao\".",
+  "notes": null,
+  "examples": [
+   {
+    "zh": "我 很 好 , 你 呢 ?",
+    "vi": "Tôi rất khỏe, còn bạn thì sao?"
+   },
+   {
+    "zh": "我 是 学生 , 你 呢 ?",
+    "vi": "Tôi là học sinh, còn bạn?"
+   }
+  ]
+ },
+ {
+  "level": 1,
+  "title": "Cách nói giờ giấc",
+  "pattern": "Số + 点 (+ số + 分) ;  半 ;  刻",
+  "explanation": "Giờ nói là 点, phút là 分. 半 là rưỡi (30 phút), 一刻 là 15 phút. Thời gian đứng trước động từ.",
+  "notes": "Thời gian đứng trước động từ: 我八点去学校, không nói 我去学校八点.",
+  "examples": [
+   {
+    "zh": "现在 几 点 ?",
+    "vi": "Bây giờ mấy giờ?"
+   },
+   {
+    "zh": "我 八 点 到 学校 。",
+    "vi": "Tám giờ tôi đến trường."
+   }
+  ]
+ },
+ {
+  "level": 2,
+  "title": "Trợ từ 过 (guo) chỉ kinh nghiệm",
+  "pattern": "Động từ + 过",
+  "explanation": "过 đứng sau động từ để nói đã từng làm việc gì trong quá khứ. Phủ định là 没 + động từ + 过.",
+  "notes": null,
+  "examples": [
+   {
+    "zh": "我 去 过 北京 。",
+    "vi": "Tôi đã từng đến Bắc Kinh."
+   },
+   {
+    "zh": "我 没 吃 过 北京 烤鸭 。",
+    "vi": "Tôi chưa từng ăn vịt quay Bắc Kinh."
+   }
+  ]
+ },
+ {
+  "level": 2,
+  "title": "正在 / 在 chỉ hành động đang diễn ra",
+  "pattern": "Chủ ngữ + 正在 / 在 + động từ (+ 呢)",
+  "explanation": "正在 hoặc 在 đứng trước động từ để nói hành động đang tiến hành, có thể thêm 呢 cuối câu. Phủ định là 没在 + động từ.",
+  "notes": null,
+  "examples": [
+   {
+    "zh": "他 正在 看 书 。",
+    "vi": "Anh ấy đang đọc sách."
+   },
+   {
+    "zh": "我 在 打 电话 。",
+    "vi": "Tôi đang gọi điện thoại."
+   }
+  ]
+ },
+ {
+  "level": 2,
+  "title": "So sánh bằng 比",
+  "pattern": "A + 比 + B + tính từ (+ số lượng)",
+  "explanation": "Dùng 比 để so sánh hơn. Trước tính từ không dùng 很. Muốn nói rõ chênh lệch thì thêm sau tính từ, ví dụ 一点儿 hoặc 三岁. Phủ định là A + 没有 + B + tính từ.",
+  "notes": "Không nói 他比我很高.",
+  "examples": [
+   {
+    "zh": "他 比 我 高 。",
+    "vi": "Anh ấy cao hơn tôi."
+   },
+   {
+    "zh": "今天 比 昨天 冷 。",
+    "vi": "Hôm nay lạnh hơn hôm qua."
+   }
+  ]
+ },
+ {
+  "level": 2,
+  "title": "Bổ ngữ trạng thái với 得 (de)",
+  "pattern": "Động từ + 得 + tính từ",
+  "explanation": "得 nối động từ với phần mô tả mức độ hoặc cách thức của hành động. Nếu có tân ngữ thì lặp lại động từ: 说汉语说得很好.",
+  "notes": null,
+  "examples": [
+   {
+    "zh": "他 跑 得 很 快 。",
+    "vi": "Anh ấy chạy rất nhanh."
+   },
+   {
+    "zh": "她 说 汉语 说 得 很 好 。",
+    "vi": "Cô ấy nói tiếng Hán rất tốt."
+   }
+  ]
+ },
+ {
+  "level": 2,
+  "title": "还是 và 或者",
+  "pattern": "A 还是 B ?  ;  A 或者 B",
+  "explanation": "还是 dùng trong câu hỏi lựa chọn (\"hay là\"). 或者 dùng trong câu trần thuật (\"hoặc\").",
+  "notes": null,
+  "examples": [
+   {
+    "zh": "你 喝 茶 还是 喝 咖啡 ?",
+    "vi": "Bạn uống trà hay uống cà phê?"
+   },
+   {
+    "zh": "我 喝 茶 或者 咖啡 都 可以 。",
+    "vi": "Trà hoặc cà phê tôi uống đều được."
+   }
+  ]
+ },
+ {
+  "level": 2,
+  "title": "因为 ... 所以 ...",
+  "pattern": "因为 + nguyên nhân , 所以 + kết quả",
+  "explanation": "Biểu thị quan hệ nguyên nhân kết quả. Khác tiếng Việt, tiếng Trung thường dùng cả hai từ cùng lúc.",
+  "notes": null,
+  "examples": [
+   {
+    "zh": "因为 下雨 , 所以 我 没 去 。",
+    "vi": "Vì trời mưa nên tôi không đi."
+   },
+   {
+    "zh": "因为 他 很 忙 , 所以 没 来 。",
+    "vi": "Vì anh ấy rất bận nên không đến."
+   }
+  ]
+ },
+ {
+  "level": 2,
+  "title": "虽然 ... 但是 ...",
+  "pattern": "虽然 + vế nhượng bộ , 但是 + vế chính",
+  "explanation": "Biểu thị sự đối lập: \"tuy ... nhưng ...\". Trong tiếng Trung bắt buộc dùng 但是 (hoặc 可是) ở vế sau.",
+  "notes": null,
+  "examples": [
+   {
+    "zh": "虽然 很 累 , 但是 他 很 开心 。",
+    "vi": "Tuy mệt nhưng anh ấy rất vui."
+   },
+   {
+    "zh": "虽然 天气 冷 , 但是 我 想 去 。",
+    "vi": "Tuy trời lạnh nhưng tôi vẫn muốn đi."
+   }
+  ]
+ },
+ {
+  "level": 2,
+  "title": "Sắp xảy ra: 要 ... 了 / 快 ... 了",
+  "pattern": "要 / 快 + động từ / tính từ + 了",
+  "explanation": "Biểu thị sự việc sắp xảy ra. 快 và 就要 đều có thể dùng, nhưng khi có thời điểm cụ thể thì chỉ dùng 就要.",
+  "notes": null,
+  "examples": [
+   {
+    "zh": "火车 要 来 了 。",
+    "vi": "Tàu sắp đến rồi."
+   },
+   {
+    "zh": "快 下雨 了 。",
+    "vi": "Sắp mưa rồi."
+   }
+  ]
+ },
+ {
+  "level": 2,
+  "title": "离, 从 ... 到 ...",
+  "pattern": "A + 离 + B + khoảng cách ;  从 + A + 到 + B",
+  "explanation": "离 nói khoảng cách giữa hai điểm hoặc hai thời điểm. 从 ... 到 ... nói điểm xuất phát đến điểm đích hoặc khoảng thời gian.",
+  "notes": null,
+  "examples": [
+   {
+    "zh": "我 家 离 学校 很 近 。",
+    "vi": "Nhà tôi rất gần trường."
+   },
+   {
+    "zh": "我 从 家 去 学校 。",
+    "vi": "Tôi đi từ nhà đến trường."
+   }
+  ]
+ },
+ {
+  "level": 2,
+  "title": "Câu liên động",
+  "pattern": "Chủ ngữ + 去 / 来 + địa điểm + động từ",
+  "explanation": "Hai hành động liên tiếp của cùng một chủ ngữ được đặt cạnh nhau, không cần từ nối. Hành động xảy ra trước đứng trước.",
+  "notes": null,
+  "examples": [
+   {
+    "zh": "我 去 商店 买 东西 。",
+    "vi": "Tôi đi cửa hàng mua đồ."
+   },
+   {
+    "zh": "他 开 车 去 工作 。",
+    "vi": "Anh ấy lái xe đi làm."
+   }
+  ]
+ },
+ {
+  "level": 2,
+  "title": "一点儿 và 有点儿",
+  "pattern": "Tính từ + 一点儿 ;  有点儿 + tính từ",
+  "explanation": "一点儿 đứng sau tính từ, dùng khi so sánh hoặc đề nghị. 有点儿 đứng trước tính từ, thường mang sắc thái không hài lòng.",
+  "notes": null,
+  "examples": [
+   {
+    "zh": "请 说 慢 一点儿 。",
+    "vi": "Xin hãy nói chậm một chút."
+   },
+   {
+    "zh": "今天 有点儿 冷 。",
+    "vi": "Hôm nay hơi lạnh."
+   }
+  ]
+ },
+ {
+  "level": 2,
+  "title": "再 và 又",
+  "pattern": "再 + động từ (sẽ lặp lại) ;  又 + động từ (đã lặp lại)",
+  "explanation": "再 nói hành động sẽ lặp lại trong tương lai. 又 nói hành động đã lặp lại trong quá khứ.",
+  "notes": null,
+  "examples": [
+   {
+    "zh": "请 再 说 一 次 。",
+    "vi": "Xin hãy nói lại một lần nữa."
+   },
+   {
+    "zh": "他 昨天 来 了 , 今天 又 来 了 。",
+    "vi": "Hôm qua anh ấy đến, hôm nay lại đến."
+   }
+  ]
+ },
+ {
+  "level": 3,
+  "title": "Câu chữ 把 (bǎ)",
+  "pattern": "Chủ ngữ + 把 + tân ngữ + động từ + thành phần khác",
+  "explanation": "Dùng 把 để đưa tân ngữ ra trước động từ, nhấn mạnh cách tân ngữ bị xử lý hoặc thay đổi. Sau động từ phải có thành phần khác như 了, bổ ngữ kết quả hoặc xu hướng. Tân ngữ sau 把 phải xác định.",
+  "notes": "Không nói 我把书看, vì thiếu thành phần sau động từ.",
+  "examples": [
+   {
+    "zh": "我 把 书 放 在 桌子 上 。",
+    "vi": "Tôi đặt quyển sách lên bàn."
+   },
+   {
+    "zh": "请 把 门 打开 。",
+    "vi": "Xin hãy mở cửa ra."
+   }
+  ]
+ },
+ {
+  "level": 3,
+  "title": "Câu bị động với 被 (bèi)",
+  "pattern": "Chủ ngữ (người/vật chịu tác động) + 被 + người gây ra + động từ + thành phần khác",
+  "explanation": "被 đưa đối tượng chịu tác động lên làm chủ ngữ. Người gây ra hành động có thể được lược bỏ. Động từ sau 被 thường kèm 了 hoặc bổ ngữ.",
+  "notes": null,
+  "examples": [
+   {
+    "zh": "我 的 手机 被 朋友 拿 走 了 。",
+    "vi": "Điện thoại của tôi bị bạn lấy đi mất rồi."
+   },
+   {
+    "zh": "杯子 被 打破 了 。",
+    "vi": "Cái cốc bị vỡ rồi."
+   }
+  ]
+ },
+ {
+  "level": 3,
+  "title": "如果 ... 就 ...",
+  "pattern": "如果 + điều kiện , (主语) + 就 + kết quả",
+  "explanation": "Biểu thị giả thiết: \"nếu ... thì ...\". 就 ở vế sau đứng trước động từ.",
+  "notes": null,
+  "examples": [
+   {
+    "zh": "如果 明天 下雨 , 我们 就 不 去 。",
+    "vi": "Nếu mai trời mưa thì chúng ta sẽ không đi."
+   },
+   {
+    "zh": "如果 你 有 时间 , 就 来 吧 。",
+    "vi": "Nếu bạn có thời gian thì hãy đến nhé."
+   }
+  ]
+ },
+ {
+  "level": 3,
+  "title": "越 ... 越 ...",
+  "pattern": "越 + động từ / tính từ 1 , 越 + động từ / tính từ 2",
+  "explanation": "Diễn tả mức độ ở vế sau tăng theo vế trước: \"càng ... càng ...\".",
+  "notes": null,
+  "examples": [
+   {
+    "zh": "汉语 越 学 越 有意思 。",
+    "vi": "Tiếng Hán càng học càng thú vị."
+   },
+   {
+    "zh": "雨 越 下 越 大 。",
+    "vi": "Mưa càng rơi càng to."
+   }
+  ]
+ },
+ {
+  "level": 3,
+  "title": "一 ... 就 ...",
+  "pattern": "一 + động từ 1 , 就 + động từ 2",
+  "explanation": "Hai hành động xảy ra liên tiếp, hoặc điều kiện vừa thỏa là kết quả xảy ra ngay: \"vừa ... là ...\".",
+  "notes": null,
+  "examples": [
+   {
+    "zh": "他 一 回 家 就 看 电视 。",
+    "vi": "Anh ấy vừa về nhà là xem tivi."
+   },
+   {
+    "zh": "我 一 看 就 明白 了 。",
+    "vi": "Tôi vừa nhìn là hiểu ngay."
+   }
+  ]
+ },
+ {
+  "level": 3,
+  "title": "Bổ ngữ khả năng",
+  "pattern": "Động từ + 得 / 不 + bổ ngữ kết quả hoặc xu hướng",
+  "explanation": "Cho biết có thể hay không thể hoàn thành hành động. Khẳng định dùng 得, phủ định dùng 不. Ví dụ 听得懂 (nghe hiểu được) và 听不懂 (nghe không hiểu).",
+  "notes": null,
+  "examples": [
+   {
+    "zh": "你 说 的 我 听 得 懂 。",
+    "vi": "Điều bạn nói tôi nghe hiểu được."
+   },
+   {
+    "zh": "这 个 字 我 看 不 懂 。",
+    "vi": "Chữ này tôi đọc không hiểu."
+   }
+  ]
+ },
+ {
+  "level": 3,
+  "title": "Bổ ngữ xu hướng",
+  "pattern": "Động từ + 上 / 下 / 进 / 出 / 回 / 过 / 起 + 来 / 去",
+  "explanation": "Chỉ hướng di chuyển của hành động. 来 là hướng về phía người nói, 去 là hướng ra xa người nói.",
+  "notes": null,
+  "examples": [
+   {
+    "zh": "他 走 进 来 了 。",
+    "vi": "Anh ấy bước vào rồi."
+   },
+   {
+    "zh": "请 你 拿 出 来 。",
+    "vi": "Xin bạn lấy ra đi."
+   }
+  ]
+ },
+ {
+  "level": 3,
+  "title": "Câu 是 ... 的",
+  "pattern": "是 + thời gian / nơi chốn / cách thức + động từ + 的",
+  "explanation": "Dùng để nhấn mạnh thời gian, địa điểm hoặc cách thức của hành động đã xảy ra rồi. 是 có thể lược bỏ trong câu khẳng định.",
+  "notes": null,
+  "examples": [
+   {
+    "zh": "我 是 昨天 来 的 。",
+    "vi": "Tôi đến vào hôm qua đấy."
+   },
+   {
+    "zh": "他 是 坐 飞机 去 的 。",
+    "vi": "Anh ấy đi bằng máy bay đấy."
+   }
+  ]
+ },
+ {
+  "level": 3,
+  "title": "除了 ... 以外",
+  "pattern": "除了 + A + 以外 , 都 / 还 / 也 ...",
+  "explanation": "Nếu đi với 都 thì loại trừ A (ngoài A ra thì đều ...). Nếu đi với 还 hoặc 也 thì bổ sung thêm (ngoài A ra còn ...).",
+  "notes": null,
+  "examples": [
+   {
+    "zh": "除了 他 以外 , 我们 都 去 。",
+    "vi": "Ngoài anh ấy ra, chúng tôi đều đi."
+   },
+   {
+    "zh": "除了 汉语 , 我 还 学 英语 。",
+    "vi": "Ngoài tiếng Hán, tôi còn học tiếng Anh."
+   }
+  ]
+ },
+ {
+  "level": 3,
+  "title": "不但 ... 而且 ...",
+  "pattern": "不但 + vế 1 , 而且 + vế 2 (+ 也 / 还)",
+  "explanation": "Biểu thị tăng tiến: \"không những ... mà còn ...\".",
+  "notes": null,
+  "examples": [
+   {
+    "zh": "他 不但 会 说 汉语 , 而且 会 写 。",
+    "vi": "Anh ấy không những biết nói tiếng Hán mà còn biết viết."
+   },
+   {
+    "zh": "这 个 菜 不但 好吃 , 而且 便宜 。",
+    "vi": "Món này không những ngon mà còn rẻ."
+   }
+  ]
+ },
+ {
+  "level": 3,
+  "title": "就 và 才",
+  "pattern": "时间 + 就 + động từ + 了 ;  时间 + 才 + động từ",
+  "explanation": "就 nhấn mạnh sự việc xảy ra sớm, nhanh, thuận lợi. 才 nhấn mạnh sự việc xảy ra muộn, chậm hoặc khó khăn.",
+  "notes": null,
+  "examples": [
+   {
+    "zh": "他 八 点 就 来 了 。",
+    "vi": "Tám giờ anh ấy đã đến rồi."
+   },
+   {
+    "zh": "他 十 点 才 来 。",
+    "vi": "Mười giờ anh ấy mới đến."
+   }
+  ]
+ },
+ {
+  "level": 3,
+  "title": "Trợ từ 着 (zhe)",
+  "pattern": "Động từ + 着",
+  "explanation": "着 sau động từ biểu thị trạng thái đang kéo dài, ví dụ 开着 (đang mở), 坐着 (đang ngồi).",
+  "notes": null,
+  "examples": [
+   {
+    "zh": "门 开 着 。",
+    "vi": "Cửa đang mở."
+   },
+   {
+    "zh": "他 坐 着 看 书 。",
+    "vi": "Anh ấy ngồi đọc sách."
+   }
+  ]
+ }
+]
