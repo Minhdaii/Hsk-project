@@ -24,7 +24,7 @@ function Highlight({ text, word }: { text: string; word: string }) {
 const face = { gridArea: '1 / 1', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' } as const;
 
 /** Thẻ từ vựng lật 3D: mặt trước (chữ Hán trong ô tập viết), mặt sau (pinyin, nghĩa, ví dụ) */
-export default function FlipCard({ card, flipped, onFlip }: { card: Card; flipped: boolean; onFlip: () => void }) {
+export default function FlipCard({ card, flipped, canFlip, onToggle }: { card: Card; flipped: boolean; canFlip: boolean; onToggle: () => void }) {
   const w = card.word;
   const ex = w.examples?.[0];
   const isNew = !card.progress;
@@ -32,13 +32,13 @@ export default function FlipCard({ card, flipped, onFlip }: { card: Card; flippe
   const meanings = splitMeaning(w.meaningVi || w.meaningEn).slice(0, 4);
 
   return (
-    <div className="[perspective:1400px]" onClick={() => { if (!flipped) onFlip(); }}>
+    <div className={`[perspective:1400px] ${canFlip ? 'cursor-pointer' : ''}`} onClick={() => { if (canFlip) onToggle(); }}>
       <div
         className="grid transition-transform duration-[650ms] ease-[cubic-bezier(.35,.1,.2,1)] [transform-style:preserve-3d]"
         style={{ transform: flipped ? 'rotateY(180deg)' : 'rotateY(0deg)' }}
       >
         {/* ---------- Mặt trước ---------- */}
-        <div style={face} className={`relative flex min-h-[27rem] flex-col items-center justify-center overflow-hidden rounded-3xl border border-stone-200 bg-white p-6 text-center shadow-soft ${flipped ? 'pointer-events-none' : 'cursor-pointer'}`}>
+        <div style={face} className={`relative flex min-h-[27rem] flex-col items-center justify-center overflow-hidden rounded-3xl border border-stone-200 bg-white p-6 text-center shadow-soft ${flipped ? 'pointer-events-none' : ''}`}>
           <div aria-hidden className="absolute inset-0 bg-[radial-gradient(circle_at_50%_38%,rgba(253,241,239,0.95),rgba(255,255,255,0)_62%)]" />
           <div className="absolute inset-x-4 top-4 flex items-center justify-between">
             <span className={`pill ${isNew ? 'bg-sky-50 text-sky-700' : 'bg-amber-50 text-amber-700'}`}>{isNew ? 'Từ mới' : 'Ôn lại'}</span>
@@ -54,7 +54,7 @@ export default function FlipCard({ card, flipped, onFlip }: { card: Card; flippe
             <span className="hanzi break-words text-[6.5rem] leading-none sm:text-[7.5rem]" style={{ fontSize: single ? undefined : 'clamp(3rem, 14vw, 5.5rem)' }}>{w.hanzi}</span>
           </div>
           <div className="relative mt-5"><SpeakButton text={w.hanzi} audioUrl={w.audioUrl} label /></div>
-          <p className="relative mt-5 text-sm text-stone-400">Chạm vào thẻ hoặc nhấn Space để lật</p>
+          <p className="relative mt-5 text-sm text-stone-400">{canFlip ? 'Chạm vào thẻ để lật xem nghĩa' : 'Chọn nghĩa tiếng Việt đúng bên dưới'}</p>
         </div>
 
         {/* ---------- Mặt sau ---------- */}
@@ -88,7 +88,10 @@ export default function FlipCard({ card, flipped, onFlip }: { card: Card; flippe
               {ex.meaningVi && <div className="break-words text-sm text-stone-600">{ex.meaningVi}</div>}
             </div>
           )}
-          <Link href={`/word/${w.id}`} onClick={(e) => e.stopPropagation()} className={`text-xs text-stone-500 underline ${ex ? '' : 'mt-auto'}`}>Xem thứ tự nét & chi tiết</Link>
+          <div className={`flex items-center justify-between text-xs text-stone-500 ${ex ? '' : 'mt-auto'}`}>
+            <Link href={`/word/${w.id}`} onClick={(e) => e.stopPropagation()} className="underline">Xem thứ tự nét & chi tiết</Link>
+            <span>Chạm để lật lại</span>
+          </div>
         </div>
       </div>
     </div>

@@ -1,24 +1,21 @@
 'use client';
 import Link from 'next/link';
-import { Suspense, useCallback, useEffect, useState } from 'react';
+import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { api } from '@/lib/api';
 import { useUser } from '@/lib/useUser';
 import { speak } from '@/lib/speak';
 import { intervalLabel, nextIntervalDays, type Rating } from '@/lib/sm2preview';
-import type { Activity, Card, ReviewResult, StreakStatus } from '@/lib/types';
+import type { Activity, Card, CardOption, ProgressRow, ReviewResult, StreakStatus } from '@/lib/types';
 import FlipCard from '@/components/FlipCard';
 import Skeleton from '@/components/Skeleton';
 import StreakCelebration from '@/components/StreakCelebration';
 
-const BUTTONS: { r: Rating; label: string; cls: string }[] = [
-  { r: 0, label: 'Quên', cls: 'border-red-200 bg-gradient-to-b from-red-50 to-red-100/70 text-red-700' },
-  { r: 1, label: 'Khó', cls: 'border-orange-200 bg-gradient-to-b from-orange-50 to-orange-100/70 text-orange-700' },
-  { r: 2, label: 'Tốt', cls: 'border-emerald-200 bg-gradient-to-b from-emerald-50 to-emerald-100/70 text-emerald-700' },
-  { r: 3, label: 'Dễ', cls: 'border-sky-200 bg-gradient-to-b from-sky-50 to-sky-100/70 text-sky-700' },
-];
-
 type StreakInfo = { status: StreakStatus; streak: number; previousStreak: number };
+type Outcome = { ok: boolean; rating: Rating; days: number | null; progress: ProgressRow };
+
+// Dự phòng nếu thẻ không có đáp án trắc nghiệm
+const FALLBACK: CardOption[] = [{ text: 'Tôi đã nhớ từ này', correct: true }, { text: 'Tôi chưa nhớ', correct: false }];
 
 function StudyInner() {
   const sp = useSearchParams();
@@ -26,6 +23,8 @@ function StudyInner() {
   const { user, loading } = useUser();
   const [queue, setQueue] = useState<Card[]>([]);
   const [ready, setReady] = useState(false);
+  const [picked, setPicked] = useState<number | null>(null); // -1 = "Chưa biết"
+  const [outcome, setOutcome] = useState<Outcome | null>(null);
   const [shown, setShown] = useState(false);
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(0);
@@ -34,23 +33,24 @@ function StudyInner() {
   const [cardKey, setCardKey] = useState(0);
   const [xpPop, setXpPop] = useState(0);
   const [autoSpeak, setAutoSpeak] = useState(false);
-  const [streakInfo, setStreakInfo] = useState<StreakInfo | null>(null);
   const [celebrate, setCelebrate] = useState<{ info: StreakInfo; days: Activity['days'] } | null>(null);
+  const infoRef = useRef<StreakInfo | null>(null);
 
   useEffect(() => { setAutoSpeak(localStorage.getItem('hsk_autospeak') === '1'); }, []);
   const toggleAuto = () => setAutoSpeak((v) => { localStorage.setItem('hsk_autospeak', v ? '0' : '1'); return !v; });
 
   useEffect(() => {
     if (!user) return;
-    setReady(false); setError(''); setStreakInfo(null); setCelebrate(null);
+    setReady(false); setError(''); setCelebrate(null); infoRef.current = null;
+    setPicked(null); setOutcome(null); setShown(false);
     api<{ cards: Card[] }>(`/study/session?level=${level}`)
-      .then((res) => { setQueue(res.cards); setTotal(res.cards.length); setDone(0); setShown(false); setReady(true); })
+      .then((res) => { setQueue(res.cards); setTotal(res.cards.length); setDone(0); setReady(true); })
       .catch((e) => { setError(e instanceof Error ? e.message : 'Có lỗi xảy ra'); setReady(true); });
   }, [user, level]);
 
   const card = queue[0];
+  const options = card ? (card.options && card.options.length > 1 ? card.options : FALLBACK) : [];
 
-  // Tự đọc từ mỗi khi sang thẻ mới
   useEffect(() => {
     if (!autoSpeak || !card) return;
     const t = setTimeout(() => speak(card.word.hanzi, card.word.audioUrl), 450);
@@ -63,34 +63,51 @@ function StudyInner() {
     setCelebrate({ info, days });
   }, []);
 
-  async function rate(r: Rating) {
-    if (busy || queue.length === 0) return;
-    const current = queue[0];
+  /** Chọn một đáp án (idx) hoặc bấm "Chưa biết" (null). Hệ thống tự chấm: đúng = Tốt, đúng sau khi đã sai = Khó, sai = Quên */
+  async function choose(idx: number | null) {
+    if (busy || outcome || !card) return;
+    const ok = idx !== null && !!options[idx]?.correct;
+    const rating: Rating = ok ? (card.retry ? 1 : 2) : 0;
+    setPicked(idx === null ? -1 : idx);
     setBusy(true);
     try {
-      const res = await api<ReviewResult>('/study/review', { body: { wordId: current.word.id, rating: r } });
-      const info: StreakInfo = streakInfo && streakInfo.status !== 'same'
-        ? { ...streakInfo, streak: res.streak }
+      const res = await api<ReviewResult>('/study/review', { body: { wordId: card.word.id, rating } });
+      const prev = infoRef.current;
+      infoRef.current = prev && prev.status !== 'same'
+        ? { ...prev, streak: res.streak }
         : { status: res.streakStatus, streak: res.streak, previousStreak: res.previousStreak };
-      setStreakInfo(info);
       setXpPop((n) => n + 1);
-      // Cập nhật ngọn lửa trên thanh điều hướng ngay lập tức
       window.dispatchEvent(new CustomEvent('stats-changed', { detail: { streak: res.streak, xp: res.xp, studiedToday: true, atRisk: false, brokenStreak: 0 } }));
-      const rest = queue.slice(1);
-      if (r === 0) rest.push({ word: current.word, progress: res.progress }); // thẻ quên: học lại cuối lượt
-      else setDone((d) => d + 1);
-      setQueue(rest); setShown(false); setError(''); setCardKey((k) => k + 1);
-      if (rest.length === 0) finish(info);
-    } catch (e) { setError(e instanceof Error ? e.message : 'Không lưu được kết quả'); }
+      setOutcome({ ok, rating, days: nextIntervalDays(card.progress, rating), progress: res.progress });
+      setTimeout(() => setShown(true), 380); // chọn xong thẻ tự lật để xem nghĩa
+      setError('');
+    } catch (e) {
+      setPicked(null);
+      setError(e instanceof Error ? e.message : 'Không lưu được kết quả');
+    }
     setBusy(false);
   }
 
+  function next() {
+    if (!outcome || !card) return;
+    const rest = queue.slice(1);
+    if (outcome.ok) setDone((d) => d + 1);
+    else rest.push({ word: card.word, progress: outcome.progress, options: card.options, retry: true }); // trả lời sai: học lại cuối lượt
+    setQueue(rest);
+    setPicked(null); setOutcome(null); setShown(false); setCardKey((k) => k + 1);
+    if (rest.length === 0 && infoRef.current) finish(infoRef.current);
+  }
+
   useEffect(() => {
-    if (celebrate) return;
+    if (celebrate || !card) return;
     const onKey = (e: KeyboardEvent) => {
-      if (queue.length === 0) return;
-      if (!shown && (e.key === ' ' || e.key === 'Enter')) { e.preventDefault(); setShown(true); return; }
-      if (shown && ['1', '2', '3', '4'].includes(e.key)) rate((Number(e.key) - 1) as Rating);
+      if (!outcome) {
+        if (['1', '2', '3', '4'].includes(e.key) && Number(e.key) <= options.length) choose(Number(e.key) - 1);
+        else if (e.key === '0') choose(null);
+        return;
+      }
+      if (e.key === 'Enter' || e.key === 'ArrowRight') { e.preventDefault(); next(); }
+      else if (e.key === ' ') { e.preventDefault(); setShown((v) => !v); }
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -162,19 +179,46 @@ function StudyInner() {
             {queue.length > 2 && <div aria-hidden className="absolute inset-x-8 bottom-0 top-8 rounded-3xl border border-stone-200 bg-white/50" />}
             {queue.length > 1 && <div aria-hidden className="absolute inset-x-4 bottom-2.5 top-4 rounded-3xl border border-stone-200 bg-white/80 shadow-sm" />}
             <div key={cardKey} className="relative animate-slide-in">
-              <FlipCard card={card} flipped={shown} onFlip={() => setShown(true)} />
+              <FlipCard card={card} flipped={shown} canFlip={!!outcome} onToggle={() => setShown((v) => !v)} />
             </div>
           </div>
 
-          <div className={`grid grid-cols-4 gap-2 transition-all duration-500 ${shown ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-3 opacity-0'}`}>
-            {BUTTONS.map((b) => (
-              <button key={b.r} disabled={busy || !shown} onClick={() => rate(b.r)}
-                className={`flex flex-col items-center rounded-2xl border py-3 shadow-sm transition-all hover:-translate-y-1 hover:shadow-md active:translate-y-0 active:scale-95 disabled:opacity-60 ${b.cls}`}>
-                <span className="text-base font-bold">{b.label}</span>
-                <span className="mt-0.5 text-[11px] font-medium opacity-80">{intervalLabel(nextIntervalDays(card.progress, b.r))}</span>
-                <span className="mt-1 hidden rounded bg-white/70 px-1.5 text-[10px] font-semibold opacity-70 sm:block">phím {b.r + 1}</span>
+          <div className="space-y-2.5">
+            <p className="text-center text-sm font-medium text-stone-500">{outcome ? (outcome.ok ? 'Chính xác!' : 'Chưa đúng, xem đáp án màu xanh') : 'Nghĩa tiếng Việt của từ trên là gì?'}</p>
+            <div className="grid gap-2 sm:grid-cols-2">
+              {options.map((o, i) => {
+                const answered = !!outcome;
+                const isPicked = picked === i;
+                const state = !answered ? 'border-stone-200 bg-white hover:-translate-y-0.5 hover:border-brand/50 hover:bg-brand-soft hover:shadow-md active:scale-[0.98]'
+                  : o.correct ? 'animate-pop border-emerald-400 bg-emerald-50 text-emerald-800'
+                  : isPicked ? 'animate-shake border-red-400 bg-red-50 text-red-800'
+                  : 'border-stone-200 bg-white opacity-50';
+                return (
+                  <button key={i} disabled={answered || busy} onClick={() => choose(i)}
+                    className={`flex items-center gap-3 rounded-2xl border px-3.5 py-3 text-left shadow-sm transition-all duration-200 ${state}`}>
+                    <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-xs font-bold ${answered && o.correct ? 'bg-emerald-500 text-white' : answered && isPicked ? 'bg-red-500 text-white' : 'bg-stone-100 text-stone-500'}`}>
+                      {answered && o.correct ? '✓' : answered && isPicked ? '✕' : i + 1}
+                    </span>
+                    <span className="min-w-0 break-words font-medium leading-snug">{o.text}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {!outcome ? (
+              <button disabled={busy} onClick={() => choose(null)} className="mx-auto block rounded-full px-4 py-1.5 text-sm text-stone-500 underline-offset-4 transition hover:text-brand hover:underline">
+                Chưa biết, cho tôi xem đáp án (phím 0)
               </button>
-            ))}
+            ) : (
+              <div className="animate-fade-up space-y-2.5 pt-1">
+                <p className="text-center text-xs text-stone-500">
+                  {outcome.ok ? `Sẽ ôn lại sau ${intervalLabel(outcome.days)}` : 'Từ này sẽ quay lại ở cuối lượt học'} · Chạm vào thẻ để lật lại
+                </p>
+                <button onClick={next} className="btn-primary w-full !py-3 text-base">
+                  {queue.length === 1 && outcome.ok ? 'Hoàn thành' : 'Tiếp tục'} →
+                </button>
+              </div>
+            )}
           </div>
         </>
       )}

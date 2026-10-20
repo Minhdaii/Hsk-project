@@ -46,6 +46,10 @@ npm run dev
 ```
 Mở http://localhost:3000
 
+## Các trang
+- `/` trang giới thiệu (công khai), `/login` đăng nhập / đăng ký.
+- Khu vực học (có thanh bên): `/dashboard` trang chủ, `/study` ôn tập, `/words` từ vựng, `/grammar` ngữ pháp, `/exercises` luyện tập, `/quiz`, `/favorites` sổ tay, `/leaderboard` xếp hạng.
+
 ## API chính
 | Method | Đường dẫn | Mô tả |
 |---|---|---|
@@ -59,6 +63,7 @@ Mở http://localhost:3000
 | POST | `/study/review` 🔒 | `{wordId, rating 0-3}` → cập nhật SM-2, streak, XP |
 | GET | `/study/stats` 🔒 | Số thẻ cần ôn, đã thuộc, streak, XP |
 | GET | `/study/activity` 🔒 | Số lượt ôn 7 ngày gần nhất + mục tiêu ngày |
+| GET | `/study/levels` 🔒 | Tiến độ theo từng cấp (đã học / đã thuộc / tổng) |
 | GET | `/grammar?level=` | Các điểm ngữ pháp kèm ví dụ |
 | GET | `/exercises/cloze?level=&count=` | Câu hỏi điền từ vào chỗ trống |
 | GET | `/exercises/order?level=&count=` | Câu hỏi sắp xếp từ thành câu |

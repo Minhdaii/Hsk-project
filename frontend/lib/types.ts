@@ -8,7 +8,9 @@ export type Example = { id: number; wordId: number; hanzi: string; pinyin: strin
 export type WordDetail = Word & { examples: Example[] };
 export type WordWithExamples = Word & { examples?: Example[] };
 export type ProgressRow = { easeFactor: number; interval: number; repetitions: number; dueDate: string };
-export type Card = { word: WordWithExamples; progress: ProgressRow | null };
+export type CardOption = { text: string; correct: boolean };
+export type Card = { word: WordWithExamples; progress: ProgressRow | null; options?: CardOption[]; retry?: boolean };
+export type ExerciseMeta = { cloze: number; order: number; reverse: number; pinyin: number; quiz: number };
 export type Stats = {
   due: number; learned: number; streak: number; xp: number;
   studiedToday: boolean; atRisk: boolean; brokenStreak: number;

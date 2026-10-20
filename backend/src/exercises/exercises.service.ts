@@ -68,4 +68,19 @@ export class ExercisesService {
       })),
     };
   }
+
+  /** Số câu hỏi tối đa có sẵn cho từng dạng bài ở một cấp */
+  async meta(level: number) {
+    const [cloze, ordered, words] = await Promise.all([
+      this.prisma.example.count({ where: { word: { hskLevel: level } } }),
+      this.prisma.example.findMany({ where: { tokens: { not: null }, word: { hskLevel: level } }, select: { hanzi: true, tokens: true } }),
+      this.prisma.word.count({ where: { hskLevel: level, meaningVi: { not: null } } }),
+    ]);
+    const seen = new Set<string>();
+    for (const e of ordered) {
+      const n = (e.tokens || '').split(' ').length;
+      if (n >= 3 && n <= 9) seen.add(e.hanzi);
+    }
+    return { cloze, order: seen.size, reverse: words, pinyin: words, quiz: words };
+  }
 }

@@ -10,6 +10,6 @@ export class QuizController {
     @Query('level', new DefaultValuePipe(1), ParseIntPipe) level: number,
     @Query('count', new DefaultValuePipe(10), ParseIntPipe) count: number,
   ) {
-    return this.quiz.build(Math.min(3, Math.max(1, level)), Math.min(30, Math.max(4, count)));
+    return this.quiz.build(Math.min(3, Math.max(1, level)), Math.min(50, Math.max(4, count)));
   }
 }
