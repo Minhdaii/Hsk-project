@@ -23,6 +23,9 @@ export class StudyController {
   @Get('activity')
   activity(@Req() req: Req_) { return this.study.activity(req.user.id); }
 
+  @Get('levels')
+  levels(@Req() req: Req_) { return this.study.levels(req.user.id); }
+
   @Get('stats')
   stats(@Req() req: Req_) { return this.study.stats(req.user.id); }
 }

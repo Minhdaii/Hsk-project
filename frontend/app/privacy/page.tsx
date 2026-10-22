@@ -1,6 +1,6 @@
 export default function Privacy() {
   return (
-    <div className="space-y-4">
+    <div className="mx-auto max-w-3xl space-y-4 px-4 py-10">
       <h1 className="text-2xl font-bold">Chính sách quyền riêng tư</h1>
       <p>Website thu thập email và mật khẩu (được mã hóa bởi dịch vụ xác thực) để tạo tài khoản, cùng tiến độ học tập của bạn (từ đã học, lịch ôn, chuỗi ngày học, điểm XP).</p>
       <p>Dữ liệu chỉ dùng để vận hành chức năng học tập, không bán hay chia sẻ cho bên thứ ba. Mỗi người dùng chỉ truy cập được dữ liệu của chính mình.</p>

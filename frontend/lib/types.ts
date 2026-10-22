@@ -32,3 +32,5 @@ export type ClozeQuestion = {
 export type OrderQuestion = { id: number; meaningVi: string | null; pinyin: string | null; tokens: string[] };
 export type Activity = { goal: number; today: number; days: { date: string; reviews: number }[] };
 export type LeaderRow = { rank: number; name: string; xp: number; streak: number };
+
+export type LevelProgress = { level: number; total: number; started: number; mastered: number };

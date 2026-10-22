@@ -37,7 +37,7 @@ export default function LandingNav() {
           ) : (
             <>
               <Link href="/login" className="btn-ghost hidden sm:inline-flex">Đăng nhập</Link>
-              <Link href="/login?mode=up" className="btn-primary">Bắt đầu miễn phí</Link>
+              <Link href="/dashboard" className="btn-primary">Học ngay</Link>
             </>
           )}
         </div>

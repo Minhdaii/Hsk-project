@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-export type IconName = 'home' | 'book' | 'cards' | 'grammar' | 'pencil' | 'star' | 'trophy' | 'menu';
+export type IconName = 'home' | 'book' | 'cards' | 'grammar' | 'pencil' | 'star' | 'trophy' | 'menu' | 'speaker' | 'chart' | 'arrow' | 'check' | 'logout';
 
 const PATHS: Record<IconName, ReactNode> = {
   home: <><path d="M3 11.5 12 4l9 7.5" /><path d="M5.5 10v10h13V10" /><path d="M10 20v-6h4v6" /></>,
@@ -11,6 +11,11 @@ const PATHS: Record<IconName, ReactNode> = {
   star: <path d="m12 3.2 2.7 5.6 6.1.8-4.5 4.2 1.1 6-5.4-3-5.4 3 1.1-6L3.2 9.6l6.1-.8L12 3.2Z" />,
   trophy: <><path d="M8 4h8v5a4 4 0 0 1-8 0V4Z" /><path d="M8 6H5v1a3 3 0 0 0 3 3M16 6h3v1a3 3 0 0 1-3 3" /><path d="M12 13v4M8.5 20h7M10 17h4" /></>,
   menu: <path d="M4 7h16M4 12h16M4 17h16" />,
+  speaker: <><path d="M11 5 6.5 9H3v6h3.5L11 19V5Z" /><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13" /></>,
+  chart: <path d="M5 20V11M12 20V4M19 20v-6M3 20h18" />,
+  arrow: <path d="M5 12h14M13 6l6 6-6 6" />,
+  check: <path d="m5 12.5 4.5 4.5L19 7.5" />,
+  logout: <><path d="M9 4H5.5A1.5 1.5 0 0 0 4 5.5v13A1.5 1.5 0 0 0 5.5 20H9" /><path d="m16 8 4 4-4 4M20 12H9" /></>,
 };
 
 /** Biểu tượng nét mảnh, đổi màu theo chữ (currentColor) */

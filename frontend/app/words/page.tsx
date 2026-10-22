@@ -8,6 +8,7 @@ import SpeakButton from '@/components/SpeakButton';
 import FavoriteButton from '@/components/FavoriteButton';
 import { levelAccent, levelPill } from '@/lib/levels';
 import { RowSkeleton } from '@/components/Skeleton';
+import PageHeader from '@/components/PageHeader';
 
 const PAGE = 30;
 
@@ -44,10 +45,7 @@ function WordsInner() {
 
   return (
     <div className="space-y-5">
-      <div>
-        <h1 className="text-2xl font-bold">Từ vựng HSK</h1>
-        <p className="text-sm text-stone-500">{loading ? 'Đang tải…' : `${total} từ`}</p>
-      </div>
+      <PageHeader title="Từ vựng HSK" subtitle={loading ? 'Đang tải…' : `${total} từ`} />
 
       <div className="flex flex-wrap gap-2">
         {[0, 1, 2, 3].map((l) => (

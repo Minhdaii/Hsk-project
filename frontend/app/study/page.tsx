@@ -168,7 +168,7 @@ function StudyInner() {
           <div className="text-5xl">🎉</div>
           <p className="text-lg font-semibold">{total ? 'Hoàn thành lượt ôn hôm nay!' : 'Hôm nay không còn thẻ nào cần học ở cấp này.'}</p>
           <div className="flex justify-center gap-2 pt-2">
-            <Link href="/" className="btn-ghost">Về trang chủ</Link>
+            <Link href="/dashboard" className="btn-ghost">Về trang chủ</Link>
             <Link href="/exercises" className="btn-primary">Luyện tập</Link>
           </div>
         </div>

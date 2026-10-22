@@ -1,26 +1,26 @@
+import '@fontsource/be-vietnam-pro/400.css';
+import '@fontsource/be-vietnam-pro/500.css';
+import '@fontsource/be-vietnam-pro/600.css';
+import '@fontsource/be-vietnam-pro/700.css';
+import '@fontsource/be-vietnam-pro/800.css';
 import './globals.css';
 import type { Metadata, Viewport } from 'next';
-import Link from 'next/link';
-import Navbar from '@/components/Navbar';
 import FavoritesProvider from '@/components/FavoritesProvider';
+import ChromeSwitch from '@/components/ChromeSwitch';
 
 export const metadata: Metadata = {
-  title: 'Học tiếng Trung HSK',
-  description: 'Học từ vựng HSK 1-3 với flashcard lặp lại ngắt quãng, quiz, nghe phát âm và tập viết chữ Hán.',
+  title: 'Học tiếng Trung HSK 1-3',
+  description: 'Học từ vựng, ngữ pháp HSK 1-3 với flashcard lặp lại ngắt quãng, bài tập đa dạng, nghe phát âm và tập viết chữ Hán. Miễn phí.',
 };
 export const viewport: Viewport = { width: 'device-width', initialScale: 1, themeColor: '#c0392b' };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="vi">
-      <body className="min-h-screen pb-20 sm:pb-0">
+      <body className="min-h-screen">
         <FavoritesProvider>
-          <Navbar />
-          <main className="mx-auto max-w-5xl px-4 py-6 sm:py-8">{children}</main>
+          <ChromeSwitch>{children}</ChromeSwitch>
         </FavoritesProvider>
-        <footer className="mx-auto max-w-5xl px-4 pb-10 pt-4 text-center text-xs text-stone-500">
-          <Link href="/credits" className="underline">Nguồn dữ liệu</Link> · <Link href="/privacy" className="underline">Quyền riêng tư</Link>
-        </footer>
       </body>
     </html>
   );

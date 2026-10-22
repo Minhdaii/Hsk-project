@@ -1,6 +1,6 @@
 export default function Credits() {
   return (
-    <div className="prose max-w-none space-y-4">
+    <div className="mx-auto max-w-3xl space-y-4 px-4 py-10">
       <h1 className="text-2xl font-bold">Nguồn dữ liệu</h1>
       <ul className="list-disc space-y-2 pl-6">
         <li><b>Danh sách từ HSK</b>: <a className="underline" href="https://github.com/drkameleon/complete-hsk-vocabulary">complete-hsk-vocabulary</a> (giấy phép MIT).</li>

@@ -6,6 +6,7 @@ import type { GrammarPoint } from '@/lib/types';
 import SpeakButton from '@/components/SpeakButton';
 import { LEVEL_STYLE, levelPill } from '@/lib/levels';
 import Skeleton from '@/components/Skeleton';
+import PageHeader from '@/components/PageHeader';
 
 export default function GrammarPage() {
   const [level, setLevel] = useState(0);
@@ -23,13 +24,7 @@ export default function GrammarPage() {
 
   return (
     <div className="mx-auto max-w-3xl space-y-5">
-      <div className="flex flex-wrap items-end justify-between gap-3">
-        <div>
-          <h1 className="text-2xl font-bold">Ngữ pháp HSK 1-3</h1>
-          <p className="text-sm text-stone-500">{loading ? 'Đang tải…' : `${items.length} điểm ngữ pháp`}</p>
-        </div>
-        <Link href="/exercises" className="btn-primary">✏️ Luyện điền từ</Link>
-      </div>
+      <PageHeader title="Ngữ pháp HSK 1-3" subtitle={loading ? 'Đang tải…' : `${items.length} điểm ngữ pháp`} actions={<Link href="/exercises" className="btn-primary">Luyện điền từ</Link>} />
 
       <div className="flex flex-wrap gap-2">
         {[0, 1, 2, 3].map((l) => (

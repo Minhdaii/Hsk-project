@@ -5,11 +5,14 @@
 html, body { overflow-x: hidden; }
 html { scroll-behavior: smooth; }
 body {
-  font-family: "Noto Sans SC","PingFang SC","Microsoft YaHei","Segoe UI",system-ui,sans-serif;
+  font-family: "Be Vietnam Pro","Noto Sans SC","PingFang SC","Microsoft YaHei","Segoe UI",system-ui,sans-serif;
+  line-height: 1.6; letter-spacing: -0.003em;
   background: radial-gradient(900px 360px at 50% -120px, #fbe3de 0%, rgba(251,227,222,0) 70%), #faf7f2;
   background-repeat: no-repeat; color: #1c1917; -webkit-font-smoothing: antialiased;
 }
 :focus-visible { outline: 2px solid #c0392b; outline-offset: 2px; }
+::selection { background: #fbd5cf; }
+h1, h2, h3 { letter-spacing: -0.02em; }
 .hanzi { font-family: "Noto Serif SC","Songti SC","SimSun","STSong","Noto Sans SC",serif; }
 
 @layer components {

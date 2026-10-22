@@ -133,4 +133,17 @@ export class StudyService {
     const map = new Map(rows.map((r) => [r.date, r.reviews]));
     return { goal: DAILY_GOAL, today: map.get(t) ?? 0, days: days.map((date) => ({ date, reviews: map.get(date) ?? 0 })) };
   }
+
+  /** Tiến độ theo từng cấp: tổng số từ, số từ đã bắt đầu học, số từ đã thuộc (ôn đúng từ 3 lần trở lên) */
+  async levels(userId: number) {
+    const levels = await Promise.all([1, 2, 3].map(async (level) => {
+      const [total, started, mastered] = await Promise.all([
+        this.prisma.word.count({ where: { hskLevel: level } }),
+        this.prisma.progress.count({ where: { userId, word: { hskLevel: level } } }),
+        this.prisma.progress.count({ where: { userId, repetitions: { gte: 3 }, word: { hskLevel: level } } }),
+      ]);
+      return { level, total, started, mastered };
+    }));
+    return { levels };
+  }
 }

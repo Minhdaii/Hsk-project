@@ -83,7 +83,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             {user && <button onClick={logout} className="btn-ghost !px-3 !py-1.5 lg:hidden" aria-label="Đăng xuất"><Icon name="logout" className="h-4 w-4" /></button>}
           </div>
         </header>
-        <main className="mx-auto max-w-5xl px-4 py-6 pb-28 lg:px-8 lg:py-8 lg:pb-12">{children}</main>
+        <main className="mx-auto max-w-5xl px-4 py-6 pb-28 lg:px-8 lg:py-8 lg:pb-12">
+          <div key={pathname} className="animate-fade-up">{children}</div>
+        </main>
       </div>
 
       {/* Thanh dưới đáy (điện thoại) */}

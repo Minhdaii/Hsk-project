@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { api } from '@/lib/api';
 import type { LeaderRow } from '@/lib/types';
+import PageHeader from '@/components/PageHeader';
 
 const MEDAL = ['🥇', '🥈', '🥉'];
 
@@ -14,11 +15,8 @@ export default function LeaderboardPage() {
   }, []);
 
   return (
-    <div className="mx-auto max-w-xl space-y-5">
-      <div>
-        <h1 className="text-2xl font-bold">Bảng xếp hạng</h1>
-        <p className="text-sm text-stone-500">Top 10 theo điểm XP (mỗi lượt ôn được 10 XP). Tên được rút gọn để bảo mật.</p>
-      </div>
+    <div className="mx-auto max-w-2xl space-y-5">
+      <PageHeader title="Bảng xếp hạng" subtitle="Top 10 theo điểm XP (mỗi lượt ôn được 10 XP). Tên được rút gọn để bảo mật." />
       {error && <p className="rounded-xl bg-amber-50 p-4 text-sm text-amber-800">{error}</p>}
       {rows && rows.length === 0 && <p className="card text-center text-stone-500">Chưa có ai trên bảng xếp hạng. Hãy là người đầu tiên!</p>}
       <ol className="space-y-2.5">

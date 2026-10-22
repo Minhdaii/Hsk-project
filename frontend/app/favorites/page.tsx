@@ -6,6 +6,7 @@ import { useUser } from '@/lib/useUser';
 import type { Word } from '@/lib/types';
 import SpeakButton from '@/components/SpeakButton';
 import FavoriteButton from '@/components/FavoriteButton';
+import PageHeader from '@/components/PageHeader';
 
 export default function FavoritesPage() {
   const { user, loading } = useUser();
@@ -30,10 +31,7 @@ export default function FavoritesPage() {
 
   return (
     <div className="space-y-5">
-      <div>
-        <h1 className="text-2xl font-bold">Sổ tay từ vựng</h1>
-        <p className="text-sm text-stone-500">{words ? `${words.length} từ đã lưu` : 'Đang tải…'}</p>
-      </div>
+      <PageHeader title="Sổ tay từ vựng" subtitle={words ? `${words.length} từ đã lưu` : 'Đang tải…'} />
       {error && <p className="rounded-xl bg-amber-50 p-4 text-sm text-amber-800">{error}</p>}
       {words && words.length === 0 && (
         <div className="card space-y-3 py-10 text-center">

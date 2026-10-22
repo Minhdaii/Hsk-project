@@ -1,4 +1,4 @@
-// template.tsx được dựng lại mỗi lần chuyển trang, nên mỗi trang đều có hiệu ứng hiện dần mượt mà
+// Giữ file này ở dạng "trong suốt": hiệu ứng chuyển trang nằm trong AppShell để thanh bên không bị nhấp nháy
 export default function Template({ children }: { children: React.ReactNode }) {
-  return <div className="animate-fade-up">{children}</div>;
+  return <>{children}</>;
 }
