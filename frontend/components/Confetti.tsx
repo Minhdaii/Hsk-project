@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 
-const COLORS = ['#c0392b', '#f59e0b', '#10b981', '#0ea5e9', '#8b5cf6', '#ec4899', '#facc15'];
+const COLORS = ['#B8A1FF', '#5B3FD1', '#C94B3C', '#202124', '#A38AEF', '#F0EBFF'];
 
 /** Pháo giấy rơi toàn màn hình (chỉ dùng CSS, tự biến mất) */
 export default function Confetti({ count = 36 }: { count?: number }) {

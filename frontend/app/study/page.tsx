@@ -14,7 +14,6 @@ import StreakCelebration from '@/components/StreakCelebration';
 type StreakInfo = { status: StreakStatus; streak: number; previousStreak: number };
 type Outcome = { ok: boolean; rating: Rating; days: number | null; progress: ProgressRow };
 
-// Dự phòng nếu thẻ không có đáp án trắc nghiệm
 const FALLBACK: CardOption[] = [{ text: 'Tôi đã nhớ từ này', correct: true }, { text: 'Tôi chưa nhớ', correct: false }];
 
 function StudyInner() {
@@ -23,7 +22,7 @@ function StudyInner() {
   const { user, loading } = useUser();
   const [queue, setQueue] = useState<Card[]>([]);
   const [ready, setReady] = useState(false);
-  const [picked, setPicked] = useState<number | null>(null); // -1 = "Chưa biết"
+  const [picked, setPicked] = useState<number | null>(null);
   const [outcome, setOutcome] = useState<Outcome | null>(null);
   const [shown, setShown] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -63,7 +62,6 @@ function StudyInner() {
     setCelebrate({ info, days });
   }, []);
 
-  /** Chọn một đáp án (idx) hoặc bấm "Chưa biết" (null). Hệ thống tự chấm: đúng = Tốt, đúng sau khi đã sai = Khó, sai = Quên */
   async function choose(idx: number | null) {
     if (busy || outcome || !card) return;
     const ok = idx !== null && !!options[idx]?.correct;
@@ -79,11 +77,11 @@ function StudyInner() {
       setXpPop((n) => n + 1);
       window.dispatchEvent(new CustomEvent('stats-changed', { detail: { streak: res.streak, xp: res.xp, studiedToday: true, atRisk: false, brokenStreak: 0 } }));
       setOutcome({ ok, rating, days: nextIntervalDays(card.progress, rating), progress: res.progress });
-      setTimeout(() => setShown(true), 380); // chọn xong thẻ tự lật để xem nghĩa
+      setTimeout(() => setShown(true), 380);
       setError('');
     } catch (e) {
       setPicked(null);
-      setError(e instanceof Error ? e.message : 'Không lưu được kết quả');
+      setError(e instanceof Error ? e.message : 'Không lưu được kết quả ôn tập');
     }
     setBusy(false);
   }
@@ -92,7 +90,7 @@ function StudyInner() {
     if (!outcome || !card) return;
     const rest = queue.slice(1);
     if (outcome.ok) setDone((d) => d + 1);
-    else rest.push({ word: card.word, progress: outcome.progress, options: card.options, retry: true }); // trả lời sai: học lại cuối lượt
+    else rest.push({ word: card.word, progress: outcome.progress, options: card.options, retry: true });
     setQueue(rest);
     setPicked(null); setOutcome(null); setShown(false); setCardKey((k) => k + 1);
     if (rest.length === 0 && infoRef.current) finish(infoRef.current);
@@ -113,13 +111,26 @@ function StudyInner() {
     return () => window.removeEventListener('keydown', onKey);
   });
 
-  if (loading) return <Skeleton className="mx-auto h-[27rem] max-w-xl !rounded-3xl" />;
+  const touch = useRef<{ x: number; y: number } | null>(null);
+  const onTouchStart = (e: React.TouchEvent) => { touch.current = { x: e.touches[0].clientX, y: e.touches[0].clientY }; };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    const t = touch.current; touch.current = null;
+    if (!t || !outcome) return;
+    const dx = e.changedTouches[0].clientX - t.x;
+    const dy = e.changedTouches[0].clientY - t.y;
+    if (dx < -70 && Math.abs(dy) < 60) next();
+  };
+
+  if (loading) return <Skeleton className="mx-auto h-[24rem] max-w-5xl" />;
   if (!user) {
     return (
-      <div className="card mx-auto max-w-md space-y-3 text-center">
-        <div className="text-4xl">🔐</div>
-        <p>Bạn cần đăng nhập để lưu tiến độ học và lịch ôn tập.</p>
-        <Link href="/login" className="btn-primary">Đăng nhập</Link>
+      <div className="editorial-card mx-auto max-w-md p-8 text-center">
+        <p className="hanzi text-4xl text-[#55449E]" lang="zh-Hans" aria-hidden>登录</p>
+        <h2 className="mt-3 text-base font-bold text-[#302B3D]">Yêu cầu đăng nhập</h2>
+        <p className="mt-1.5 text-xs text-[#777184]">Vui lòng đăng nhập để hệ thống ghi nhận lịch ôn tập ngắt quãng SM-2 và lưu kết quả học tập của bạn.</p>
+        <div className="mt-5">
+          <Link href="/login" className="btn-editorial-primary w-full text-center">Đăng nhập ngay</Link>
+        </div>
       </div>
     );
   }
@@ -129,103 +140,256 @@ function StudyInner() {
   const reviewLeft = queue.length - newLeft;
 
   return (
-    <div className="mx-auto max-w-xl space-y-4">
+    <div className="mx-auto max-w-5xl space-y-4">
       {celebrate && (
-        <StreakCelebration status={celebrate.info.status} streak={celebrate.info.streak}
-          previousStreak={celebrate.info.previousStreak} days={celebrate.days}
-          onClose={() => { setCelebrate(null); window.dispatchEvent(new Event('stats-changed')); }} />
+        <StreakCelebration
+          status={celebrate.info.status}
+          streak={celebrate.info.streak}
+          previousStreak={celebrate.info.previousStreak}
+          days={celebrate.days}
+          onClose={() => { setCelebrate(null); window.dispatchEvent(new Event('stats-changed')); }}
+        />
       )}
 
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="inline-flex rounded-xl bg-stone-100 p-1">
+      {/* Điều khiển cấp độ và chế độ tự đọc */}
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#E7E2F0] pb-2.5">
+        <nav aria-label="Chọn cấp độ ôn tập" className="inline-flex rounded-lg border border-[#E7E2F0] bg-white p-0.5">
           {[1, 2, 3].map((l) => (
-            <Link key={l} href={`/study?level=${l}`}
-              className={`rounded-lg px-4 py-1.5 text-sm font-semibold transition-all duration-300 ${l === level ? 'bg-white text-brand shadow-sm' : 'text-stone-500 hover:text-stone-800'}`}>HSK {l}</Link>
+            <Link
+              key={l}
+              href={`/study?level=${l}`}
+              aria-current={l === level ? 'page' : undefined}
+              className={`inline-flex min-h-[34px] items-center rounded-md px-3 text-xs font-bold transition-all ${
+                l === level
+                  ? 'border border-[#D8CFF2] bg-[#EEE9FC] text-[#3B2D78] shadow-xs'
+                  : 'text-[#777184] hover:text-[#302B3D]'
+              }`}
+            >
+              HSK {l}
+            </Link>
           ))}
-        </div>
-        <button onClick={toggleAuto} aria-pressed={autoSpeak}
-          className={`flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-semibold transition ${autoSpeak ? 'border-brand/30 bg-brand-soft text-brand' : 'border-stone-200 bg-white text-stone-500'}`}>
-          <span className={`relative h-4 w-7 rounded-full transition ${autoSpeak ? 'bg-brand' : 'bg-stone-300'}`}>
-            <span className={`absolute top-0.5 h-3 w-3 rounded-full bg-white shadow transition-all ${autoSpeak ? 'left-3.5' : 'left-0.5'}`} />
+        </nav>
+
+        <button
+          onClick={toggleAuto}
+          aria-pressed={autoSpeak}
+          className={`flex min-h-[34px] items-center gap-2 rounded-lg border px-3 text-xs font-semibold transition-colors ${
+            autoSpeak
+              ? 'border-[#D8CFF2] bg-[#EEE9FC] text-[#3B2D78]'
+              : 'border-[#E7E2F0] bg-white text-[#777184] hover:border-[#D5CEF3]'
+          }`}
+        >
+          <span
+            aria-hidden
+            className={`relative h-3.5 w-6 rounded-full transition-colors ${
+              autoSpeak ? 'bg-[#A99AE8]' : 'bg-stone-300'
+            }`}
+          >
+            <span
+              className={`absolute top-0.5 h-2.5 w-2.5 rounded-full bg-white transition-all ${
+                autoSpeak ? 'left-3' : 'left-0.5'
+              }`}
+            />
           </span>
-          Tự đọc
+          Tự động phát âm
         </button>
       </div>
 
+      {/* Tiến độ phiên học */}
       <div>
-        <div className="h-2.5 overflow-hidden rounded-full bg-stone-200">
-          <div className="bar-fill h-full rounded-full bg-brand transition-all duration-700 ease-out" style={{ width: `${pct}%` }} />
+        <div
+          role="progressbar"
+          aria-label="Tiến độ buổi học"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={pct}
+          className="h-2 overflow-hidden rounded-full bg-[#EEE9FC]"
+        >
+          <div
+            className="bar-fill h-full rounded-full bg-[#A99AE8] transition-[width] duration-500 ease-out"
+            style={{ width: `${pct}%` }}
+          />
         </div>
-        <div className="mt-2 flex items-center justify-between text-xs text-stone-500">
-          <span>{done}/{total} thẻ</span>
-          {card && <span className="flex gap-1.5"><span className="pill bg-sky-50 text-sky-700">{newLeft} từ mới</span><span className="pill bg-amber-50 text-amber-700">{reviewLeft} ôn lại</span></span>}
+        <div className="mt-1.5 flex items-center justify-between text-xs text-[#777184]">
+          <span className="font-semibold tabular-nums text-[#302B3D]">{done} / {total} thẻ hoàn thành</span>
+          {card && (
+            <span className="flex gap-1.5">
+              <span className="editorial-badge">{newLeft} từ mới</span>
+              <span className="editorial-badge-stone">{reviewLeft} ôn tập</span>
+            </span>
+          )}
         </div>
       </div>
-      {error && <p className="rounded-xl bg-amber-50 p-3 text-sm text-amber-800">{error}</p>}
 
-      {!ready ? <Skeleton className="h-[27rem] !rounded-3xl" /> : !card ? (
-        <div className="card animate-pop space-y-3 py-10 text-center">
-          <div className="text-5xl">🎉</div>
-          <p className="text-lg font-semibold">{total ? 'Hoàn thành lượt ôn hôm nay!' : 'Hôm nay không còn thẻ nào cần học ở cấp này.'}</p>
-          <div className="flex justify-center gap-2 pt-2">
-            <Link href="/dashboard" className="btn-ghost">Về trang chủ</Link>
-            <Link href="/exercises" className="btn-primary">Luyện tập</Link>
+      {error && (
+        <p role="alert" className="rounded-lg border border-red-300 bg-red-50 p-3 text-xs text-red-800">
+          {error}
+        </p>
+      )}
+
+      {!ready ? (
+        <Skeleton className="h-[24rem]" />
+      ) : !card ? (
+        <div className="editorial-card animate-pop space-y-4 py-12 text-center">
+          <p lang="zh-Hans" aria-hidden className="hanzi text-5xl font-bold text-[#55449E]">完成</p>
+          <div>
+            <h2 className="text-xl font-bold text-[#302B3D]">
+              {total ? 'Hoàn thành phiên học hôm nay!' : 'Không còn thẻ nào cần học ở cấp độ này.'}
+            </h2>
+            <p className="mt-1 text-xs text-[#777184]">
+              Thuật toán SM-2 đã cập nhật chu kỳ ôn tập ngắt quãng tiếp theo cho bạn.
+            </p>
+          </div>
+          <div className="flex flex-col justify-center gap-2.5 pt-2 sm:flex-row">
+            <Link href="/dashboard" className="btn-editorial-ghost text-xs">Về trang tổng quan</Link>
+            <Link href="/exercises" className="btn-editorial-primary text-xs">Luyện tập mini-games</Link>
           </div>
         </div>
       ) : (
-        <>
-          <div className="relative pb-5">
-            {xpPop > 0 && <span key={xpPop} className="pointer-events-none absolute right-6 top-14 z-10 animate-float-up rounded-full bg-amber-100 px-2.5 py-0.5 text-sm font-bold text-amber-700 shadow-sm">+10 XP</span>}
-            {queue.length > 2 && <div aria-hidden className="absolute inset-x-8 bottom-0 top-8 rounded-3xl border border-stone-200 bg-white/50" />}
-            {queue.length > 1 && <div aria-hidden className="absolute inset-x-4 bottom-2.5 top-4 rounded-3xl border border-stone-200 bg-white/80 shadow-sm" />}
-            <div key={cardKey} className="relative animate-slide-in">
+        /* BỐ CỤC HAI CỘT: CÂU HỎI BÊN TRÁI, ĐÁP ÁN BÊN PHẢI */
+        <div className="grid grid-cols-1 items-stretch gap-4 sm:gap-5 lg:grid-cols-12">
+          {/* CỘT TRÁI (6 COLS): NỘI DUNG TỪ VỰNG / CÂU HỎI */}
+          <div className="relative flex flex-col [touch-action:pan-y] lg:col-span-6" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+            {xpPop > 0 && (
+              <span
+                key={xpPop}
+                aria-hidden
+                className="pointer-events-none absolute right-4 top-12 z-10 animate-float-up rounded-md bg-[#A99AE8] px-2 py-0.5 text-xs font-bold text-[#241D45] shadow-xs"
+              >
+                +10 XP
+              </span>
+            )}
+            {queue.length > 1 && (
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-x-2 bottom-0 top-2 rounded-2xl border border-[#E7E2F0] bg-[#FAF9FD]"
+              />
+            )}
+            <div key={cardKey} className="relative h-full animate-slide-in">
               <FlipCard card={card} flipped={shown} canFlip={!!outcome} onToggle={() => setShown((v) => !v)} />
             </div>
           </div>
 
-          <div className="space-y-2.5">
-            <p className="text-center text-sm font-medium text-stone-500">{outcome ? (outcome.ok ? 'Chính xác!' : 'Chưa đúng, xem đáp án màu xanh') : 'Nghĩa tiếng Việt của từ trên là gì?'}</p>
-            <div className="grid gap-2 sm:grid-cols-2">
+          {/* CỘT PHẢI (6 COLS): BẢNG ĐÁP ÁN VÀ ĐIỀU KHIỂN HỌC TẬP */}
+          <div className="flex flex-col justify-between rounded-2xl border-2 border-[#D8D1EE] bg-white p-5 sm:p-6 shadow-sm lg:col-span-6">
+            {/* Tiêu đề & Thông báo trạng thái */}
+            <div>
+              <div className="flex items-center justify-between border-b border-[#E7E2F0] pb-2.5">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[#777184]">
+                  {outcome ? 'Kết quả ôn tập' : 'Lựa chọn đáp án'}
+                </span>
+                <span className="text-xs text-[#9892A6]">
+                  {outcome ? 'Chu kỳ lặp lại SM-2' : 'Phím tắt 1–4'}
+                </span>
+              </div>
+
+              <div className="mt-3">
+                {!outcome ? (
+                  <p className="text-xs sm:text-sm font-semibold text-[#302B3D]">
+                    Chọn nghĩa tiếng Việt chính xác của từ vựng:
+                  </p>
+                ) : outcome.ok ? (
+                  <div className="rounded-xl border border-emerald-200 bg-emerald-50/90 p-3 text-emerald-950">
+                    <div className="flex items-center gap-2 text-xs sm:text-sm font-bold">
+                      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-600 text-xs text-white">✓</span>
+                      Chính xác!
+                    </div>
+                    <p className="mt-1 text-xs text-emerald-800">
+                      Lịch ôn tập tiếp theo: sau <strong className="font-semibold">{intervalLabel(outcome.days)}</strong>
+                    </p>
+                  </div>
+                ) : (
+                  <div className="rounded-xl border border-rose-200 bg-rose-50/90 p-3 text-rose-950">
+                    <div className="flex items-center gap-2 text-xs sm:text-sm font-bold">
+                      <span className="flex h-5 w-5 items-center justify-center rounded-full bg-rose-600 text-xs text-white">✕</span>
+                      Chưa chính xác!
+                    </div>
+                    <p className="mt-1 text-xs text-rose-800">
+                      Thẻ này sẽ tự động quay lại vào cuối lượt học để bạn ôn lại.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Danh sách các phương án đáp án: mỗi hàng rõ ràng, căn chỉnh đồng đều */}
+            <div className="my-3 space-y-2.5">
               {options.map((o, i) => {
                 const answered = !!outcome;
                 const isPicked = picked === i;
-                const state = !answered ? 'border-stone-200 bg-white hover:-translate-y-0.5 hover:border-brand/50 hover:bg-brand-soft hover:shadow-md active:scale-[0.98]'
-                  : o.correct ? 'animate-pop border-emerald-400 bg-emerald-50 text-emerald-800'
-                  : isPicked ? 'animate-shake border-red-400 bg-red-50 text-red-800'
-                  : 'border-stone-200 bg-white opacity-50';
+                const state = !answered
+                  ? 'border-[#E7E2F0] bg-[#FAF9FD] hover:border-[#A99AE8] hover:bg-[#EEE9FC]/40 active:translate-y-px text-[#302B3D]'
+                  : o.correct
+                  ? 'border-emerald-500 bg-emerald-50 text-emerald-950 font-semibold shadow-xs ring-1 ring-emerald-400'
+                  : isPicked
+                  ? 'border-red-400 bg-red-50 text-red-900 font-semibold ring-1 ring-red-300'
+                  : 'border-[#E7E2F0] bg-white opacity-40 text-stone-400';
                 return (
-                  <button key={i} disabled={answered || busy} onClick={() => choose(i)}
-                    className={`flex items-center gap-3 rounded-2xl border px-3.5 py-3 text-left shadow-sm transition-all duration-200 ${state}`}>
-                    <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-xs font-bold ${answered && o.correct ? 'bg-emerald-500 text-white' : answered && isPicked ? 'bg-red-500 text-white' : 'bg-stone-100 text-stone-500'}`}>
+                  <button
+                    key={i}
+                    disabled={answered || busy}
+                    onClick={() => choose(i)}
+                    className={`flex min-h-[46px] w-full items-center gap-3 rounded-xl border px-3.5 py-2.5 text-left transition-all ${state}`}
+                  >
+                    <span
+                      aria-hidden
+                      className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-xs font-bold ${
+                        answered && o.correct
+                          ? 'bg-emerald-600 text-white'
+                          : answered && isPicked
+                          ? 'bg-red-500 text-white'
+                          : 'bg-[#EEE9FC] text-[#55449E]'
+                      }`}
+                    >
                       {answered && o.correct ? '✓' : answered && isPicked ? '✕' : i + 1}
                     </span>
-                    <span className="min-w-0 break-words font-medium leading-snug">{o.text}</span>
+                    <span className="min-w-0 flex-1 break-words text-xs sm:text-sm font-medium leading-snug">
+                      {o.text}
+                    </span>
                   </button>
                 );
               })}
             </div>
 
-            {!outcome ? (
-              <button disabled={busy} onClick={() => choose(null)} className="mx-auto block rounded-full px-4 py-1.5 text-sm text-stone-500 underline-offset-4 transition hover:text-brand hover:underline">
-                Chưa biết, cho tôi xem đáp án (phím 0)
-              </button>
-            ) : (
-              <div className="animate-fade-up space-y-2.5 pt-1">
-                <p className="text-center text-xs text-stone-500">
-                  {outcome.ok ? `Sẽ ôn lại sau ${intervalLabel(outcome.days)}` : 'Từ này sẽ quay lại ở cuối lượt học'} · Chạm vào thẻ để lật lại
-                </p>
-                <button onClick={next} className="btn-primary w-full !py-3 text-base">
-                  {queue.length === 1 && outcome.ok ? 'Hoàn thành' : 'Tiếp tục'} →
+            {/* Khu vực hành động phía dưới */}
+            <div className="border-t border-[#E7E2F0] pt-3">
+              {!outcome ? (
+                <button
+                  disabled={busy}
+                  onClick={() => choose(null)}
+                  className="w-full rounded-xl border border-dashed border-[#D5CEF3] bg-[#FAF9FD] py-2 text-center text-xs font-semibold text-[#55449E] transition-colors hover:bg-[#EEE9FC]"
+                >
+                  Chưa biết từ này, hiển thị đáp án học <span className="ml-1 opacity-70">(phím 0)</span>
                 </button>
-              </div>
-            )}
+              ) : (
+                <div className="grid grid-cols-2 gap-2.5">
+                  <button
+                    onClick={() => setShown((v) => !v)}
+                    aria-pressed={shown}
+                    className="btn-editorial-ghost !min-h-[42px] !px-3 text-xs font-semibold"
+                  >
+                    {shown ? 'Xem mặt trước' : 'Lật xem nghĩa (Space)'}
+                  </button>
+                  <button
+                    onClick={next}
+                    className="btn-editorial-primary !min-h-[42px] !px-3 text-xs sm:text-sm font-bold"
+                  >
+                    {queue.length === 1 && outcome.ok ? 'Hoàn thành' : 'Tiếp tục (Enter →)'}
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
-        </>
+        </div>
       )}
     </div>
   );
 }
 
 export default function StudyPage() {
-  return <Suspense fallback={<Skeleton className="mx-auto h-[27rem] max-w-xl !rounded-3xl" />}><StudyInner /></Suspense>;
+  return (
+    <Suspense fallback={<Skeleton className="mx-auto h-[24rem] max-w-5xl" />}>
+      <StudyInner />
+    </Suspense>
+  );
 }

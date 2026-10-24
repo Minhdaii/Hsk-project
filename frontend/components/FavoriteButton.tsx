@@ -10,7 +10,7 @@ export default function FavoriteButton({ wordId, label = false, className = '' }
       aria-label={on ? 'Bỏ khỏi sổ tay' : 'Lưu vào sổ tay'}
       title={on ? 'Bỏ khỏi sổ tay' : 'Lưu vào sổ tay'}
       onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggle(wordId); }}
-      className={`inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full border bg-white shadow-sm transition active:scale-95 ${on ? 'border-amber-300 text-amber-500' : 'border-stone-200 text-stone-400 hover:border-amber-300 hover:text-amber-500'} ${label ? 'px-4 py-2 text-sm font-medium' : 'h-10 w-10 text-lg'} ${className}`}
+      className={`inline-flex shrink-0 items-center justify-center gap-1.5 rounded-full border transition-colors active:translate-y-px ${on ? 'border-brand-ink/40 bg-brand-soft text-brand-ink' : 'border-line bg-white text-stone-500 hover:border-brand-ink hover:text-brand-ink'} ${label ? 'min-h-[44px] px-4 text-sm font-medium' : 'h-11 w-11 text-lg'} ${className}`}
     >
       <span aria-hidden>{on ? '★' : '☆'}</span>{label && <span>{on ? 'Đã lưu' : 'Lưu từ'}</span>}
     </button>

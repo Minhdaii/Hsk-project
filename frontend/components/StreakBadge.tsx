@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Flame from './Flame';
 import type { Stats } from '@/lib/types';
 
-/** Ngọn lửa + số ngày trên thanh điều hướng. Xám khi hôm nay chưa học; vừa học xong thì được thắp sáng ngay (có hiệu ứng) */
+/** Ngọn lửa + số ngày trên thanh trên: phong cách Lavender White × Lavender */
 export default function StreakBadge({ stats }: { stats: Stats | null }) {
   const [igniting, setIgniting] = useState(false);
   const prevOn = useRef<boolean | null>(null);
@@ -25,10 +25,20 @@ export default function StreakBadge({ stats }: { stats: Stats | null }) {
   if (!stats) return null;
   const tip = on ? `Chuỗi ${stats.streak} ngày, hôm nay đã giữ lửa` : stats.atRisk ? 'Học hôm nay để giữ chuỗi!' : 'Học hôm nay để thắp lửa';
   return (
-    <Link href="/study?level=1" title={tip}
-      className={`relative flex items-center gap-1 rounded-full border px-2.5 py-1 text-sm font-bold transition-all duration-500 hover:-translate-y-px ${on ? 'border-orange-200 bg-orange-50 text-orange-600' : 'border-stone-200 bg-white text-stone-400'} ${igniting ? 'scale-110 shadow-[0_0_0_4px_rgba(251,146,60,0.25)]' : ''}`}>
-      <Flame size={22} state={igniting ? 'ignite' : on ? 'lit' : 'off'} />
-      <span key={stats.streak} className="animate-pop">{stats.streak}</span>
+    <Link
+      href="/study"
+      title={tip}
+      aria-label={`${tip}. Bấm để vào ôn tập`}
+      className={`relative flex min-h-[38px] items-center gap-1.5 rounded-lg border px-3 text-xs font-bold transition-all duration-300 ${
+        on
+          ? 'border-[#D8CFF2] bg-[#EEE9FC] text-[#55449E] shadow-xs'
+          : 'border-[#E7E2F0] bg-white text-[#777184] hover:border-[#D4CFE0]'
+      }`}
+    >
+      <Flame size={18} state={igniting ? 'ignite' : on ? 'lit' : 'off'} />
+      <span key={stats.streak} className="animate-pop tabular-nums">
+        {stats.streak} <span className="font-medium text-[#777184]">ngày</span>
+      </span>
     </Link>
   );
 }

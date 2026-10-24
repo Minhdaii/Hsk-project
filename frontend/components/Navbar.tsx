@@ -40,7 +40,7 @@ export default function Navbar() {
           <div className="hidden min-w-0 flex-1 items-center gap-1 overflow-x-auto [scrollbar-width:none] sm:flex [&::-webkit-scrollbar]:hidden">
             {ITEMS.map((l) => (
               <Link key={l.href} href={l.href}
-                className={`whitespace-nowrap rounded-lg px-3 py-1.5 font-medium transition ${l.match(pathname) ? 'bg-brand-soft text-brand' : 'text-stone-600 hover:bg-stone-100'}`}>
+                className={`whitespace-nowrap rounded-lg px-3 py-1.5 font-medium transition ${l.match(pathname) ? 'bg-brand-soft text-brand-ink' : 'text-stone-600 hover:bg-stone-100'}`}>
                 {l.label}
               </Link>
             ))}
@@ -64,7 +64,7 @@ export default function Navbar() {
         <div className="fixed inset-x-3 bottom-[4.5rem] z-40 animate-pop rounded-2xl border border-stone-200 bg-white p-2 shadow-soft sm:hidden">
           {MORE_MOBILE.map((i) => (
             <Link key={i.href} href={i.href} onClick={() => setMore(false)}
-              className={`flex items-center gap-3 rounded-xl px-4 py-3 font-medium ${i.match(pathname) ? 'bg-brand-soft text-brand' : 'text-stone-700'}`}>
+              className={`flex items-center gap-3 rounded-xl px-4 py-3 font-medium ${i.match(pathname) ? 'bg-brand-soft text-brand-ink' : 'text-stone-700'}`}>
               <Icon name={i.icon} className="h-5 w-5" />{i.label}
             </Link>
           ))}
@@ -75,14 +75,14 @@ export default function Navbar() {
           {MAIN_MOBILE.map((i) => (
             <li key={i.href}>
               <Link href={i.href} onClick={() => setMore(false)}
-                className={`flex flex-col items-center gap-0.5 py-2 text-[11px] font-medium ${i.match(pathname) ? 'text-brand' : 'text-stone-500'}`}>
+                className={`flex flex-col items-center gap-0.5 py-2 text-[11px] font-medium ${i.match(pathname) ? 'text-brand-ink' : 'text-stone-500'}`}>
                 <Icon name={i.icon} className={`h-6 w-6 transition ${i.match(pathname) ? 'scale-110' : ''}`} />{i.label}
               </Link>
             </li>
           ))}
           <li>
             <button onClick={() => setMore(!more)}
-              className={`flex w-full flex-col items-center gap-0.5 py-2 text-[11px] font-medium ${moreActive || more ? 'text-brand' : 'text-stone-500'}`}>
+              className={`flex w-full flex-col items-center gap-0.5 py-2 text-[11px] font-medium ${moreActive || more ? 'text-brand-ink' : 'text-stone-500'}`}>
               <Icon name="menu" className="h-6 w-6" />Thêm
             </button>
           </li>

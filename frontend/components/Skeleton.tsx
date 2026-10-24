@@ -1,6 +1,6 @@
 /** Khung chờ có vệt sáng chạy, thay cho chữ "Đang tải…" */
 export default function Skeleton({ className = '' }: { className?: string }) {
-  return <div aria-hidden className={`animate-shimmer rounded-xl bg-[linear-gradient(90deg,#ece8e2_25%,#f8f5f0_50%,#ece8e2_75%)] bg-[length:200%_100%] ${className}`} />;
+  return <div aria-hidden className={`animate-shimmer rounded-xl bg-[linear-gradient(90deg,#ECEAF1_25%,#F7F6FA_50%,#ECEAF1_75%)] bg-[length:200%_100%] ${className}`} />;
 }
 
 export function RowSkeleton({ rows = 6 }: { rows?: number }) {

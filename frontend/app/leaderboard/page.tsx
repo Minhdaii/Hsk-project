@@ -3,32 +3,102 @@ import { useEffect, useState } from 'react';
 import { api } from '@/lib/api';
 import type { LeaderRow } from '@/lib/types';
 import PageHeader from '@/components/PageHeader';
-
-const MEDAL = ['🥇', '🥈', '🥉'];
+import Skeleton from '@/components/Skeleton';
 
 export default function LeaderboardPage() {
   const [rows, setRows] = useState<LeaderRow[] | null>(null);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    api<{ items: LeaderRow[] }>('/leaderboard').then((r) => setRows(r.items)).catch((e) => setError(e.message));
+    api<{ items: LeaderRow[] }>('/leaderboard')
+      .then((r) => setRows(r.items))
+      .catch((e) => setError(e instanceof Error ? e.message : 'Có lỗi xảy ra khi tải bảng xếp hạng'));
   }, []);
 
   return (
-    <div className="mx-auto max-w-2xl space-y-5">
-      <PageHeader title="Bảng xếp hạng" subtitle="Top 10 theo điểm XP (mỗi lượt ôn được 10 XP). Tên được rút gọn để bảo mật." />
-      {error && <p className="rounded-xl bg-amber-50 p-4 text-sm text-amber-800">{error}</p>}
-      {rows && rows.length === 0 && <p className="card text-center text-stone-500">Chưa có ai trên bảng xếp hạng. Hãy là người đầu tiên!</p>}
-      <ol className="space-y-2.5">
-        {rows?.map((r) => (
-          <li key={r.rank} className={`card flex items-center gap-4 !p-4 ${r.rank === 1 ? 'border-amber-300 shadow-soft' : ''}`}>
-            <span className="w-8 text-center text-2xl font-bold text-stone-500">{MEDAL[r.rank - 1] ?? r.rank}</span>
-            <span className="min-w-0 flex-1 truncate font-semibold">{r.name}</span>
-            <span className="pill">🔥 {r.streak}</span>
-            <span className="w-20 text-right font-bold text-brand">{r.xp} XP</span>
-          </li>
-        ))}
-      </ol>
+    <div className="mx-auto max-w-2xl space-y-6">
+      <PageHeader
+        glyph="榜"
+        title="Bảng xếp hạng học tập"
+        subtitle="Vinh danh 10 học viên tích cực nhất theo điểm kinh nghiệm XP (mỗi lượt ôn hoàn thành đạt +10 XP). Tên hiển thị ẩn danh để bảo mật."
+      />
+
+      {error && (
+        <p role="alert" className="rounded border border-red-300 bg-red-50 p-4 text-xs text-red-800">
+          {error}
+        </p>
+      )}
+
+      {!rows && !error && (
+        <div className="space-y-3">
+          {[1, 2, 3, 4, 5].map((i) => (
+            <Skeleton key={i} className="h-14" />
+          ))}
+        </div>
+      )}
+
+      {rows && rows.length === 0 && (
+        <div className="editorial-card p-10 text-center">
+          <p className="text-xs text-[#5B5866]">
+            Chưa có dữ liệu học viên trên bảng xếp hạng. Hãy là người đầu tiên hoàn thành lượt ôn hôm nay!
+          </p>
+        </div>
+      )}
+
+      {rows && rows.length > 0 && (
+        <div className="editorial-card overflow-hidden">
+          <div className="flex items-center justify-between border-b border-[#E7E2F0] bg-[#EEE9FC]/30 px-5 py-3 text-[11px] font-bold uppercase tracking-wider text-[#777184]">
+            <span>Học viên</span>
+            <div className="flex items-center gap-8">
+              <span>Chuỗi ngày</span>
+              <span>Điểm XP</span>
+            </div>
+          </div>
+          <ol className="divide-y divide-[#E7E2F0]">
+            {rows.map((r) => (
+              <li
+                key={r.rank}
+                className={`flex items-center gap-4 px-5 py-4 transition-colors hover:bg-[#EEE9FC]/20 ${
+                  r.rank === 1 ? 'bg-[#EEE9FC]/30' : ''
+                }`}
+              >
+                <div className="flex w-7 shrink-0 items-center justify-center">
+                  {r.rank === 1 ? (
+                    <span className="seal h-7 w-7 text-xs font-bold shadow-sm">一</span>
+                  ) : r.rank === 2 ? (
+                    <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-[#55449E] text-xs font-bold text-white">
+                      二
+                    </span>
+                  ) : r.rank === 3 ? (
+                    <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-[#777184] text-xs font-bold text-white">
+                      三
+                    </span>
+                  ) : (
+                    <span className="text-xs font-bold tabular-nums text-[#777184]">
+                      {r.rank}
+                    </span>
+                  )}
+                </div>
+
+                <div className="min-w-0 flex-1">
+                  <span className="block truncate text-sm font-bold text-[#302B3D]">
+                    {r.name}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-6">
+                  <span className="editorial-badge-stone text-xs">
+                    {r.streak} ngày
+                  </span>
+                  <span className="w-20 text-right text-xs font-bold tabular-nums text-[#55449E]">
+                    {r.xp.toLocaleString('vi-VN')} XP
+                  </span>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      )}
     </div>
   );
 }

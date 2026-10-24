@@ -34,3 +34,6 @@ export type Activity = { goal: number; today: number; days: { date: string; revi
 export type LeaderRow = { rank: number; name: string; xp: number; streak: number };
 
 export type LevelProgress = { level: number; total: number; started: number; mastered: number };
+
+/** Chữ Hán của ngày: GET /words/daily */
+export type DailyWord = { date: string; word: Word };

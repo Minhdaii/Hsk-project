@@ -1,4 +1,4 @@
-import { Controller, DefaultValuePipe, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
+import { Controller, DefaultValuePipe, Get, Header, Param, ParseIntPipe, Query } from '@nestjs/common';
 import { WordsService } from './words.service';
 
 @Controller('words')
@@ -14,6 +14,11 @@ export class WordsController {
   ) {
     return this.words.list(level || undefined, q, Math.max(1, page), Math.min(100, Math.max(1, limit)));
   }
+
+  // Đặt trước ':id' để không bị hiểu nhầm là id
+  @Get('daily')
+  @Header('Cache-Control', 'public, max-age=300')
+  daily() { return this.words.daily(); }
 
   @Get('levels')
   levels() { return this.words.levels(); }

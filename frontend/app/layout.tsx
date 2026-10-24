@@ -3,6 +3,8 @@ import '@fontsource/be-vietnam-pro/500.css';
 import '@fontsource/be-vietnam-pro/600.css';
 import '@fontsource/be-vietnam-pro/700.css';
 import '@fontsource/be-vietnam-pro/800.css';
+import '@fontsource/noto-serif-sc/chinese-simplified-600.css';
+import '@fontsource/noto-serif-sc/chinese-simplified-900.css';
 import './globals.css';
 import type { Metadata, Viewport } from 'next';
 import FavoritesProvider from '@/components/FavoritesProvider';

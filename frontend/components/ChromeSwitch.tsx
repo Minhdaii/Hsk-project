@@ -12,7 +12,7 @@ export default function ChromeSwitch({ children }: { children: React.ReactNode }
   if (pathname === '/login') return <>{children}</>;
   if (LANDING.includes(pathname)) {
     return (
-      <div className="flex min-h-screen flex-col">
+      <div className="paper flex min-h-screen flex-col">
         <LandingNav />
         <div className="flex-1">{children}</div>
         <LandingFooter />

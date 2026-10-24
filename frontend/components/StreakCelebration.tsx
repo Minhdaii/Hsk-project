@@ -49,7 +49,7 @@ export default function StreakCelebration({ status, streak, previousStreak, days
   if (!mounted) return null;
   return createPortal(
     <div role="dialog" aria-modal="true" aria-label="Chuỗi ngày học"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-stone-900/55 p-4 backdrop-blur-sm" onClick={onClose}>
+      className="fixed inset-0 z-50 flex items-center justify-center bg-ink/60 p-4" onClick={onClose}>
       {lit && celebrating && <Confetti />}
       <div className="card relative w-full max-w-sm animate-pop space-y-4 text-center shadow-soft" onClick={(e) => e.stopPropagation()}>
         <div className="relative mx-auto flex h-36 items-end justify-center">
@@ -57,16 +57,16 @@ export default function StreakCelebration({ status, streak, previousStreak, days
           {lit && celebrating && <Sparks />}
         </div>
         <div>
-          <div key={shown} className="animate-pop text-6xl font-extrabold leading-none text-orange-500">{shown}</div>
-          <div className="mt-1 text-sm font-medium text-stone-500">ngày liên tiếp</div>
+          <div key={shown} className="animate-pop text-6xl font-extrabold leading-none tabular-nums text-ink">{shown}</div>
+          <div className="mt-1 text-sm font-medium text-stone-600">ngày liên tiếp</div>
         </div>
-        {milestone && <span className="pill animate-pop bg-amber-100 !px-3 !py-1 text-sm text-amber-700">🏅 Mốc {streak} ngày!</span>}
+        {milestone && <span className="pill animate-pop bg-brand-soft !px-3 !py-1 text-sm text-brand-ink">Mốc {streak} ngày!</span>}
         <div>
           <h2 className="text-xl font-bold">{copy[status][0]}</h2>
           <p className="mt-1 text-sm text-stone-600">{copy[status][1]}</p>
         </div>
         <WeekFlames days={days} />
-        <button className="btn-primary w-full !py-3" onClick={onClose} autoFocus>Tiếp tục</button>
+        <button className="btn-primary w-full !min-h-[48px]" onClick={onClose} autoFocus>Tiếp tục</button>
       </div>
     </div>,
     document.body,

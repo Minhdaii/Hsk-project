@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-export type IconName = 'home' | 'book' | 'cards' | 'grammar' | 'pencil' | 'star' | 'trophy' | 'menu' | 'speaker' | 'chart' | 'arrow' | 'check' | 'logout';
+export type IconName = 'home' | 'book' | 'cards' | 'grammar' | 'pencil' | 'star' | 'trophy' | 'menu' | 'speaker' | 'chart' | 'arrow' | 'check' | 'logout' | 'user';
 
 const PATHS: Record<IconName, ReactNode> = {
   home: <><path d="M3 11.5 12 4l9 7.5" /><path d="M5.5 10v10h13V10" /><path d="M10 20v-6h4v6" /></>,
@@ -16,6 +16,7 @@ const PATHS: Record<IconName, ReactNode> = {
   arrow: <path d="M5 12h14M13 6l6 6-6 6" />,
   check: <path d="m5 12.5 4.5 4.5L19 7.5" />,
   logout: <><path d="M9 4H5.5A1.5 1.5 0 0 0 4 5.5v13A1.5 1.5 0 0 0 5.5 20H9" /><path d="m16 8 4 4-4 4M20 12H9" /></>,
+  user: <><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></>,
 };
 
 /** Biểu tượng nét mảnh, đổi màu theo chữ (currentColor) */

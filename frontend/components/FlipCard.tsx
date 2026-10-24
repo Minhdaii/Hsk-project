@@ -2,29 +2,45 @@
 import Link from 'next/link';
 import SpeakButton from './SpeakButton';
 import FavoriteButton from './FavoriteButton';
-import { levelPill } from '@/lib/levels';
 import { posLabels, splitMeaning } from '@/lib/pos';
 import type { Card } from '@/lib/types';
 
-const GUIDE = 'rgba(192,57,43,0.22)';
-const line = (dir: string) => `linear-gradient(${dir}, transparent calc(50% - 0.5px), ${GUIDE} calc(50% - 0.5px) calc(50% + 0.5px), transparent calc(50% + 0.5px))`;
-
-/** Làm nổi bật từ cần học trong câu ví dụ */
+/** Làm nổi bật từ cần học trong câu ví dụ với phong cách Lavender thanh nhã */
 function Highlight({ text, word }: { text: string; word: string }) {
   const parts = text.split(word);
   return (
     <>
       {parts.map((p, i) => (
-        <span key={i}>{p}{i < parts.length - 1 && <b className="rounded bg-brand/10 px-0.5 text-brand">{word}</b>}</span>
+        <span key={i}>
+          {p}
+          {i < parts.length - 1 && (
+            <b className="rounded bg-[#EEE9FC] px-1 font-semibold text-[#55449E]">{word}</b>
+          )}
+        </span>
       ))}
     </>
   );
 }
 
 const face = { gridArea: '1 / 1', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' } as const;
+const inert = (on: boolean): Record<string, string> => (on ? { inert: '' } : {});
 
-/** Thẻ từ vựng lật 3D: mặt trước (chữ Hán trong ô tập viết), mặt sau (pinyin, nghĩa, ví dụ) */
-export default function FlipCard({ card, flipped, canFlip, onToggle }: { card: Card; flipped: boolean; canFlip: boolean; onToggle: () => void }) {
+/**
+ * Thẻ từ vựng Flashcard phong cách Lavender White × Lavender:
+ * Mặt trước: Chữ Hán đại tự trong khung mễ tự cách cân đối.
+ * Mặt sau: Tầng bậc biên tập Hán tự → Pinyin Lavender → Nghĩa tiếng Việt → Câu ví dụ ngữ cảnh.
+ */
+export default function FlipCard({
+  card,
+  flipped,
+  canFlip,
+  onToggle,
+}: {
+  card: Card;
+  flipped: boolean;
+  canFlip: boolean;
+  onToggle: () => void;
+}) {
   const w = card.word;
   const ex = w.examples?.[0];
   const isNew = !card.progress;
@@ -32,65 +48,141 @@ export default function FlipCard({ card, flipped, canFlip, onToggle }: { card: C
   const meanings = splitMeaning(w.meaningVi || w.meaningEn).slice(0, 4);
 
   return (
-    <div className={`[perspective:1400px] ${canFlip ? 'cursor-pointer' : ''}`} onClick={() => { if (canFlip) onToggle(); }}>
+    <div
+      className={`h-full [perspective:1400px] ${canFlip ? 'cursor-pointer' : ''}`}
+      onClick={() => {
+        if (canFlip) onToggle();
+      }}
+    >
       <div
-        className="grid transition-transform duration-[650ms] ease-[cubic-bezier(.35,.1,.2,1)] [transform-style:preserve-3d]"
+        className="grid h-full transition-transform duration-[550ms] ease-[cubic-bezier(.35,.1,.2,1)] [transform-style:preserve-3d]"
         style={{ transform: flipped ? 'rotateY(180deg)' : 'rotateY(0deg)' }}
       >
-        {/* ---------- Mặt trước ---------- */}
-        <div style={face} className={`relative flex min-h-[27rem] flex-col items-center justify-center overflow-hidden rounded-3xl border border-stone-200 bg-white p-6 text-center shadow-soft ${flipped ? 'pointer-events-none' : ''}`}>
-          <div aria-hidden className="absolute inset-0 bg-[radial-gradient(circle_at_50%_38%,rgba(253,241,239,0.95),rgba(255,255,255,0)_62%)]" />
-          <div className="absolute inset-x-4 top-4 flex items-center justify-between">
-            <span className={`pill ${isNew ? 'bg-sky-50 text-sky-700' : 'bg-amber-50 text-amber-700'}`}>{isNew ? 'Từ mới' : 'Ôn lại'}</span>
+        {/* ---------- Mặt trước: Chữ / Câu hỏi ---------- */}
+        <div
+          style={face}
+          aria-hidden={flipped}
+          {...inert(flipped)}
+          className="relative flex h-full min-h-[300px] sm:min-h-[350px] lg:min-h-[420px] flex-col items-center justify-between rounded-2xl border-2 border-[#D8D1EE] bg-white p-5 sm:p-6 text-center shadow-sm"
+        >
+          {/* Top meta */}
+          <div className="flex w-full items-center justify-between">
+            <span className={isNew ? 'editorial-badge' : 'editorial-badge-stone'}>
+              {isNew ? 'Từ mới' : 'Ôn tập'}
+            </span>
             <div className="flex items-center gap-2">
-              <span className={`pill ${levelPill(w.hskLevel)}`}>HSK {w.hskLevel}</span>
-              <FavoriteButton wordId={w.id} className="!h-8 !w-8 !text-base" />
+              <span className="editorial-badge">HSK {w.hskLevel}</span>
+              <FavoriteButton wordId={w.id} className="!h-8 !w-8 !text-xs sm:!h-9 sm:!w-9 sm:!text-sm" />
             </div>
           </div>
-          <div
-            className={`relative flex items-center justify-center rounded-2xl border border-brand/25 ${single ? 'aspect-square w-52' : 'min-w-[13rem] px-8 py-10'}`}
-            style={single ? { backgroundImage: `${line('90deg')}, ${line('0deg')}` } : undefined}
-          >
-            <span className="hanzi break-words text-[6.5rem] leading-none sm:text-[7.5rem]" style={{ fontSize: single ? undefined : 'clamp(3rem, 14vw, 5.5rem)' }}>{w.hanzi}</span>
+
+          {/* Center Glyph Box */}
+          <div className="my-auto flex flex-col items-center py-2">
+            <div
+              className={`flex items-center justify-center rounded-xl border border-[#E7E2F0] bg-[#FAF9FD] ${
+                single ? 'mi-grid-ink aspect-square w-28 sm:w-36 lg:w-40' : 'min-w-[10rem] max-w-full px-5 py-4 sm:py-6'
+              }`}
+            >
+              <span
+                lang="zh-Hans"
+                className="hanzi break-words leading-none text-[#302B3D]"
+                style={{ fontSize: single ? 'clamp(3.5rem, 9vw, 5.25rem)' : 'clamp(2.5rem, 6.5vw, 3.75rem)' }}
+              >
+                {w.hanzi}
+              </span>
+            </div>
+
+            <div className="mt-4">
+              <SpeakButton text={w.hanzi} audioUrl={w.audioUrl} label />
+            </div>
           </div>
-          <div className="relative mt-5"><SpeakButton text={w.hanzi} audioUrl={w.audioUrl} label /></div>
-          <p className="relative mt-5 text-sm text-stone-400">{canFlip ? 'Chạm vào thẻ để lật xem nghĩa' : 'Chọn nghĩa tiếng Việt đúng bên dưới'}</p>
+
+          {/* Bottom helper */}
+          <p className="text-[11px] sm:text-xs font-medium text-[#777184]">
+            {canFlip ? 'Chạm vào thẻ hoặc nhấn Space để lật thẻ' : 'Lựa chọn đáp án chính xác ở cột bên phải (phím 1–4)'}
+          </p>
         </div>
 
-        {/* ---------- Mặt sau ---------- */}
-        <div style={{ ...face, transform: 'rotateY(180deg)' }} className={`relative flex min-h-[27rem] flex-col gap-4 overflow-hidden rounded-3xl border border-brand/15 bg-gradient-to-br from-brand-soft via-white to-white p-6 shadow-soft ${flipped ? '' : 'pointer-events-none'}`}>
-          <div className="flex items-start justify-between gap-3">
-            <div className="min-w-0">
-              <div className="hanzi break-words text-4xl leading-tight">{w.hanzi}</div>
-              <div className="mt-1 break-words text-2xl font-medium text-brand">{w.pinyin}</div>
+        {/* ---------- Mặt sau: Đáp án & Thông tin chi tiết ---------- */}
+        <div
+          style={{ ...face, transform: 'rotateY(180deg)' }}
+          aria-hidden={!flipped}
+          {...inert(!flipped)}
+          className="relative flex h-full min-h-[300px] sm:min-h-[350px] lg:min-h-[420px] flex-col justify-between rounded-2xl border-2 border-[#D8D1EE] bg-[#FAF9FD] p-5 sm:p-6 text-left shadow-sm"
+        >
+          {/* Header */}
+          <div>
+            <div className="flex items-start justify-between gap-3 border-b border-[#E7E2F0] pb-3">
+              <div className="min-w-0">
+                <div lang="zh-Hans" className="hanzi break-words text-3xl sm:text-4xl font-bold leading-tight text-[#302B3D]">
+                  {w.hanzi}
+                </div>
+                <div className="pinyin mt-0.5 break-words text-lg sm:text-xl font-bold text-[#55449E]">
+                  {w.pinyin}
+                </div>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <FavoriteButton wordId={w.id} className="!h-8 !w-8 !text-xs sm:!h-9 sm:!w-9 sm:!text-sm" />
+                <SpeakButton text={w.hanzi} audioUrl={w.audioUrl} />
+              </div>
             </div>
-            <SpeakButton text={w.hanzi} audioUrl={w.audioUrl} />
+
+            {/* Meanings */}
+            <div className="mt-3 space-y-2">
+              <ul className="space-y-1">
+                {meanings.map((m, i) => (
+                  <li
+                    key={i}
+                    className={`flex items-start gap-2 break-words leading-snug ${
+                      i === 0 ? 'text-base font-bold text-[#302B3D]' : 'text-xs sm:text-sm text-[#484256]'
+                    }`}
+                  >
+                    <span aria-hidden className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#A99AE8]" />
+                    <span className="min-w-0 flex-1">{m}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                {w.hanviet && (
+                  <span className="editorial-badge-stone">Âm Hán Việt: {w.hanviet}</span>
+                )}
+                {posLabels(w.pos).map((p) => (
+                  <span key={p} className="editorial-badge-stone">
+                    {p}
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
 
-          <ul className="space-y-1.5">
-            {meanings.map((m, i) => (
-              <li key={i} className={`flex gap-2 break-words ${i === 0 ? 'text-lg font-semibold' : 'text-base text-stone-700'}`}>
-                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand" />{m}
-              </li>
-            ))}
-          </ul>
-
-          <div className="flex flex-wrap gap-1.5">
-            {w.hanviet && <span className="pill bg-amber-100 text-amber-800">Hán Việt: {w.hanviet}</span>}
-            {posLabels(w.pos).map((p) => <span key={p} className="pill">{p}</span>)}
-          </div>
-
+          {/* Context Example */}
           {ex && (
-            <div className="mt-auto rounded-2xl border border-stone-200 bg-white/80 p-3.5">
-              <div className="text-[11px] font-semibold uppercase tracking-wide text-stone-400">Ví dụ</div>
-              <div className="hanzi mt-1 break-words text-lg leading-snug"><Highlight text={ex.hanzi} word={w.hanzi} /></div>
-              {ex.pinyin && <div className="break-words text-sm text-brand">{ex.pinyin}</div>}
-              {ex.meaningVi && <div className="break-words text-sm text-stone-600">{ex.meaningVi}</div>}
+            <div className="my-2 rounded-xl border border-[#E7E2F0] bg-white p-3">
+              <div className="text-[10px] font-bold uppercase tracking-wider text-[#777184]">
+                Ví dụ ngữ cảnh
+              </div>
+              <div lang="zh-Hans" className="hanzi mt-1 break-words text-sm sm:text-base leading-snug text-[#302B3D]">
+                <Highlight text={ex.hanzi} word={w.hanzi} />
+              </div>
+              {ex.pinyin && (
+                <div className="pinyin mt-0.5 break-words text-[11px] text-[#55449E]">{ex.pinyin}</div>
+              )}
+              {ex.meaningVi && (
+                <div className="mt-0.5 break-words text-[11px] text-[#777184]">{ex.meaningVi}</div>
+              )}
             </div>
           )}
-          <div className={`flex items-center justify-between text-xs text-stone-500 ${ex ? '' : 'mt-auto'}`}>
-            <Link href={`/word/${w.id}`} onClick={(e) => e.stopPropagation()} className="underline">Xem thứ tự nét & chi tiết</Link>
-            <span>Chạm để lật lại</span>
+
+          {/* Footer Link */}
+          <div className="border-t border-[#E7E2F0] pt-2">
+            <Link
+              href={`/word/${w.id}`}
+              onClick={(e) => e.stopPropagation()}
+              className="inline-flex min-h-[30px] items-center text-xs font-semibold text-[#55449E] underline-offset-4 hover:underline"
+            >
+              Xem nét bút thuận & chi tiết từ điển →
+            </Link>
           </div>
         </div>
       </div>

@@ -3,22 +3,44 @@ import Flame from './Flame';
 
 const LABEL = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
 
-/** 7 ngày gần nhất: ngày nào có học thì có ngọn lửa */
+/**
+ * 7 ngày gần nhất:
+ * Tối ưu responsive hoàn toàn, loại bỏ triệt để lỗi tràn ngang (overflow) trên màn hình hẹp (320px - 390px).
+ * Sử dụng flex-1, min-w-0, và kích thước ngọn lửa thích ứng.
+ */
 export default function WeekFlames({ days }: { days: { date: string; reviews: number }[] }) {
   return (
-    <div className="flex items-end justify-between gap-1">
-      {days.map((d, i) => {
-        const isToday = i === days.length - 1;
-        const lit = d.reviews > 0;
-        return (
-          <div key={d.date} className="flex flex-1 flex-col items-center gap-1">
-            <div className={`flex h-10 w-10 items-end justify-center rounded-full pb-1 ${isToday ? 'ring-2 ring-brand/40' : ''} ${lit ? 'bg-orange-50' : 'bg-stone-100'}`}>
-              {lit ? <Flame size={26} state={isToday ? 'lit' : 'lit'} /> : <span className="mb-2 h-2 w-2 rounded-full bg-stone-300" />}
+    <div className="w-full min-w-0 border-t border-[#E7E2F0] pt-3">
+      <div className="flex w-full items-end justify-between gap-1 sm:gap-1.5">
+        {days.map((d, i) => {
+          const isToday = i === days.length - 1;
+          const lit = d.reviews > 0;
+          return (
+            <div key={d.date} className="flex min-w-0 flex-1 flex-col items-center gap-1">
+              <div
+                className={`flex aspect-square w-full max-w-[2.25rem] min-w-[1.75rem] items-center justify-center rounded-lg transition-all ${
+                  isToday
+                    ? 'border-2 border-[#A99AE8] bg-[#EEE9FC] shadow-xs'
+                    : 'border border-[#E7E2F0]'
+                } ${lit ? 'bg-[#EEE9FC]' : 'bg-[#FAF9FD]'}`}
+              >
+                {lit ? (
+                  <Flame size={20} state="lit" />
+                ) : (
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#D4CFE0]" />
+                )}
+              </div>
+              <span
+                className={`text-[10px] sm:text-[11px] truncate ${
+                  isToday ? 'font-bold text-[#55449E]' : 'font-medium text-[#777184]'
+                }`}
+              >
+                {LABEL[new Date(d.date + 'T00:00:00').getDay()]}
+              </span>
             </div>
-            <span className={`text-[11px] ${isToday ? 'font-bold text-brand' : 'text-stone-500'}`}>{LABEL[new Date(d.date + 'T00:00:00').getDay()]}</span>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 }

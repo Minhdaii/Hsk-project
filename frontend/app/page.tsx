@@ -1,159 +1,126 @@
 import Link from 'next/link';
 import DemoCard from '@/components/landing/DemoCard';
+import WordOfDay from '@/components/landing/WordOfDay';
 import Reveal from '@/components/Reveal';
-import Icon, { type IconName } from '@/components/Icon';
-import Flame from '@/components/Flame';
-import WeekFlames from '@/components/WeekFlames';
 
-const FEATURES: { icon: IconName; title: string; text: string; grad: string }[] = [
-  { icon: 'cards', title: 'Flashcard thông minh', text: 'Chọn nghĩa tiếng Việt đúng, hệ thống tự chấm và lên lịch ôn lại theo thuật toán lặp lại ngắt quãng SM-2.', grad: 'from-rose-500 to-rose-700' },
-  { icon: 'grammar', title: 'Ngữ pháp dễ hiểu', text: '39 điểm ngữ pháp HSK 1-3 giải thích bằng tiếng Việt, kèm ví dụ có pinyin và nút nghe.', grad: 'from-amber-500 to-orange-600' },
-  { icon: 'pencil', title: 'Bài tập đa dạng', text: 'Điền từ vào câu, sắp xếp câu, dịch Việt → Hán, gõ pinyin. Tự chọn số câu cho mỗi lần luyện.', grad: 'from-sky-500 to-sky-700' },
-  { icon: 'speaker', title: 'Nghe và tập viết', text: 'Nghe phát âm từng từ, xem thứ tự nét và tự viết trực tiếp từng chữ Hán trên màn hình.', grad: 'from-violet-500 to-violet-700' },
-  { icon: 'trophy', title: 'Giữ lửa mỗi ngày', text: 'Chuỗi ngày học, điểm XP và bảng xếp hạng giúp bạn duy trì thói quen học đều đặn.', grad: 'from-emerald-500 to-emerald-700' },
-  { icon: 'star', title: 'Sổ tay riêng', text: 'Lưu những từ khó nhớ vào sổ tay để xem lại bất cứ lúc nào.', grad: 'from-yellow-500 to-amber-600' },
+// Mỗi tính năng gắn với một chữ Hán đúng nghĩa của nó (ghi nhớ, ngữ pháp, luyện tập, nghe-viết, lửa, lưu giữ)
+const FEATURES = [
+  { han: '记', title: 'Flashcard thông minh', text: 'Chọn nghĩa tiếng Việt đúng, hệ thống tự chấm và lên lịch ôn lại theo thuật toán lặp lại ngắt quãng SM-2.' },
+  { han: '法', title: 'Ngữ pháp dễ hiểu', text: '39 điểm ngữ pháp HSK 1-3 giải thích bằng tiếng Việt, kèm ví dụ có pinyin và nút nghe.' },
+  { han: '练', title: 'Bài tập đa dạng', text: 'Điền từ vào câu, sắp xếp câu, dịch Việt → Hán, gõ pinyin. Tự chọn số câu cho mỗi lần luyện.' },
+  { han: '听写', title: 'Nghe và tập viết', text: 'Nghe phát âm từng từ, xem thứ tự nét và tự viết trực tiếp từng chữ Hán trên màn hình.' },
+  { han: '火', title: 'Giữ lửa mỗi ngày', text: 'Chuỗi ngày học, điểm XP và bảng xếp hạng giúp bạn duy trì thói quen học đều đặn.' },
+  { han: '收藏', title: 'Sổ tay riêng', text: 'Lưu những từ khó nhớ vào sổ tay để xem lại bất cứ lúc nào.' },
 ];
 
+// Đây là một chuỗi bước thật nên dùng số Hán 一 二 三
 const STEPS = [
-  { n: 1, title: 'Học từ mới mỗi ngày', text: 'Mỗi lượt có 10 từ mới theo tần suất sử dụng, từ thông dụng nhất đến ít gặp hơn.' },
-  { n: 2, title: 'Ôn đúng lúc sắp quên', text: 'Từ bạn trả lời đúng sẽ được hẹn ôn lại sau 1, 6 ngày rồi xa dần. Trả lời sai thì quay lại ngay trong buổi học.' },
-  { n: 3, title: 'Luyện tập và giữ lửa', text: 'Làm bài tập, học ngữ pháp và giữ chuỗi ngày học để biến kiến thức thành phản xạ.' },
+  { han: '一', title: 'Học từ mới mỗi ngày', text: 'Mỗi lượt có 10 từ mới theo tần suất sử dụng, từ thông dụng nhất đến ít gặp hơn.' },
+  { han: '二', title: 'Ôn đúng lúc sắp quên', text: 'Từ bạn trả lời đúng sẽ được hẹn ôn lại sau 1, 6 ngày rồi xa dần. Trả lời sai thì quay lại ngay trong buổi học.' },
+  { han: '三', title: 'Luyện tập và giữ lửa', text: 'Làm bài tập, học ngữ pháp và giữ chuỗi ngày học để biến kiến thức thành phản xạ.' },
 ];
 
 const LEVELS = [
-  { level: 1, words: 506, grad: 'from-emerald-500 to-emerald-700', glyph: '你', desc: 'Chào hỏi, số đếm, gia đình, đồ ăn thức uống.', sample: ['我', '你好', '谢谢', '学生', '朋友'] },
-  { level: 2, words: 750, grad: 'from-sky-500 to-sky-700', glyph: '学', desc: 'Giao tiếp hằng ngày, mua sắm, thời gian, sức khỏe.', sample: ['已经', '因为', '旅游', '准备', '希望'] },
-  { level: 3, words: 953, grad: 'from-rose-500 to-rose-700', glyph: '说', desc: 'Công việc, du lịch, học tập, bày tỏ ý kiến.', sample: ['经验', '环境', '机会', '解决', '同意'] },
+  { level: 1, han: '一级', words: 506, desc: 'Chào hỏi, số đếm, gia đình, đồ ăn thức uống.', sample: ['我', '你好', '谢谢', '学生', '朋友'] },
+  { level: 2, han: '二级', words: 750, desc: 'Giao tiếp hằng ngày, mua sắm, thời gian, sức khỏe.', sample: ['已经', '因为', '旅游', '准备', '希望'] },
+  { level: 3, han: '三级', words: 953, desc: 'Công việc, du lịch, học tập, bày tỏ ý kiến.', sample: ['经验', '环境', '机会', '解决', '同意'] },
 ];
-
-const DEMO_WEEK = ['2026-01-05', '2026-01-06', '2026-01-07', '2026-01-08', '2026-01-09', '2026-01-10', '2026-01-11']
-  .map((date, i) => ({ date, reviews: i === 3 ? 0 : 12 + i }));
 
 export default function LandingPage() {
   return (
     <>
-      {/* ---------- Hero ---------- */}
-      <section className="relative overflow-hidden">
-        <div aria-hidden className="pointer-events-none absolute -left-32 -top-32 h-[28rem] w-[28rem] rounded-full bg-brand/15 blur-3xl" />
-        <div aria-hidden className="pointer-events-none absolute -right-32 top-20 h-[26rem] w-[26rem] rounded-full bg-amber-300/30 blur-3xl" />
-        <span aria-hidden className="hanzi pointer-events-none absolute right-[8%] top-10 hidden animate-float select-none text-[14rem] leading-none text-brand/[0.06] lg:block">学</span>
-        <div className="relative mx-auto grid max-w-6xl items-center gap-14 px-4 pb-20 pt-10 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:pb-28 lg:pt-16">
-          <div>
-            <span className="inline-flex animate-fade-up items-center gap-2 rounded-full border border-brand/20 bg-brand-soft px-3.5 py-1.5 text-sm font-semibold text-brand">
-              <span className="h-2 w-2 animate-pulse rounded-full bg-brand" />Chuẩn HSK 3.0 · Miễn phí 100%
-            </span>
-            <h1 className="mt-5 animate-fade-up text-balance text-4xl font-extrabold leading-[1.12] tracking-tight [animation-delay:80ms] sm:text-5xl lg:text-[3.4rem]">
-              Chinh phục{' '}<span className="whitespace-nowrap bg-gradient-to-r from-brand to-orange-500 bg-clip-text text-transparent">HSK 1-3</span>{' '}mỗi ngày, nhẹ nhàng mà nhớ lâu
-            </h1>
-            <p className="mt-5 max-w-xl animate-fade-up text-lg text-stone-600 [animation-delay:160ms]">
-              Học hơn 2.200 từ vựng và 39 điểm ngữ pháp bằng flashcard lặp lại ngắt quãng, bài tập đa dạng, nghe phát âm và tập viết chữ Hán, tất cả bằng tiếng Việt.
-            </p>
-            <div className="mt-8 flex animate-fade-up flex-wrap gap-3 [animation-delay:240ms]">
-              <Link href="/dashboard" className="btn-primary !px-8 !py-4 text-lg">Học ngay <Icon name="arrow" className="h-5 w-5" /></Link>
-              <Link href="/words" className="btn-ghost !px-7 !py-4 text-lg">Xem từ vựng</Link>
-            </div>
-            <dl className="mt-10 grid max-w-md animate-fade-up grid-cols-3 gap-4 [animation-delay:320ms]">
-              {[['2.200+', 'từ vựng'], ['39', 'điểm ngữ pháp'], ['4', 'dạng bài tập']].map(([n, l]) => (
-                <div key={l}><dt className="text-3xl font-extrabold text-brand">{n}</dt><dd className="text-sm text-stone-500">{l}</dd></div>
-              ))}
-            </dl>
+      {/* ---------- Hero: bất đối xứng, chữ Hán trong ô tập viết là điểm nhớ duy nhất ---------- */}
+      <section className="mx-auto grid max-w-6xl gap-10 px-4 pb-14 pt-8 sm:px-6 lg:grid-cols-12 lg:items-center lg:gap-8 lg:pb-24 lg:pt-16">
+        <div className="lg:col-span-7">
+          <p className="animate-fade-up text-sm font-medium text-stone-600">Học tiếng Trung và ôn luyện HSK 1-3, hoàn toàn bằng tiếng Việt</p>
+          <h1 className="mt-4 animate-fade-up text-balance text-[2.5rem] font-extrabold leading-[1.08] tracking-tight [animation-delay:70ms] sm:text-6xl lg:text-[4.5rem]">
+            Mỗi ngày một chữ, nhớ lâu hơn.
+          </h1>
+          <p className="mt-5 max-w-xl animate-fade-up text-lg text-stone-700 [animation-delay:140ms]">
+            Hơn 2.200 từ vựng và 39 điểm ngữ pháp, học bằng flashcard lặp lại ngắt quãng, bài tập, nghe phát âm và tập viết từng nét.
+          </p>
+          <div className="mt-8 flex animate-fade-up flex-col gap-3 [animation-delay:210ms] sm:flex-row">
+            <Link href="/dashboard" className="btn-primary !min-h-[52px] !px-8 text-base">Bắt đầu học</Link>
+            <Link href="/words" className="btn-ghost !min-h-[52px] !px-7 text-base">Khám phá kho từ vựng</Link>
           </div>
-          <div className="animate-fade-up [animation-delay:200ms]"><DemoCard /></div>
+          <dl className="mt-10 hidden max-w-lg animate-fade-up sm:flex divide-x divide-ink/15 border-y border-ink/15 [animation-delay:280ms]">
+            {[['2.200+', 'từ vựng'], ['39', 'điểm ngữ pháp'], ['4', 'dạng bài tập']].map(([n, l], i) => (
+              <div key={l} className={`flex-1 py-3 ${i ? 'pl-4' : 'pr-4'}`}><dt className="text-2xl font-bold">{n}</dt><dd className="text-sm text-stone-600">{l}</dd></div>
+            ))}
+          </dl>
+        </div>
+
+        <WordOfDay />
+      </section>
+
+      {/* ---------- Thẻ học thật trông thế nào ---------- */}
+      <section className="border-t border-ink/15 py-16 lg:py-24">
+        <div className="mx-auto grid max-w-6xl gap-10 px-4 sm:px-6 lg:grid-cols-12 lg:items-center">
+          <Reveal className="lg:col-span-5">
+            <h2 className="text-balance text-3xl font-extrabold tracking-tight sm:text-4xl">Mỗi từ là một tấm thẻ</h2>
+            <p className="mt-4 max-w-md text-lg text-stone-700">Chữ Hán đủ lớn để nhận mặt chữ. Chọn nghĩa đúng, thẻ lật ra pinyin có dấu thanh, nghĩa tiếng Việt, Hán Việt và câu ví dụ có bản dịch.</p>
+            <p className="mt-3 max-w-md text-stone-600">Thử lật tấm thẻ mẫu bên cạnh. Trên điện thoại, bạn chạm để lật và vuốt để sang thẻ kế tiếp.</p>
+          </Reveal>
+          <Reveal delay={100} className="lg:col-span-6 lg:col-start-7"><DemoCard /></Reveal>
         </div>
       </section>
 
-      {/* ---------- Tính năng ---------- */}
-      <section id="tinh-nang" className="scroll-mt-20 border-y border-stone-200/70 bg-white/60 py-20">
+      {/* ---------- Tính năng: mục lục biên tập, không phải lưới thẻ ---------- */}
+      <section id="tinh-nang" className="scroll-mt-20 border-t border-ink/15 py-16 lg:py-24">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <Reveal className="mx-auto max-w-2xl text-center">
-            <p className="text-sm font-bold uppercase tracking-widest text-brand">Tính năng</p>
-            <h2 className="mt-2 text-balance text-3xl font-extrabold tracking-tight sm:text-4xl">Mọi thứ bạn cần để học tiếng Trung hiệu quả</h2>
-            <p className="mt-3 text-stone-600">Từ ghi nhớ từ vựng đến luyện ngữ pháp và giữ động lực, gói gọn trong một ứng dụng.</p>
-          </Reveal>
-          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {FEATURES.map((f, i) => (
-              <Reveal key={f.title} delay={(i % 3) * 90}>
-                <div className="card group h-full transition-all duration-300 hover:-translate-y-1.5 hover:shadow-soft">
-                  <span className={`flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br text-white shadow-sm transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-110 ${f.grad}`}><Icon name={f.icon} className="h-6 w-6" /></span>
-                  <h3 className="mt-4 text-lg font-bold">{f.title}</h3>
-                  <p className="mt-1.5 text-stone-600">{f.text}</p>
+          <h2 className="max-w-2xl text-balance text-3xl font-extrabold tracking-tight sm:text-4xl">Mọi thứ cần để học tiếng Trung đều ở một nơi</h2>
+          <ul className="mt-10 grid border-b border-ink/15 md:grid-cols-2 md:gap-x-12">
+            {FEATURES.map((f) => (
+              <li key={f.title} className="flex items-start gap-5 border-t border-ink/15 py-6">
+                <span lang="zh-Hans" aria-hidden className="hanzi flex h-14 w-[4.25rem] shrink-0 items-center justify-center text-4xl leading-none">{f.han}</span>
+                <div className="min-w-0">
+                  <h3 className="text-lg font-bold">{f.title}</h3>
+                  <p className="mt-1 text-stone-700">{f.text}</p>
                 </div>
-              </Reveal>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
       </section>
 
       {/* ---------- Cách học ---------- */}
-      <section id="cach-hoc" className="scroll-mt-20 py-20">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <Reveal className="mx-auto max-w-2xl text-center">
-            <p className="text-sm font-bold uppercase tracking-widest text-brand">Cách học</p>
-            <h2 className="mt-2 text-balance text-3xl font-extrabold tracking-tight sm:text-4xl">Ba bước đơn giản, mỗi ngày một chút</h2>
-          </Reveal>
-          <div className="relative mt-14 grid gap-8 md:grid-cols-3">
-            <div aria-hidden className="absolute left-[16%] right-[16%] top-7 hidden h-0.5 bg-gradient-to-r from-brand/10 via-brand/40 to-brand/10 md:block" />
+      <section id="cach-hoc" className="scroll-mt-20 border-t border-ink/15 py-16 lg:py-24">
+        <div className="mx-auto grid max-w-6xl gap-10 px-4 sm:px-6 lg:grid-cols-12">
+          <h2 className="text-balance text-3xl font-extrabold tracking-tight sm:text-4xl lg:col-span-4">Ba bước, mỗi ngày một chút</h2>
+          <ol className="lg:col-span-7 lg:col-start-6">
             {STEPS.map((s, i) => (
-              <Reveal key={s.n} delay={i * 120} className="relative text-center">
-                <span className="relative mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-brand to-[#7a1f16] text-2xl font-extrabold text-white shadow-[0_12px_24px_-10px_rgba(192,57,43,0.9)]">{s.n}</span>
-                <h3 className="mt-5 text-lg font-bold">{s.title}</h3>
-                <p className="mx-auto mt-2 max-w-xs text-stone-600">{s.text}</p>
+              <Reveal key={s.han} delay={i * 80}>
+                <li className="flex items-start gap-6 border-t border-ink/15 py-7 first:border-t-0 first:pt-0">
+                  <span lang="zh-Hans" aria-hidden className="hanzi w-12 shrink-0 text-5xl leading-none text-brand-ink">{s.han}</span>
+                  <div>
+                    <h3 className="text-xl font-bold">{s.title}</h3>
+                    <p className="mt-1.5 max-w-lg text-stone-700">{s.text}</p>
+                  </div>
+                </li>
               </Reveal>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ---------- Chuỗi ngày học ---------- */}
-      <section className="bg-gradient-to-br from-orange-50 via-white to-amber-50 py-20">
-        <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-2">
-          <Reveal>
-            <p className="text-sm font-bold uppercase tracking-widest text-orange-600">Duy trì động lực</p>
-            <h2 className="mt-2 text-balance text-3xl font-extrabold tracking-tight sm:text-4xl">Giữ ngọn lửa học tập cháy mỗi ngày</h2>
-            <p className="mt-4 text-lg text-stone-600">Hoàn thành một bài học để thắp sáng ngọn lửa của ngày hôm nay. Bỏ lỡ một ngày, lửa sẽ tắt, nhưng bạn luôn có thể quay lại và thắp lại.</p>
-            <ul className="mt-6 space-y-3">
-              {['Chuỗi ngày học cập nhật ngay sau từng thẻ', 'Điểm XP mỗi lượt ôn và bảng xếp hạng', 'Mục tiêu hằng ngày và biểu đồ 7 ngày gần nhất'].map((t) => (
-                <li key={t} className="flex items-start gap-3"><span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-orange-100 text-orange-600"><Icon name="check" className="h-4 w-4" /></span><span className="text-stone-700">{t}</span></li>
-              ))}
-            </ul>
-          </Reveal>
-          <Reveal delay={120}>
-            <div className="card mx-auto w-full max-w-md space-y-5 border-orange-200 bg-gradient-to-br from-orange-50/80 to-white shadow-soft">
-              <div className="flex items-center gap-4">
-                <Flame size={84} state="lit" />
-                <div>
-                  <div className="flex items-baseline gap-1.5"><span className="text-6xl font-extrabold leading-none text-orange-500">7</span><span className="font-medium text-stone-500">ngày</span></div>
-                  <div className="mt-1 font-bold">Bạn đã giữ lửa hôm nay!</div>
-                  <p className="text-sm text-stone-600">Ngày mai quay lại để nối dài chuỗi.</p>
-                </div>
-              </div>
-              <WeekFlames days={DEMO_WEEK} />
-            </div>
-          </Reveal>
+          </ol>
         </div>
       </section>
 
       {/* ---------- Cấp độ ---------- */}
-      <section id="cap-do" className="scroll-mt-20 py-20">
+      <section id="cap-do" className="scroll-mt-20 border-t border-ink/15 py-16 lg:py-24">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <Reveal className="mx-auto max-w-2xl text-center">
-            <p className="text-sm font-bold uppercase tracking-widest text-brand">Cấp độ</p>
-            <h2 className="mt-2 text-balance text-3xl font-extrabold tracking-tight sm:text-4xl">Từ nhập môn đến sơ trung cấp</h2>
-            <p className="mt-3 text-stone-600">Ba cấp độ theo chuẩn HSK 3.0 với hơn 2.200 từ vựng. Bạn có thể xem từ vựng mà không cần đăng nhập.</p>
-          </Reveal>
-          <div className="mt-12 grid gap-5 md:grid-cols-3">
+          <h2 className="max-w-2xl text-balance text-3xl font-extrabold tracking-tight sm:text-4xl">Từ nhập môn đến sơ trung cấp</h2>
+          <p className="mt-3 max-w-xl text-stone-700">Ba cấp độ theo chuẩn HSK 3.0 với hơn 2.200 từ vựng. Bạn có thể xem từ vựng mà không cần đăng nhập.</p>
+          <div className="mt-10 border-b border-ink/15">
             {LEVELS.map((l, i) => (
-              <Reveal key={l.level} delay={i * 100}>
-                <div className="card group flex h-full flex-col overflow-hidden !p-0 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-soft">
-                  <div className={`relative h-28 bg-gradient-to-br ${l.grad}`}>
-                    <span aria-hidden className="hanzi absolute -bottom-4 right-4 select-none text-9xl leading-none text-white/25 transition-transform duration-500 group-hover:scale-110">{l.glyph}</span>
-                    <div className="absolute bottom-3 left-5"><div className="text-3xl font-extrabold text-white">HSK {l.level}</div><div className="text-sm text-white/85">{l.words} từ vựng</div></div>
+              <Reveal key={l.level} delay={i * 80}>
+                <div className="grid items-center gap-4 border-t border-ink/15 py-7 md:grid-cols-[11rem_1fr_auto] md:gap-8">
+                  <div className="flex items-baseline gap-3">
+                    <span lang="zh-Hans" aria-hidden className="hanzi text-4xl leading-none">{l.han}</span>
+                    <span><span className="block text-xl font-bold">HSK {l.level}</span><span className="block text-sm text-stone-600">{l.words} từ vựng</span></span>
                   </div>
-                  <div className="flex flex-1 flex-col p-5">
-                    <p className="text-stone-600">{l.desc}</p>
-                    <div className="mt-4 flex flex-wrap gap-2">{l.sample.map((w) => <span key={w} className="hanzi rounded-lg bg-stone-100 px-2.5 py-1 text-lg">{w}</span>)}</div>
-                    <Link href={`/words?level=${l.level}`} className="btn-ghost mt-auto !mt-6 w-full">Xem từ vựng HSK {l.level}</Link>
+                  <div>
+                    <p className="text-stone-700">{l.desc}</p>
+                    <p lang="zh-Hans" className="hanzi mt-2 flex flex-wrap gap-x-5 gap-y-1 text-2xl">{l.sample.map((w) => <span key={w}>{w}</span>)}</p>
                   </div>
+                  <Link href={`/words?level=${l.level}`} className="btn-ghost w-full md:w-auto">Xem từ vựng HSK {l.level}</Link>
                 </div>
               </Reveal>
             ))}
@@ -162,22 +129,18 @@ export default function LandingPage() {
       </section>
 
       {/* ---------- Kêu gọi hành động ---------- */}
-      <section className="px-4 pb-20 sm:px-6">
-        <Reveal>
-          <div className="relative mx-auto max-w-5xl overflow-hidden rounded-[2rem] bg-gradient-to-br from-brand via-[#a8301f] to-[#6d1b13] px-6 py-14 text-center text-white shadow-soft sm:px-12">
-            <div aria-hidden className="pointer-events-none absolute inset-0 opacity-[0.12] [background-image:radial-gradient(#fff_1px,transparent_1px)] [background-size:18px_18px]" />
-            <span aria-hidden className="hanzi pointer-events-none absolute -left-4 -top-10 select-none text-[12rem] leading-none text-white/10">汉</span>
-            <span aria-hidden className="hanzi pointer-events-none absolute -bottom-12 -right-4 animate-float select-none text-[13rem] leading-none text-white/10">语</span>
-            <div className="relative">
-              <h2 className="text-balance text-3xl font-extrabold tracking-tight sm:text-5xl">Bắt đầu học tiếng Trung ngay hôm nay</h2>
-              <p className="mx-auto mt-4 max-w-xl text-lg text-white/85">Vào học ngay, không cần chờ đợi. Tạo tài khoản khi bạn muốn lưu tiến độ và giữ chuỗi ngày học.</p>
-              <div className="mt-8 flex flex-wrap justify-center gap-3">
-                <Link href="/dashboard" className="btn bg-white !px-8 !py-4 text-lg text-brand shadow-sm hover:-translate-y-px hover:bg-brand-soft">Học ngay</Link>
-                <Link href="/login?mode=up" className="btn border border-white/40 !px-7 !py-4 text-lg text-white hover:bg-white/10">Tạo tài khoản</Link>
-              </div>
-            </div>
+      <section className="bg-ink text-ivory">
+        <div className="mx-auto grid max-w-6xl items-center gap-8 px-4 py-16 sm:px-6 lg:grid-cols-12 lg:py-20">
+          <div className="lg:col-span-8">
+            <p lang="zh-Hans" className="hanzi text-5xl leading-none text-ivory/90 sm:text-6xl">开始</p>
+            <h2 className="mt-4 text-balance text-3xl font-extrabold tracking-tight sm:text-4xl">Bắt đầu học tiếng Trung ngay hôm nay</h2>
+            <p className="mt-3 max-w-xl text-ivory/80">Vào học ngay, không cần chờ đợi. Tạo tài khoản khi bạn muốn lưu tiến độ và giữ chuỗi ngày học.</p>
           </div>
-        </Reveal>
+          <div className="flex flex-col gap-3 sm:flex-row lg:col-span-4 lg:flex-col">
+            <Link href="/dashboard" className="btn-primary !min-h-[52px] text-base">Học ngay</Link>
+            <Link href="/login?mode=up" className="btn !min-h-[52px] border border-ivory/40 text-base text-ivory hover:bg-white/10">Tạo tài khoản</Link>
+          </div>
+        </div>
       </section>
     </>
   );
