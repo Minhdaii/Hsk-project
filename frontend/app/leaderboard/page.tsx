@@ -39,7 +39,7 @@ export default function LeaderboardPage() {
 
       {rows && rows.length === 0 && (
         <div className="editorial-card p-10 text-center">
-          <p className="text-xs text-[#5B5866]">
+          <p className="text-xs text-stone-700">
             Chưa có dữ liệu học viên trên bảng xếp hạng. Hãy là người đầu tiên hoàn thành lượt ôn hôm nay!
           </p>
         </div>
@@ -47,41 +47,41 @@ export default function LeaderboardPage() {
 
       {rows && rows.length > 0 && (
         <div className="editorial-card overflow-hidden">
-          <div className="flex items-center justify-between border-b border-[#E7E2F0] bg-[#EEE9FC]/30 px-5 py-3 text-[11px] font-bold uppercase tracking-wider text-[#777184]">
+          <div className="flex items-center justify-between border-b border-line bg-brand-soft/30 px-5 py-3 text-[11px] font-bold uppercase tracking-wider text-stone-600">
             <span>Học viên</span>
             <div className="flex items-center gap-8">
               <span>Chuỗi ngày</span>
               <span>Điểm XP</span>
             </div>
           </div>
-          <ol className="divide-y divide-[#E7E2F0]">
+          <ol className="divide-y divide-line">
             {rows.map((r) => (
               <li
                 key={r.rank}
-                className={`flex items-center gap-4 px-5 py-4 transition-colors hover:bg-[#EEE9FC]/20 ${
-                  r.rank === 1 ? 'bg-[#EEE9FC]/30' : ''
+                className={`flex items-center gap-4 px-5 py-4 transition-colors hover:bg-brand-soft/20 ${
+                  r.rank === 1 ? 'bg-brand-soft/30' : ''
                 }`}
               >
                 <div className="flex w-7 shrink-0 items-center justify-center">
                   {r.rank === 1 ? (
                     <span className="seal h-7 w-7 text-xs font-bold shadow-sm">一</span>
                   ) : r.rank === 2 ? (
-                    <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-[#55449E] text-xs font-bold text-white">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-brand-ink text-xs font-bold text-white">
                       二
                     </span>
                   ) : r.rank === 3 ? (
-                    <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-[#777184] text-xs font-bold text-white">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-stone-500 text-xs font-bold text-white">
                       三
                     </span>
                   ) : (
-                    <span className="text-xs font-bold tabular-nums text-[#777184]">
+                    <span className="text-xs font-bold tabular-nums text-stone-600">
                       {r.rank}
                     </span>
                   )}
                 </div>
 
                 <div className="min-w-0 flex-1">
-                  <span className="block truncate text-sm font-bold text-[#302B3D]">
+                  <span className="block truncate text-sm font-bold text-ink">
                     {r.name}
                   </span>
                 </div>
@@ -90,7 +90,7 @@ export default function LeaderboardPage() {
                   <span className="editorial-badge-stone text-xs">
                     {r.streak} ngày
                   </span>
-                  <span className="w-20 text-right text-xs font-bold tabular-nums text-[#55449E]">
+                  <span className="w-20 text-right text-xs font-bold tabular-nums text-brand-ink">
                     {r.xp.toLocaleString('vi-VN')} XP
                   </span>
                 </div>

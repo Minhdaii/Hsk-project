@@ -53,16 +53,16 @@ function WordsInner() {
       {/* Bộ lọc cấp độ */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div role="group" aria-label="Lọc theo cấp độ" className="-mx-4 overflow-x-auto px-4 [scrollbar-width:none]">
-          <div className="inline-flex rounded-lg border border-[#E7E2F0] bg-white p-0.5">
+          <div className="inline-flex rounded-lg border border-line bg-white p-0.5">
             {[0, 1, 2, 3].map((l) => (
               <button
                 key={l}
                 onClick={() => setLevel(l)}
                 aria-pressed={l === level}
-                className={`min-h-[36px] whitespace-nowrap rounded-md px-4 text-xs font-bold transition-all ${
+                className={`min-h-[44px] whitespace-nowrap rounded-md px-4 text-xs font-bold transition-all ${
                   l === level
-                    ? 'border border-[#D8CFF2] bg-[#EEE9FC] text-[#3B2D78] shadow-xs'
-                    : 'text-[#777184] hover:text-[#302B3D]'
+                    ? 'border border-line bg-brand-soft text-brand-ink '
+                    : 'text-stone-600 hover:text-ink'
                 }`}
               >
                 {l === 0 ? 'Tất cả cấp độ' : `HSK ${l}`}
@@ -79,7 +79,7 @@ function WordsInner() {
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="Tra chữ Hán, phiên âm pinyin hoặc nghĩa tiếng Việt…"
-            className="w-full rounded-lg border border-[#E7E2F0] bg-white px-4 py-2.5 text-xs text-[#302B3D] outline-none transition-colors placeholder:text-[#9892A6] focus:border-[#A99AE8] focus:ring-1 focus:ring-[#A99AE8]"
+            className="w-full min-h-[44px] rounded-lg border border-line bg-white px-4 py-2.5 text-sm text-ink outline-none transition-colors placeholder:text-stone-500 focus:border-brand focus:ring-1 focus:ring-brand/40"
           />
         </div>
       </div>
@@ -94,33 +94,33 @@ function WordsInner() {
 
       {(words.length > 0 || (!loading && !error)) && (
         <div className="editorial-card overflow-hidden">
-          <ul className={`divide-y divide-[#E7E2F0] transition-opacity duration-200 ${loading && words.length > 0 ? 'opacity-50' : ''}`}>
+          <ul className={`divide-y divide-line transition-opacity duration-200 ${loading && words.length > 0 ? 'opacity-50' : ''}`}>
             {words.map((w) => (
               <li
                 key={w.id}
-                className="group flex flex-col gap-2 px-4 py-3.5 transition-colors hover:bg-[#FAF9FD] sm:flex-row sm:items-center sm:gap-6 sm:px-5"
+                className="group flex flex-col gap-2 px-4 py-3.5 transition-colors hover:bg-stone-50 sm:flex-row sm:items-center sm:gap-6 sm:px-5"
               >
                 <Link href={`/word/${w.id}`} className="flex min-w-0 flex-1 flex-col gap-2 sm:flex-row sm:items-center sm:gap-6">
                   {/* Cột trái: Chữ Hán & Phiên âm Pinyin */}
                   <div className="flex shrink-0 items-center gap-3 sm:w-44 sm:gap-3.5">
                     <span
                       lang="zh-Hans"
-                      className="hanzi shrink-0 text-3xl font-bold leading-none text-[#302B3D] sm:text-4xl"
+                      className="hanzi shrink-0 text-3xl font-bold leading-none text-ink sm:text-4xl"
                     >
                       {w.hanzi}
                     </span>
-                    <span className="pinyin break-words text-sm font-semibold text-[#55449E]">
+                    <span className="pinyin break-words text-sm font-semibold text-brand-ink">
                       {w.pinyin}
                     </span>
                   </div>
 
                   {/* Cột phải: Nghĩa tiếng Việt & Âm Hán Việt */}
                   <div className="min-w-0 flex-1">
-                    <p className="break-words text-xs sm:text-sm font-medium leading-relaxed text-[#302B3D]">
+                    <p className="break-words text-xs sm:text-sm font-medium leading-relaxed text-ink">
                       {w.meaningVi || w.meaningEn}
                     </p>
                     {w.hanviet && (
-                      <span className="mt-0.5 inline-block text-[11px] text-[#777184]">
+                      <span className="mt-0.5 inline-block text-[11px] text-stone-600">
                         Âm Hán Việt: {w.hanviet}
                       </span>
                     )}
@@ -128,16 +128,16 @@ function WordsInner() {
                 </Link>
 
                 {/* Tiện ích thao tác */}
-                <div className="flex shrink-0 items-center justify-between gap-2 border-t border-[#E7E2F0]/60 pt-2 sm:border-0 sm:pt-0">
+                <div className="flex shrink-0 items-center justify-between gap-2 border-t border-line/60 pt-2 sm:border-0 sm:pt-0">
                   <span className="editorial-badge">HSK {w.hskLevel}</span>
-                  <FavoriteButton wordId={w.id} className="!h-8 !w-8 !text-xs sm:!h-9 sm:!w-9 sm:!text-sm" />
+                  <FavoriteButton wordId={w.id} className="!text-base" />
                   <SpeakButton text={w.hanzi} audioUrl={w.audioUrl} />
                 </div>
               </li>
             ))}
 
             {!loading && words.length === 0 && !error && (
-              <li className="p-10 text-center text-xs text-[#777184]">
+              <li className="p-10 text-center text-xs text-stone-600">
                 Không tìm thấy từ vựng phù hợp với từ khóa của bạn.
               </li>
             )}
@@ -146,19 +146,19 @@ function WordsInner() {
       )}
 
       {/* Điều hướng phân trang */}
-      <nav aria-label="Phân trang" className="flex items-center justify-between border-t border-[#E7E2F0] pt-4">
+      <nav aria-label="Phân trang" className="flex items-center justify-between border-t border-line pt-4">
         <button
-          className="btn-editorial-ghost !min-h-[38px] !px-4 text-xs"
+          className="btn-editorial-ghost !min-h-[44px] !px-4 text-xs"
           disabled={page === 0}
           onClick={() => setPage(page - 1)}
         >
           ← Trang trước
         </button>
-        <span className="text-xs font-semibold tabular-nums text-[#777184]">
+        <span className="text-xs font-semibold tabular-nums text-stone-600">
           Trang {page + 1} / {pages}
         </span>
         <button
-          className="btn-editorial-ghost !min-h-[38px] !px-4 text-xs"
+          className="btn-editorial-ghost !min-h-[44px] !px-4 text-xs"
           disabled={page + 1 >= pages}
           onClick={() => setPage(page + 1)}
         >

@@ -41,11 +41,11 @@ export default function LearningStatsPage() {
   if (!user) {
     return (
       <div className="editorial-card mx-auto max-w-md p-8 text-center">
-        <p lang="zh-Hans" aria-hidden className="hanzi text-5xl font-bold text-[#55449E]">
+        <p lang="zh-Hans" aria-hidden className="hanzi text-5xl font-bold text-brand-ink">
           数据
         </p>
-        <h2 className="mt-4 text-base font-bold text-[#302B3D]">Yêu cầu đăng nhập</h2>
-        <p className="mt-1.5 text-xs text-[#777184]">
+        <h2 className="mt-4 text-base font-bold text-ink">Yêu cầu đăng nhập</h2>
+        <p className="mt-1.5 text-xs text-stone-600">
           Đăng nhập để theo dõi bức tranh toàn cảnh về tiến độ học tập và biểu đồ hoạt động của bạn.
         </p>
         <div className="mt-5">
@@ -81,40 +81,40 @@ export default function LearningStatsPage() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div className="editorial-card p-5">
           <span className="editorial-badge">TỪ ĐÃ HỌC</span>
-          <div className="mt-2 text-3xl font-extrabold text-[#302B3D] tabular-nums">
-            {startedWords} <span className="text-xs font-normal text-[#777184]">/ {totalWords}</span>
+          <div className="mt-2 text-3xl font-extrabold text-ink tabular-nums">
+            {startedWords} <span className="text-xs font-normal text-stone-600">/ {totalWords}</span>
           </div>
-          <p className="mt-1 text-xs text-[#777184]">{Math.round((startedWords / totalWords) * 100)}% tổng số từ vựng</p>
+          <p className="mt-1 text-xs text-stone-600">{Math.round((startedWords / totalWords) * 100)}% tổng số từ vựng</p>
         </div>
 
         <div className="editorial-card p-5">
           <span className="editorial-badge">ĐÃ THUỘC VỮNG</span>
           <div className="mt-2 text-3xl font-extrabold text-emerald-700 tabular-nums">
-            {masteredWords} <span className="text-xs font-normal text-[#777184]">từ</span>
+            {masteredWords} <span className="text-xs font-normal text-stone-600">từ</span>
           </div>
-          <p className="mt-1 text-xs text-[#777184]">Nhớ sâu theo chuẩn SM-2</p>
+          <p className="mt-1 text-xs text-stone-600">Nhớ sâu theo chuẩn SM-2</p>
         </div>
 
         <div className="editorial-card p-5">
           <span className="editorial-badge">CHUỖI NGÀY HỌC</span>
-          <div className="mt-2 text-3xl font-extrabold text-[#55449E] tabular-nums">
-            {streak} <span className="text-xs font-normal text-[#777184]">ngày</span>
+          <div className="mt-2 text-3xl font-extrabold text-brand-ink tabular-nums">
+            {streak} <span className="text-xs font-normal text-stone-600">ngày</span>
           </div>
-          <p className="mt-1 text-xs text-[#777184]">Độ liên tục học tập</p>
+          <p className="mt-1 text-xs text-stone-600">Độ liên tục học tập</p>
         </div>
 
         <div className="editorial-card p-5">
           <span className="editorial-badge">ĐIỂM KINH NGHIỆM</span>
-          <div className="mt-2 text-3xl font-extrabold text-[#A99AE8] tabular-nums">
-            {xp} <span className="text-xs font-normal text-[#777184]">XP</span>
+          <div className="mt-2 text-3xl font-extrabold text-brand-ink tabular-nums">
+            {xp} <span className="text-xs font-normal text-stone-600">XP</span>
           </div>
-          <p className="mt-1 text-xs text-[#777184]">{totalReviews} lượt ôn tập hoàn thành</p>
+          <p className="mt-1 text-xs text-stone-600">{totalReviews} lượt ôn tập hoàn thành</p>
         </div>
       </div>
 
       {/* Chi tiết phân bổ theo cấp độ HSK 1, 2, 3 */}
       <section className="editorial-card p-6" aria-labelledby="chi-tiet-cap-do">
-        <h2 id="chi-tiet-cap-do" className="text-sm font-bold text-[#302B3D]">
+        <h2 id="chi-tiet-cap-do" className="text-sm font-bold text-ink">
           Phân bổ từ vựng theo cấp độ
         </h2>
         <div className="mt-4 space-y-4">
@@ -124,18 +124,18 @@ export default function LearningStatsPage() {
             return (
               <div key={l.level} className="space-y-1.5">
                 <div className="flex items-center justify-between text-xs">
-                  <span className="font-bold text-[#302B3D]">HSK Cấp {l.level}</span>
-                  <span className="text-[#777184]">
+                  <span className="font-bold text-ink">HSK Cấp {l.level}</span>
+                  <span className="text-stone-600">
                     {l.started}/{l.total} từ ({pctStarted}%) · Đã thuộc: {l.mastered} ({pctMastered}%)
                   </span>
                 </div>
-                <div className="relative h-2.5 overflow-hidden rounded-full bg-[#EEE9FC]">
+                <div className="relative h-2.5 overflow-hidden rounded-full bg-brand-soft">
                   <div
-                    className="absolute inset-y-0 left-0 bg-[#C8BEF2] transition-all duration-500"
+                    className="absolute inset-y-0 left-0 bg-brand/60 transition-all duration-500"
                     style={{ width: `${pctStarted}%` }}
                   />
                   <div
-                    className="bar-fill absolute inset-y-0 left-0 bg-[#A99AE8] transition-all duration-500"
+                    className="bar-fill absolute inset-y-0 left-0 bg-brand transition-all duration-500"
                     style={{ width: `${pctMastered}%` }}
                   />
                 </div>
@@ -148,14 +148,14 @@ export default function LearningStatsPage() {
       {/* Biểu đồ 7 ngày gần đây */}
       {activity && (
         <section className="editorial-card p-6" aria-labelledby="hoat-dong-tuan">
-          <div className="flex items-center justify-between border-b border-[#E7E2F0] pb-3">
+          <div className="flex items-center justify-between border-b border-line pb-3">
             <div>
-              <h2 id="hoat-dong-tuan" className="text-sm font-bold text-[#302B3D]">
+              <h2 id="hoat-dong-tuan" className="text-sm font-bold text-ink">
                 Hoạt động ôn tập 7 ngày
               </h2>
-              <p className="mt-0.5 text-xs text-[#777184]">Tổng số câu và thẻ từ đã học mỗi ngày</p>
+              <p className="mt-0.5 text-xs text-stone-600">Tổng số câu và thẻ từ đã học mỗi ngày</p>
             </div>
-            <span className="text-xs font-semibold text-[#55449E]">
+            <span className="text-xs font-semibold text-brand-ink">
               {totalReviews} lượt ôn tập trong tuần
             </span>
           </div>
@@ -169,18 +169,18 @@ export default function LearningStatsPage() {
 
               return (
                 <div key={d.date} className="flex min-w-0 flex-1 flex-col items-center justify-end gap-1.5">
-                  <span className="text-[11px] font-semibold tabular-nums text-[#777184]">
+                  <span className="text-[11px] font-semibold tabular-nums text-stone-600">
                     {d.reviews || 0}
                   </span>
                   <div
                     className={`w-full max-w-[2.5rem] rounded-t transition-all duration-500 ${
-                      isToday ? 'bg-[#A99AE8]' : 'bg-[#DDD6F0] hover:bg-[#C8BEF2]'
+                      isToday ? 'bg-brand' : 'bg-stone-200 hover:bg-brand/60'
                     }`}
                     style={{ height: `${heightPx}px` }}
                   />
                   <span
                     className={`text-[11px] truncate ${
-                      isToday ? 'font-bold text-[#55449E]' : 'font-medium text-[#777184]'
+                      isToday ? 'font-bold text-brand-ink' : 'font-medium text-stone-600'
                     }`}
                   >
                     {label}

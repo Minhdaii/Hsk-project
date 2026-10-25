@@ -170,22 +170,22 @@ export default function LearningPathPage() {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <span className="editorial-badge">TIẾN ĐỘ LỘ TRÌNH</span>
-            <h2 id="tong-quan-lo-trinh" className="mt-1 text-base font-bold text-[#302B3D] sm:text-lg">
+            <h2 id="tong-quan-lo-trinh" className="mt-1 text-base font-bold text-ink sm:text-lg">
               Đã hoàn thành {completedStages} / {totalStages} chặng kiến thức
             </h2>
-            <p className="mt-0.5 text-xs text-[#777184]">
+            <p className="mt-0.5 text-xs text-stone-600">
               {user ? `Chuỗi học tập: ${stats?.streak ?? 0} ngày liên tiếp` : 'Đăng nhập để lưu tiến độ hoàn thành các bài học'}
             </p>
           </div>
 
           <div className="flex items-center gap-3">
             <div className="text-right">
-              <span className="text-2xl font-extrabold text-[#55449E]">{progressPercent}%</span>
-              <span className="block text-[10px] text-[#777184]">Hoàn thành</span>
+              <span className="text-2xl font-extrabold text-brand-ink">{progressPercent}%</span>
+              <span className="block text-[10px] text-stone-600">Hoàn thành</span>
             </div>
-            <div className="h-10 w-24 overflow-hidden rounded-full bg-[#EEE9FC] p-1">
+            <div className="h-10 w-24 overflow-hidden rounded-full bg-brand-soft p-1">
               <div
-                className="h-full rounded-full bg-[#A99AE8] transition-all duration-700"
+                className="h-full rounded-full bg-brand transition-all duration-700"
                 style={{ width: `${Math.max(10, progressPercent)}%` }}
               />
             </div>
@@ -204,8 +204,8 @@ export default function LearningPathPage() {
               key={s.id}
               className={`editorial-card transition-all ${
                 isCurrent
-                  ? 'border-2 border-[#A99AE8] bg-white shadow-sm ring-2 ring-[#EEE9FC]'
-                  : 'hover:border-[#D5CEF3]'
+                  ? 'border-2 border-brand bg-white shadow-sm ring-2 ring-brand-soft'
+                  : 'hover:border-line'
               }`}
             >
               <div className="flex flex-col gap-4 p-5 sm:flex-row sm:items-start sm:justify-between sm:p-6">
@@ -214,12 +214,12 @@ export default function LearningPathPage() {
                   <span
                     lang="zh-Hans"
                     aria-hidden
-                    className={`hanzi flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-2xl font-bold shadow-xs ${
+                    className={`hanzi flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-2xl font-bold  ${
                       isDone
-                        ? 'border border-[#D8CFF2] bg-[#EEE9FC] text-[#55449E]'
+                        ? 'border border-line bg-brand-soft text-brand-ink'
                         : isCurrent
-                        ? 'bg-[#A99AE8] text-[#241D45]'
-                        : 'border border-[#E7E2F0] bg-[#FAF8F5] text-[#777184]'
+                        ? 'bg-brand text-ink'
+                        : 'border border-line bg-stone-50 text-stone-600'
                     }`}
                   >
                     {s.hanzi}
@@ -235,34 +235,34 @@ export default function LearningPathPage() {
                         </span>
                       )}
                       {isCurrent && (
-                        <span className="inline-flex items-center gap-1 rounded bg-[#EEE9FC] px-2 py-0.5 text-xs font-bold text-[#55449E]">
+                        <span className="inline-flex items-center gap-1 rounded bg-brand-soft px-2 py-0.5 text-xs font-bold text-brand-ink">
                           ● Đang học chặng này
                         </span>
                       )}
                     </div>
 
-                    <h3 className="mt-1.5 text-base font-bold text-[#302B3D] sm:text-lg">
+                    <h3 className="mt-1.5 text-base font-bold text-ink sm:text-lg">
                       {s.title}
                     </h3>
-                    <p className="mt-0.5 text-xs leading-relaxed text-[#777184]">
+                    <p className="mt-0.5 text-xs leading-relaxed text-stone-600">
                       {s.desc}
                     </p>
 
                     {/* Danh sách bài học nhỏ trong chặng */}
-                    <div className="mt-3.5 divide-y divide-[#F0ECF6] rounded-lg border border-[#E7E2F0] bg-[#FAF9FD] px-3">
+                    <div className="mt-3.5 divide-y divide-line rounded-lg border border-line bg-stone-50 px-3">
                       {s.lessons.map((lesson, idx) => (
                         <div key={idx} className="flex items-center justify-between py-2 text-xs">
                           <div className="flex items-center gap-2">
                             <span
                               className={`h-2 w-2 rounded-full ${
-                                lesson.done ? 'bg-emerald-500' : isCurrent && idx === 1 ? 'bg-[#A99AE8]' : 'bg-stone-300'
+                                lesson.done ? 'bg-emerald-500' : isCurrent && idx === 1 ? 'bg-brand' : 'bg-stone-300'
                               }`}
                             />
-                            <span className={`font-medium ${lesson.done ? 'text-stone-500 line-through' : 'text-[#302B3D]'}`}>
+                            <span className={`font-medium ${lesson.done ? 'text-stone-500 line-through' : 'text-ink'}`}>
                               {lesson.title}
                             </span>
                           </div>
-                          <span className="hidden text-[11px] text-[#777184] sm:inline">
+                          <span className="hidden text-[11px] text-stone-600 sm:inline">
                             {lesson.desc}
                           </span>
                         </div>
@@ -276,10 +276,10 @@ export default function LearningPathPage() {
                     href={`/study?level=${s.level}`}
                     className={`w-full sm:w-auto text-center text-xs ${
                       isCurrent
-                        ? 'btn-editorial-primary !min-h-[40px] !px-5'
+                        ? 'btn-editorial-primary !min-h-[44px] !px-5'
                         : isDone
-                        ? 'btn-editorial-ghost !min-h-[40px] !px-4'
-                        : 'btn-editorial-soft !min-h-[40px] !px-4'
+                        ? 'btn-editorial-ghost !min-h-[44px] !px-4'
+                        : 'btn-editorial-soft !min-h-[44px] !px-4'
                     }`}
                   >
                     {isCurrent ? 'Học tiếp bài này' : isDone ? 'Ôn lại chặng' : 'Bắt đầu học'}

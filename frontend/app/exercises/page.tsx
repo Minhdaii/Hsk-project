@@ -7,7 +7,6 @@ import type { ClozeQuestion, ExerciseMeta, OrderQuestion, Word } from '@/lib/typ
 import { speak } from '@/lib/speak';
 import SpeakButton from '@/components/SpeakButton';
 import CountPicker from '@/components/CountPicker';
-import PageHeader from '@/components/PageHeader';
 import { AnswerPanel, GameHeader, GameResult, useCombo } from '@/components/game/GameBits';
 
 type GameMode = 'match' | 'order' | 'cloze' | 'listen' | 'dialogue';
@@ -48,7 +47,7 @@ function Problem({ msg, onExit }: { msg: string; onExit: () => void }) {
   );
 }
 
-const Loading = () => <div className="editorial-card flex h-48 items-center justify-center text-xs text-[#777184]">Đang chuẩn bị nội dung bài tập…</div>;
+const Loading = () => <div className="editorial-card flex h-48 items-center justify-center text-xs text-stone-600">Đang chuẩn bị nội dung bài tập…</div>;
 
 function NextButton({ last, onClick }: { last: boolean; onClick: () => void }) {
   return (
@@ -59,10 +58,10 @@ function NextButton({ last, onClick }: { last: boolean; onClick: () => void }) {
 }
 
 const optionBase = 'rounded-lg border px-3.5 py-3 text-center transition-all duration-150';
-const optionIdle = 'border-[#E7E2F0] bg-white hover:border-[#A99AE8] hover:bg-[#FAF9FD] text-[#302B3D] active:translate-y-px';
+const optionIdle = 'border-line bg-white hover:border-brand hover:bg-stone-50 text-ink active:translate-y-px';
 const optionRight = 'animate-pop border-emerald-500 bg-emerald-50 text-emerald-950 font-semibold shadow-xs';
 const optionWrong = 'animate-shake border-red-400 bg-red-50 text-red-900 font-semibold';
-const optionDim = 'border-[#E7E2F0] bg-white opacity-40 text-stone-400';
+const optionDim = 'border-line bg-white opacity-40 text-stone-400';
 
 /* ============================================================
    GAME 1: GHÉP TỪ VỚI NGHĨA (Matching Pairs)
@@ -136,45 +135,32 @@ function MatchGame({ level, count, onAgain, onExit }: GameProps) {
   return (
     <div className="space-y-4">
       <GameHeader i={matchedCount} total={totalPairs} score={score} combo={combo} />
-      <div className="editorial-card p-4 text-center sm:p-5">
-        <span className="editorial-badge">GHÉP CẶP TƯƠNG ỨNG</span>
-        <p className="mt-1.5 text-xs text-[#777184]">
-          Chạm vào một ô chữ Hán và ô ý nghĩa tiếng Việt tương ứng để nối thành cặp chuẩn xác
-        </p>
-      </div>
+      <p className="text-sm text-stone-600">Chạm một chữ Hán ở cột trái, rồi chạm nghĩa tiếng Việt tương ứng ở cột phải.</p>
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-        {items.map((item) => {
-          const isSelected = selected?.id === item.id;
-          const isWrong = wrongIds.includes(item.id);
-          const isHanzi = item.type === 'hanzi';
-
-          const state = item.matched
-            ? 'border-emerald-400 bg-emerald-50/70 text-emerald-800 opacity-40 cursor-default scale-95'
-            : isWrong
-            ? 'animate-shake border-rose-400 bg-rose-50 text-rose-900 font-bold'
-            : isSelected
-            ? 'border-2 border-[#A99AE8] bg-[#EEE9FC] text-[#3B2D78] shadow-sm -translate-y-0.5'
-            : isHanzi
-            ? 'border-[#E7E2F0] bg-white text-[#302B3D] hover:border-[#A99AE8] hover:bg-[#FAF9FD] active:translate-y-px shadow-2xs'
-            : 'border-[#E7E2F0] bg-[#FAF9FD] text-[#484256] hover:border-[#A99AE8] hover:bg-white active:translate-y-px shadow-2xs';
-
-          return (
-            <button
-              key={item.id}
-              disabled={item.matched}
-              onClick={() => handleSelect(item)}
-              className={`flex min-h-[72px] flex-col items-center justify-center rounded-xl p-3 text-center transition-all ${state}`}
-            >
-              <span className={isHanzi ? 'hanzi text-2xl font-bold' : 'text-xs font-semibold'}>
-                {item.text}
-              </span>
-              <span className="mt-1 text-[10px] text-[#9892A6]">
-                {isHanzi ? 'Chữ Hán' : 'Tiếng Việt'}
-              </span>
-            </button>
-          );
-        })}
+      <div className="grid grid-cols-2 gap-x-3 sm:gap-x-5">
+        {(['hanzi', 'meaning'] as const).map((col) => (
+          <div key={col} className="space-y-2.5">
+            <h2 className="px-1 text-xs font-semibold text-stone-600">{col === 'hanzi' ? 'Chữ Hán' : 'Nghĩa tiếng Việt'}</h2>
+            {items.filter((x) => x.type === col).map((item) => {
+              const isSelected = selected?.id === item.id;
+              const isWrong = wrongIds.includes(item.id);
+              const state = item.matched
+                ? 'border-emerald-300 bg-emerald-50 text-emerald-800 opacity-50'
+                : isWrong
+                ? 'animate-shake border-red-400 bg-red-50 text-red-900'
+                : isSelected
+                ? 'g-line g-soft -translate-y-0.5 !border-[rgb(var(--g))]'
+                : '';
+              return (
+                <button key={item.id} disabled={item.matched} onClick={() => handleSelect(item)} aria-pressed={isSelected}
+                  className={`lab-key flex min-h-[64px] w-full items-center justify-center gap-2 px-3 py-2 text-center ${state}`}>
+                  {item.matched && <span aria-hidden className="text-sm">✓</span>}
+                  <span lang={col === 'hanzi' ? 'zh-Hans' : undefined} className={col === 'hanzi' ? 'hanzi text-3xl leading-tight' : 'text-sm font-semibold leading-snug'}>{item.text}</span>
+                </button>
+              );
+            })}
+          </div>
+        ))}
       </div>
     </div>
   );
@@ -219,31 +205,32 @@ function OrderGame({ level, count, onAgain, onExit }: GameProps) {
   return (
     <div className="space-y-4">
       <GameHeader i={i} total={qs.length} score={score} combo={combo} />
-      <div className="editorial-card space-y-2 p-5 text-center sm:p-7">
-        <span className="editorial-badge">SẮP XẾP THÀNH CÂU HOÀN CHỈNH</span>
-        <p className="text-base font-bold leading-snug text-[#302B3D] sm:text-lg">{q.meaningVi}</p>
+      <div className="lab-surface g-rule p-5">
+        <p className="text-xs font-semibold text-stone-600">Xếp thành câu tiếng Trung có nghĩa:</p>
+        <p className="mt-1 text-xl font-bold leading-snug sm:text-2xl">{q.meaningVi}</p>
       </div>
 
-      <div className={`flex min-h-[4.75rem] flex-wrap items-center gap-2 rounded-xl border-2 border-dashed p-3.5 transition-colors ${checked === null ? 'border-[#E7E2F0] bg-white' : checked ? 'border-emerald-500 bg-emerald-50/60' : 'animate-shake border-red-400 bg-red-50/70'}`}>
-        {ans.length === 0 && <span className="px-1 text-xs text-[#777184]">Chạm vào các thẻ từ bên dưới để ghép thành câu…</span>}
+      {/* Dòng viết: các quân chữ đã chọn nằm trên đường kẻ */}
+      <div className={`flex min-h-[5rem] flex-wrap items-end gap-2 border-b-[3px] px-1 pb-2 pt-3 transition-colors ${checked === null ? 'g-line' : checked ? 'border-emerald-500' : 'animate-shake border-red-400'}`}>
+        {ans.length === 0 && <span className="pb-1 text-sm text-stone-500">Chạm các quân chữ bên dưới để đặt vào dòng…</span>}
         {ans.map((c) => (
           <button key={c.id} disabled={locked} onClick={() => { setAns(ans.filter((x) => x.id !== c.id)); setBank([...bank, c]); }}
-            className={`${chip} animate-pop border-[#DED7F0] bg-[#EEE9FC] text-[#3B2D78] hover:border-[#A99AE8]`}>{c.t}</button>
+            lang="zh-Hans" className="lab-key hanzi animate-pop g-soft g-line min-h-[48px] px-3.5 text-xl">{c.t}</button>
         ))}
       </div>
 
-      <div className="flex min-h-[3.5rem] flex-wrap justify-center gap-2">
+      <div className="flex min-h-[3.5rem] flex-wrap justify-center gap-2 pt-1">
         {bank.map((c) => (
           <button key={c.id} disabled={locked} onClick={() => { setBank(bank.filter((x) => x.id !== c.id)); setAns([...ans, c]); }}
-            className={`${chip} border-[#E7E2F0] bg-white text-[#302B3D] hover:border-[#A99AE8] hover:bg-[#FAF9FD]`}>{c.t}</button>
+            lang="zh-Hans" className="lab-key hanzi min-h-[48px] px-3.5 text-xl">{c.t}</button>
         ))}
       </div>
 
       {locked && (
         <div className={`rounded-xl border p-4 text-center ${checked ? 'border-emerald-500/50 bg-emerald-50/70' : 'border-red-400/50 bg-red-50/80'}`}>
           <p className={`text-xs font-bold ${checked ? 'text-emerald-800' : 'text-red-800'}`}>{checked ? '✓ Rất chính xác!' : '✕ Chưa đúng. Câu chuẩn là:'}</p>
-          <p className="hanzi mt-1 text-2xl font-bold text-[#302B3D]">{q.tokens.join('')}</p>
-          {q.pinyin && <p className="pinyin mt-0.5 text-xs font-semibold text-[#55449E]">{q.pinyin}</p>}
+          <p className="hanzi mt-1 text-2xl font-bold text-ink">{q.tokens.join('')}</p>
+          {q.pinyin && <p className="pinyin mt-0.5 text-xs font-semibold text-brand-ink">{q.pinyin}</p>}
           <div className="mt-2">
             <SpeakButton text={q.tokens.join('')} label />
           </div>
@@ -289,36 +276,34 @@ function ClozeGame({ level, count, onAgain, onExit }: GameProps) {
   return (
     <div className="space-y-4">
       <GameHeader i={i} total={qs.length} score={score} combo={combo} />
-      <div className="editorial-card space-y-3 p-5 text-center sm:p-7">
-        <span className="editorial-badge">ĐIỀN TỪ CÒN THIẾU</span>
-        <div className="hanzi break-words text-2xl font-bold leading-relaxed text-[#302B3D] sm:text-3xl">
+      <figure className="lab-surface space-y-3 border-l-4 p-5 sm:p-7 g-line !border-l-[rgb(var(--g))]">
+        <p className="text-xs font-semibold text-stone-600">Chọn từ điền vào chỗ trống:</p>
+        <div lang="zh-Hans" className="hanzi break-words text-3xl leading-relaxed sm:text-4xl">
           {before}
-          <span className={`mx-1.5 inline-block min-w-[3.5rem] border-b-2 px-1.5 transition-colors ${!answered ? 'border-[#A99AE8] text-transparent' : correct ? 'border-emerald-600 text-emerald-800' : 'border-red-500 text-red-600'}`}>
+          <span className={`mx-1.5 inline-block min-w-[3.5rem] border-b-[3px] px-1.5 text-center transition-colors ${!answered ? 'g-line text-transparent' : correct ? 'border-emerald-600 text-emerald-800' : 'border-red-500 text-red-600'}`}>
             {answered ? picked : '＿＿'}
           </span>
           {after}
         </div>
-        {q.meaningVi && <p className="text-xs leading-relaxed text-[#777184]">{q.meaningVi}</p>}
+        {q.meaningVi && <figcaption className="text-sm text-stone-600">{q.meaningVi}</figcaption>}
         {answered && (
-          <div className="animate-fade-up space-y-1 border-t border-[#E7E2F0] pt-4">
-            <p className={`text-xs font-bold ${correct ? 'text-emerald-800' : 'text-red-700'}`}>
-              {correct ? '✓ Rất chính xác!' : <>Đáp án chuẩn: <span className="hanzi text-base font-bold text-emerald-800">{q.answer.hanzi}</span></>}
+          <div className="animate-fade-up space-y-1 border-t border-line pt-3">
+            <p className={`text-sm font-bold ${correct ? 'text-emerald-800' : 'text-red-700'}`}>
+              {correct ? '✓ Chính xác!' : <>Đáp án đúng: <span className="hanzi text-lg text-emerald-800">{q.answer.hanzi}</span></>}
             </p>
-            {q.pinyin && <p className="pinyin text-xs font-semibold text-[#55449E]">{q.pinyin}</p>}
-            <div className="pt-1">
-              <SpeakButton text={q.fullSentence} label />
-            </div>
+            {q.pinyin && <p className="pinyin text-base font-medium text-brand-ink">{q.pinyin}</p>}
+            <div className="pt-1"><SpeakButton text={q.fullSentence} label /></div>
           </div>
         )}
-      </div>
+      </figure>
       <div className="grid grid-cols-2 gap-2.5">
         {q.options.map((o) => {
           const isAnswer = o.hanzi === q.answer.hanzi;
-          const state = !answered ? optionIdle : isAnswer ? optionRight : o.hanzi === picked ? optionWrong : optionDim;
+          const state = !answered ? '' : isAnswer ? '!border-emerald-500 bg-emerald-50 text-emerald-950' : o.hanzi === picked ? 'animate-shake !border-red-400 bg-red-50 text-red-900' : 'opacity-40';
           return (
-            <button key={o.hanzi} disabled={answered} onClick={() => pick(o.hanzi)} className={`${optionBase} ${state}`}>
-              <span className="hanzi block text-2xl font-bold">{o.hanzi}</span>
-              {answered && <span className="pinyin block text-xs font-medium text-stone-500">{o.pinyin}</span>}
+            <button key={o.hanzi} disabled={answered} onClick={() => pick(o.hanzi)} className={`lab-key min-h-[68px] px-3 py-2 text-center ${state}`}>
+              <span lang="zh-Hans" className="hanzi block text-3xl leading-tight">{o.hanzi}</span>
+              {answered && <span className="pinyin block text-sm font-medium text-stone-600">{o.pinyin}</span>}
             </button>
           );
         })}
@@ -339,12 +324,21 @@ function ListenGame({ level, count, onAgain, onExit }: GameProps) {
   const [picked, setPicked] = useState<number | null>(null);
   const [score, setScore] = useState(0);
   const [done, setDone] = useState(false);
+  const [playing, setPlaying] = useState(false);
   const { combo, best, record } = useCombo();
+
+  // Phát âm và làm sóng âm chuyển động trong lúc phát (không lặp vô hạn)
+  const play = (hanzi: string, audioUrl: string | null) => {
+    speak(hanzi, audioUrl);
+    setPlaying(true);
+    setTimeout(() => setPlaying(false), 1400);
+  };
 
   useEffect(() => {
     if (data?.questions?.[i]) {
-      speak(data.questions[i].word.hanzi, data.questions[i].word.audioUrl);
+      play(data.questions[i].word.hanzi, data.questions[i].word.audioUrl);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, i]);
 
   if (error) return <Problem msg={error} onExit={onExit} />;
@@ -364,35 +358,27 @@ function ListenGame({ level, count, onAgain, onExit }: GameProps) {
     <div className="space-y-4">
       <GameHeader i={i} total={qs.length} score={score} combo={combo} />
       
-      {/* Khung trung tâm thính giác với hiệu ứng âm thanh */}
-      <div className="editorial-card flex min-h-[13rem] flex-col items-center justify-center p-6 text-center sm:p-8">
-        <span className="editorial-badge mb-3">NGHE PHÁT ÂM CHỌN MẶT CHỮ</span>
-        
-        {/* Sóng âm visualizer */}
-        <div className="flex items-center gap-1.5 my-3 h-8">
-          <span className="w-1.5 h-4 bg-[#A99AE8] rounded-full animate-pulse" />
-          <span className="w-1.5 h-8 bg-[#55449E] rounded-full animate-pulse [animation-delay:150ms]" />
-          <span className="w-1.5 h-6 bg-[#A99AE8] rounded-full animate-pulse [animation-delay:300ms]" />
-          <span className="w-1.5 h-10 bg-[#55449E] rounded-full animate-pulse [animation-delay:75ms]" />
-          <span className="w-1.5 h-5 bg-[#A99AE8] rounded-full animate-pulse [animation-delay:220ms]" />
-        </div>
-
-        <button
-          onClick={() => speak(q.word.hanzi, q.word.audioUrl)}
-          className="btn-editorial-primary !min-h-[46px] !px-7 text-xs font-bold shadow-sm"
-        >
-          🔊 Phát âm lại giọng bản ngữ
+      <div className="lab-surface flex flex-col items-center gap-4 px-5 py-8 text-center">
+        <button onClick={() => play(q.word.hanzi, q.word.audioUrl)} aria-label="Phát lại âm thanh"
+          className="g-solid flex h-24 w-24 items-center justify-center rounded-full ring-8 ring-[rgb(var(--g)/.12)] transition-transform duration-150 hover:scale-105 active:scale-95">
+          <svg viewBox="0 0 24 24" className="h-10 w-10" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M11 5 6 9H3v6h3l5 4V5Z" /><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13" /></svg>
         </button>
+        <div aria-hidden className="flex h-8 items-center gap-1.5">
+          {[16, 28, 20, 32, 14, 26, 18].map((h, k) => (
+            <span key={k} style={{ height: h, animationDelay: `${k * 70}ms` }} className={`g-solid w-1.5 rounded-full opacity-70 ${playing ? 'animate-pulse' : ''}`} />
+          ))}
+        </div>
+        <p className="text-sm text-stone-600">Nghe và chọn chữ Hán bạn vừa nghe. Chạm nút tròn để nghe lại.</p>
       </div>
 
       <div className="grid grid-cols-2 gap-3">
         {q.options.map((o) => {
           const isAnswer = o.id === q.word.id;
-          const state = !answered ? optionIdle : isAnswer ? optionRight : o.id === picked ? optionWrong : optionDim;
+          const state = !answered ? '' : isAnswer ? '!border-emerald-500 bg-emerald-50 text-emerald-950' : o.id === picked ? 'animate-shake !border-red-400 bg-red-50 text-red-900' : 'opacity-40';
           return (
-            <button key={o.id} disabled={answered} onClick={() => pick(o.id)} className={`${optionBase} ${state} !min-h-[72px]`}>
-              <span className="hanzi block text-3xl font-bold">{o.hanzi}</span>
-              {answered && <span className="pinyin block text-xs font-semibold text-[#55449E] mt-1">{o.pinyin}</span>}
+            <button key={o.id} disabled={answered} onClick={() => pick(o.id)} className={`lab-key min-h-[76px] px-3 py-2 text-center ${state}`}>
+              <span lang="zh-Hans" className="hanzi block text-3xl leading-tight">{o.hanzi}</span>
+              {answered && <span className="pinyin mt-0.5 block text-sm font-medium text-brand-ink">{o.pinyin}</span>}
             </button>
           );
         })}
@@ -496,63 +482,30 @@ function DialogueGame({ onAgain, onExit }: { onAgain: () => void; onExit: () => 
     <div className="space-y-4">
       <GameHeader i={i} total={SCENARIOS.length} score={score} combo={combo} />
       
-      {/* Khung mô phỏng đàm thoại thực tế */}
-      <div className="editorial-card space-y-4 p-5 sm:p-6">
-        <div className="flex items-center justify-between border-b border-[#E7E2F0] pb-2.5">
-          <span className="editorial-badge">BỐI CẢNH ĐÀM THOẠI</span>
-          <span className="text-xs font-semibold text-[#55449E]">{q.scenario}</span>
-        </div>
+      <p className="text-sm text-stone-600"><span className="font-semibold text-ink">Bối cảnh:</span> {q.scenario}</p>
 
-        {/* Bong bóng lời nói của đối phương */}
-        <div className="flex items-start gap-3">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#A99AE8] text-sm font-bold text-[#241D45] shadow-xs">
-            友
-          </span>
-          <div className="rounded-2xl rounded-tl-sm border border-[#DED7F0] bg-[#EEE9FC]/80 p-4 max-w-lg shadow-2xs">
-            <span className="block text-[10px] font-bold uppercase tracking-wider text-[#55449E] mb-1">
-              Người đối thoại nói:
-            </span>
-            <div lang="zh-Hans" className="hanzi text-xl font-bold text-[#302B3D] sm:text-2xl">
-              {q.speakerA}
-            </div>
-            <div className="pinyin mt-0.5 text-xs font-semibold text-[#55449E]">{q.speakerAPinyin}</div>
-            <div className="mt-1 text-xs text-[#777184]">{q.speakerAMeaning}</div>
-            <div className="mt-2.5">
-              <SpeakButton text={q.speakerA} label />
-            </div>
-          </div>
-        </div>
-
-        <div className="pt-2">
-          <p className="text-xs font-bold text-[#302B3D] uppercase tracking-wider">
-            Bạn sẽ đáp lại như thế nào?
-          </p>
+      {/* Lời của đối phương (trái) */}
+      <div className="flex items-start gap-3">
+        <span aria-hidden lang="zh-Hans" className="hanzi g-solid flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-lg">友</span>
+        <div className="lab-surface rounded-tl-sm p-4">
+          <div lang="zh-Hans" className="hanzi text-2xl leading-snug">{q.speakerA}</div>
+          <div className="pinyin mt-0.5 text-base font-medium text-brand-ink">{q.speakerAPinyin}</div>
+          <div className="mt-0.5 text-sm text-stone-600">{q.speakerAMeaning}</div>
+          <div className="mt-2"><SpeakButton text={q.speakerA} label /></div>
         </div>
       </div>
 
-      <div className="grid gap-2.5">
+      {/* Lựa chọn trả lời của bạn (phải) */}
+      <p className="pt-1 text-right text-xs font-semibold text-stone-600">Bạn đáp lại thế nào?</p>
+      <div className="space-y-2.5">
         {q.options.map((o, idx) => {
           const isSelected = picked === idx;
-          const state = !answered
-            ? optionIdle
-            : o.correct
-            ? optionRight
-            : isSelected
-            ? optionWrong
-            : optionDim;
-
+          const state = !answered ? 'g-line hover:g-soft' : o.correct ? '!border-emerald-500 bg-emerald-50 text-emerald-950' : isSelected ? 'animate-shake !border-red-400 bg-red-50 text-red-900' : 'opacity-40';
           return (
-            <button
-              key={idx}
-              disabled={answered}
-              onClick={() => handlePick(idx)}
-              className={`flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 rounded-xl border p-4 text-left transition-all ${state} !min-h-[56px]`}
-            >
-              <div className="flex items-baseline gap-2.5">
-                <span className="editorial-badge !text-[10px] !px-1.5">#{idx + 1}</span>
-                <span className="hanzi text-lg font-bold text-[#302B3D]">{o.hanzi}</span>
-              </div>
-              <span className="text-xs text-[#777184]">{o.meaning}</span>
+            <button key={idx} disabled={answered} onClick={() => handlePick(idx)}
+              className={`ml-auto block w-[92%] rounded-xl rounded-tr-sm border-2 bg-white p-3.5 text-left transition-colors sm:w-[85%] ${state}`}>
+              <span lang="zh-Hans" className="hanzi block text-xl leading-snug">{o.hanzi}</span>
+              <span className="mt-0.5 block text-sm text-stone-600">{o.meaning}</span>
             </button>
           );
         })}
@@ -561,7 +514,7 @@ function DialogueGame({ onAgain, onExit }: { onAgain: () => void; onExit: () => 
       {answered && (
         <div className={`rounded-xl border p-4 text-xs ${isCorrect ? 'border-emerald-500 bg-emerald-50 text-emerald-950' : 'border-rose-400 bg-rose-50 text-rose-950'}`}>
           <div className="font-bold">{isCorrect ? '✓ Đáp án chuẩn xác!' : '✕ Chưa phù hợp.'}</div>
-          <p className="mt-1 leading-relaxed text-[#504A5D]">{q.explanation}</p>
+          <p className="mt-1 leading-relaxed text-stone-700">{q.explanation}</p>
         </div>
       )}
 
@@ -614,17 +567,12 @@ function ExercisesContent() {
   if (mode) {
     const selectedGame = GAMES.find((x) => x.id === mode)!;
     return (
-      <div className="mx-auto max-w-lg space-y-4">
-        {/* Thanh điều hướng lúc chơi (In-Game Focus Bar) */}
-        <div className="flex items-center gap-3 border-b border-[#E7E2F0] pb-3">
-          <button className="btn-editorial-ghost !min-h-[36px] !px-3 text-xs" onClick={() => setMode(null)}>
-            ← Danh mục trò chơi
-          </button>
-          <span lang="zh-Hans" aria-hidden className="hanzi flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#EEE9FC] text-base font-bold text-[#55449E]">
-            {selectedGame.glyph}
-          </span>
-          <h1 className="min-w-0 flex-1 truncate text-sm font-bold text-[#302B3D]">
-            {selectedGame.title} <span className="text-xs font-normal text-[#777184]">· HSK Cấp {level}</span>
+      <div data-game={mode} className="lab-game mx-auto max-w-lg space-y-4">
+        <div className="flex items-center gap-3 border-b border-line pb-3">
+          <button className="btn-ghost !px-3" onClick={() => setMode(null)}>← Danh mục</button>
+          <span lang="zh-Hans" aria-hidden className="hanzi g-solid flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-lg">{selectedGame.glyph}</span>
+          <h1 className="min-w-0 flex-1 truncate font-bold">
+            {selectedGame.title.replace(/^\d+\.\s*/, '')} <span className="text-sm font-normal text-stone-600">· HSK {level}</span>
           </h1>
         </div>
 
@@ -637,240 +585,96 @@ function ExercisesContent() {
     );
   }
 
+  const tile = (id: GameMode, span: string, preview: React.ReactNode, hint?: string) => {
+    const g = GAMES.find((x) => x.id === id)!;
+    return (
+      <button key={id} onClick={() => setMode(id)} data-game={id}
+        className={`lab-game lab-tile g-solid group relative flex min-h-[15rem] flex-col justify-between overflow-hidden rounded-xl p-5 text-left transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline-offset-4 sm:p-6 ${span}`}>
+        <span aria-hidden lang="zh-Hans" className="lab-glyph hanzi pointer-events-none absolute -bottom-7 -right-1 select-none text-[9.5rem] font-black leading-none text-white/15">{g.glyph}</span>
+        <span className="relative block">
+          {hint && <span className="mb-2 inline-block rounded-md bg-white px-2 py-0.5 text-xs font-bold g-ink">{hint}</span>}
+          <span className="block text-xl font-bold leading-tight sm:text-2xl">{g.title.replace(/^\d+\.\s*/, '')}</span>
+          <span className="mt-1 block max-w-[17rem] text-sm text-white/95">{g.desc}</span>
+        </span>
+        <span aria-hidden className="relative my-4 block">{preview}</span>
+        <span className="relative flex items-center justify-between text-sm font-semibold">
+          <span className="text-white/90">{g.duration}</span>
+          <span className="inline-flex items-center gap-1.5">Chơi <span className="lab-nudge inline-block">→</span></span>
+        </span>
+      </button>
+    );
+  };
+  const chipW = 'rounded-md bg-white px-2.5 py-1.5 text-ink';
+
   return (
-    <div className="mx-auto max-w-4xl space-y-8">
-      <PageHeader
-        glyph="练"
-        title="Phòng luyện tập & Mini-games"
-        subtitle="5 trò chơi giáo dục tương tác rèn luyện phản xạ chữ Hán, ngữ pháp, thính giác và đàm thoại đời sống"
-      />
+    <div className="space-y-7">
+      <header>
+        <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">Phòng luyện tập</h1>
+        <p className="mt-1 max-w-xl text-stone-600">Năm trò chơi, mỗi trò rèn một kỹ năng khác nhau. Chọn cấp độ và số câu rồi bắt đầu.</p>
+      </header>
 
-      {/* Thử thách đề xuất hôm nay (Featured Activity) */}
-      <div className="editorial-card rounded-2xl border-2 border-[#D8D1EE] bg-white relative overflow-hidden p-6 sm:p-7 border-l-4 border-l-[#A99AE8] shadow-sm">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5">
-          <div className="max-w-xl">
-            <div className="flex items-center gap-2">
-              <span className="editorial-badge">THỬ THÁCH HÔM NAY</span>
-              <span className="text-xs text-[#777184]">Thời lượng 2–3 phút</span>
-            </div>
-            <h2 className="mt-2 text-lg font-bold text-[#302B3D]">
-              Ghép từ vựng phản xạ HSK Cấp {level}
-            </h2>
-            <p className="mt-1 text-xs text-[#777184] leading-relaxed">
-              Khởi động ngày mới với bài tập ghép cặp chữ Hán và giải nghĩa tiếng Việt, rèn luyện tốc độ nhận diện mặt chữ và phản xạ ngữ nghĩa tức thì.
-            </p>
-          </div>
-          <button
-            onClick={() => setMode('match')}
-            className="btn-editorial-primary shrink-0 text-xs font-bold !min-h-[46px] !px-6 shadow-sm"
-          >
-            Chơi ngay hôm nay →
-          </button>
-        </div>
-      </div>
-
-      {/* Bộ điều khiển cấp độ & số lượng câu hỏi */}
-      <section className="editorial-card rounded-2xl border-2 border-[#D8D1EE] bg-white space-y-4 p-5 sm:p-6 shadow-sm" aria-labelledby="cau-hinh-bai-tap">
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-6">
-          <span id="cau-hinh-bai-tap" className="w-28 shrink-0 text-xs font-bold uppercase tracking-wider text-[#777184]">
-            Cấp độ luyện
-          </span>
-          <div role="group" aria-label="Chọn cấp độ luyện tập" className="inline-flex rounded-xl border border-[#D8D1EE] bg-[#FAF9FD] p-1">
+      <div className="lab-surface flex flex-col gap-4 p-4 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-8 sm:gap-y-3 sm:px-5">
+        <div className="flex items-center gap-3">
+          <span className="w-14 shrink-0 text-sm font-semibold text-stone-600">Cấp độ</span>
+          <div role="group" aria-label="Chọn cấp độ luyện tập" className="flex gap-1.5">
             {[1, 2, 3].map((l) => (
-              <button
-                key={l}
-                onClick={() => setLevel(l)}
-                aria-pressed={l === level}
-                className={`min-h-[36px] rounded-lg px-4 text-xs font-bold transition-all ${
-                  l === level
-                    ? 'border border-[#C8BEF2] bg-[#EEE9FC] text-[#3B2D78] shadow-xs'
-                    : 'text-[#777184] hover:text-[#302B3D]'
-                }`}
-              >
-                HSK Cấp {l}
+              <button key={l} onClick={() => setLevel(l)} aria-pressed={l === level}
+                className={`min-h-[44px] min-w-[68px] rounded-lg border px-3 text-sm font-bold transition-colors ${l === level ? 'border-brand-ink/50 bg-brand text-ink' : 'border-line bg-white text-stone-600 hover:border-stone-400 hover:text-ink'}`}>
+                HSK {l}
               </button>
             ))}
           </div>
         </div>
-
-        <div className="flex flex-col gap-2 border-t border-[#F0ECF6] pt-4 sm:flex-row sm:items-center sm:gap-6">
-          <span className="w-28 shrink-0 text-xs font-bold uppercase tracking-wider text-[#777184]">
-            Số câu hỏi
-          </span>
+        <span aria-hidden className="hidden h-8 w-px bg-line sm:block" />
+        <div className="flex flex-wrap items-center gap-3">
+          <span className="w-14 shrink-0 text-sm font-semibold text-stone-600">Số câu</span>
           <CountPicker value={count} onChange={changeCount} />
         </div>
-      </section>
+      </div>
 
-      {/* DANH SÁCH 5 TRÒ CHƠI — ĐÓNG KHUNG RÕ RÀNG VÀ DỄ NHÌN */}
-      <div className="space-y-6">
-        <div className="flex items-center justify-between border-b border-[#E7E2F0] pb-2.5">
-          <div className="flex items-center gap-2">
-            <span className="editorial-badge !text-[10px]">DANH MỤC TRÒ CHƠI</span>
-            <h3 className="text-sm font-bold uppercase tracking-wider text-[#302B3D]">
-              5 Mini-games luyện tập phản xạ
-            </h3>
-          </div>
-          <span className="text-xs text-[#777184]">HSK Cấp {level}</span>
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {/* 1. Ghép từ với nghĩa */}
-          <div className="editorial-card rounded-2xl border-2 border-[#D8D1EE] bg-white flex flex-col justify-between p-5 hover:border-[#A99AE8] hover:shadow-md transition-all shadow-sm">
-            <div>
-              <div className="flex items-center justify-between">
-                <span lang="zh-Hans" className="hanzi flex h-10 w-10 items-center justify-center rounded-xl bg-[#EEE9FC] text-xl font-bold text-[#55449E]">
-                  配
-                </span>
-                <span className="rounded-md bg-[#F0ECF6] px-2 py-0.5 text-[10px] font-semibold text-[#777184]">
-                  2–3 phút
-                </span>
-              </div>
-              <h4 className="mt-3 text-base font-bold text-[#302B3D]">1. Ghép từ với nghĩa</h4>
-              <p className="mt-1 text-xs text-[#777184] leading-relaxed">
-                Nối từng cặp chữ Hán và ý nghĩa tiếng Việt tương ứng để củng cố phản xạ nhận diện từ vựng.
-              </p>
-              {/* Visual Preview */}
-              <div className="mt-3.5 flex items-center gap-2 text-xs">
-                <span className="rounded-md border border-[#D8D1EE] bg-[#FAF9FD] px-2.5 py-1 font-bold text-[#302B3D]">你好</span>
-                <span className="text-[#A99AE8] font-bold">↔</span>
-                <span className="rounded-md border border-[#DED7F0] bg-[#EEE9FC] px-2.5 py-1 text-[11px] font-semibold text-[#55449E]">Xin chào</span>
-              </div>
-            </div>
-            <div className="mt-5 pt-3 border-t border-[#F0ECF6]">
-              <button
-                onClick={() => setMode('match')}
-                className="btn-editorial-primary w-full text-xs font-bold !min-h-[44px] shadow-sm"
-              >
-                Bắt đầu ghép từ →
-              </button>
-            </div>
-          </div>
-
-          {/* 2. Sắp xếp thành câu */}
-          <div className="editorial-card rounded-2xl border-2 border-[#D8D1EE] bg-white flex flex-col justify-between p-5 hover:border-[#A99AE8] hover:shadow-md transition-all shadow-sm">
-            <div>
-              <div className="flex items-center justify-between">
-                <span lang="zh-Hans" className="hanzi flex h-10 w-10 items-center justify-center rounded-xl bg-[#EEE9FC] text-xl font-bold text-[#55449E]">
-                  排
-                </span>
-                <span className="rounded-md bg-[#F0ECF6] px-2 py-0.5 text-[10px] font-semibold text-[#777184]">
-                  3–5 phút
-                </span>
-              </div>
-              <h4 className="mt-3 text-base font-bold text-[#302B3D]">2. Sắp xếp từ thành câu</h4>
-              <p className="mt-1 text-xs text-[#777184] leading-relaxed">
-                Sắp đặt các thẻ từ theo đúng trật tự ngữ pháp và cú pháp chuẩn mực trong tiếng Trung.
-              </p>
-              {/* Visual Preview */}
-              <div className="mt-3.5 flex items-center gap-1.5 text-xs">
-                <span className="rounded-md border border-[#DED7F0] bg-[#EEE9FC] px-2 py-0.5 text-[11px] font-bold text-[#3B2D78]">我</span>
-                <span className="rounded-md border border-[#DED7F0] bg-[#EEE9FC] px-2 py-0.5 text-[11px] font-bold text-[#3B2D78]">是</span>
-                <span className="rounded-md border border-[#DED7F0] bg-[#EEE9FC] px-2 py-0.5 text-[11px] font-bold text-[#3B2D78]">学生</span>
-              </div>
-            </div>
-            <div className="mt-5 pt-3 border-t border-[#F0ECF6]">
-              <button
-                onClick={() => setMode('order')}
-                className="btn-editorial-primary w-full text-xs font-bold !min-h-[44px] shadow-sm"
-              >
-                Bắt đầu sắp xếp câu →
-              </button>
-            </div>
-          </div>
-
-          {/* 3. Điền từ còn thiếu */}
-          <div className="editorial-card rounded-2xl border-2 border-[#D8D1EE] bg-white flex flex-col justify-between p-5 hover:border-[#A99AE8] hover:shadow-md transition-all shadow-sm">
-            <div>
-              <div className="flex items-center justify-between">
-                <span lang="zh-Hans" className="hanzi flex h-10 w-10 items-center justify-center rounded-xl bg-[#EEE9FC] text-xl font-bold text-[#55449E]">
-                  填
-                </span>
-                <span className="rounded-md bg-[#F0ECF6] px-2 py-0.5 text-[10px] font-semibold text-[#777184]">
-                  3–5 phút
-                </span>
-              </div>
-              <h4 className="mt-3 text-base font-bold text-[#302B3D]">3. Điền từ còn thiếu</h4>
-              <p className="mt-1 text-xs text-[#777184] leading-relaxed">
-                Đọc hiểu câu văn có chỗ khuyết và lựa chọn từ vựng chính xác điền vào vị trí ngữ cảnh.
-              </p>
-              {/* Visual Preview */}
-              <div className="mt-3.5 flex items-center gap-1 text-xs">
-                <span className="text-xs font-semibold text-[#302B3D]">我喜欢喝 ＿＿ 咖啡</span>
-              </div>
-            </div>
-            <div className="mt-5 pt-3 border-t border-[#F0ECF6]">
-              <button
-                onClick={() => setMode('cloze')}
-                className="btn-editorial-primary w-full text-xs font-bold !min-h-[44px] shadow-sm"
-              >
-                Bắt đầu điền từ →
-              </button>
-            </div>
-          </div>
-
-          {/* 4. Nghe và chọn đáp án */}
-          <div className="editorial-card rounded-2xl border-2 border-[#D8D1EE] bg-white flex flex-col justify-between p-5 hover:border-[#A99AE8] hover:shadow-md transition-all shadow-sm">
-            <div>
-              <div className="flex items-center justify-between">
-                <span lang="zh-Hans" className="hanzi flex h-10 w-10 items-center justify-center rounded-xl bg-[#EEE9FC] text-xl font-bold text-[#55449E]">
-                  听
-                </span>
-                <span className="rounded-md bg-[#F0ECF6] px-2 py-0.5 text-[10px] font-semibold text-[#777184]">
-                  2–4 phút
-                </span>
-              </div>
-              <h4 className="mt-3 text-base font-bold text-[#302B3D]">4. Nghe chọn chữ Hán</h4>
-              <p className="mt-1 text-xs text-[#777184] leading-relaxed">
-                Lắng nghe phát âm âm thanh giọng bản ngữ và nhận diện chữ Hán tương ứng chính xác.
-              </p>
-              {/* Visual Preview */}
-              <div className="mt-3.5 flex items-center gap-2 text-xs">
-                <span className="rounded-md bg-[#EEE9FC] border border-[#DED7F0] px-2 py-0.5 text-[11px] font-bold text-[#55449E]">🔊 Phát âm chuẩn</span>
-                <span className="text-[#777184] text-[11px]">4 phương án</span>
-              </div>
-            </div>
-            <div className="mt-5 pt-3 border-t border-[#F0ECF6]">
-              <button
-                onClick={() => setMode('listen')}
-                className="btn-editorial-primary w-full text-xs font-bold !min-h-[44px] shadow-sm"
-              >
-                Bắt đầu luyện nghe →
-              </button>
-            </div>
-          </div>
-
-          {/* 5. Tình huống giao tiếp */}
-          <div className="editorial-card rounded-2xl border-2 border-[#D8D1EE] bg-white flex flex-col justify-between p-5 hover:border-[#A99AE8] hover:shadow-md transition-all shadow-sm sm:col-span-2 lg:col-span-2">
-            <div>
-              <div className="flex items-center justify-between">
-                <span lang="zh-Hans" className="hanzi flex h-10 w-10 items-center justify-center rounded-xl bg-[#EEE9FC] text-xl font-bold text-[#55449E]">
-                  话
-                </span>
-                <span className="rounded-md bg-[#F0ECF6] px-2 py-0.5 text-[10px] font-semibold text-[#777184]">
-                  3–5 phút
-                </span>
-              </div>
-              <h4 className="mt-3 text-base font-bold text-[#302B3D]">5. Tình huống giao tiếp đời sống</h4>
-              <p className="mt-1 text-xs text-[#777184] leading-relaxed">
-                Mô phỏng đàm thoại thực tế: Đọc câu đối thoại của đối phương và chọn câu phản hồi lịch sự, chuẩn xác trong đời thường.
-              </p>
-              {/* Visual Preview */}
-              <div className="mt-3.5 flex items-center gap-2 text-xs">
-                <span className="rounded-md border border-[#D8D1EE] bg-[#FAF9FD] px-2.5 py-1 text-[11px] font-medium text-[#302B3D]">“A: 很高兴认识你！”</span>
-                <span className="text-[#A99AE8] font-bold">→</span>
-                <span className="rounded-md border border-[#DED7F0] bg-[#EEE9FC] px-2.5 py-1 text-[11px] font-semibold text-[#55449E]">“B: 我也很高兴认识你。”</span>
-              </div>
-            </div>
-            <div className="mt-5 pt-3 border-t border-[#F0ECF6]">
-              <button
-                onClick={() => setMode('dialogue')}
-                className="btn-editorial-primary w-full text-xs font-bold !min-h-[44px] shadow-sm"
-              >
-                Bắt đầu đàm thoại giao tiếp →
-              </button>
-            </div>
-          </div>
-        </div>
+      <div className="grid gap-4 lg:grid-cols-12">
+        {tile('match', 'lg:col-span-7', (
+          <span className="grid max-w-sm grid-cols-2 gap-x-3 gap-y-1.5 text-sm font-semibold">
+            {[['你好', 'Xin chào'], ['谢谢', 'Cảm ơn'], ['再见', 'Tạm biệt']].map(([h, v], k) => (
+              <span key={h} className="contents">
+                <span lang="zh-Hans" className={`hanzi ${chipW} text-lg`}>{h}</span>
+                <span className={`${chipW} ${k === 0 ? 'ring-2 ring-white/70' : 'opacity-90'}`}>{k === 0 ? '✓ ' : ''}{v}</span>
+              </span>
+            ))}
+          </span>
+        ), 'Nên bắt đầu từ đây')}
+        {tile('listen', 'lg:col-span-5', (
+          <span className="flex items-center gap-4">
+            <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-white g-ink">
+              <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 5 6 9H3v6h3l5 4V5Z" /><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13" /></svg>
+            </span>
+            <span className="flex h-8 items-center gap-1.5">{[14, 26, 18, 30, 12, 22].map((h, k) => <span key={k} style={{ height: h }} className="w-1.5 rounded-full bg-white/80" />)}</span>
+          </span>
+        ))}
+        {tile('order', 'lg:col-span-5', (
+          <span className="block max-w-xs">
+            <span className="flex min-h-[2.5rem] items-end gap-1.5 border-b-[3px] border-white/70 pb-1.5">
+              {['我', '是'].map((c) => <span key={c} lang="zh-Hans" className={`hanzi ${chipW} text-lg`}>{c}</span>)}
+            </span>
+            <span className="mt-2.5 flex gap-1.5">
+              {['学生', '们'].map((c) => <span key={c} lang="zh-Hans" className={`hanzi ${chipW} text-lg opacity-90`}>{c}</span>)}
+            </span>
+          </span>
+        ))}
+        {tile('cloze', 'lg:col-span-7', (
+          <span className="block">
+            <span lang="zh-Hans" className="hanzi block text-2xl leading-snug">我喜欢 <span className="inline-block min-w-[3rem] border-b-[3px] border-white/80 align-bottom">&nbsp;</span> 咖啡</span>
+            <span className="mt-3 flex gap-1.5">
+              {['喝', '看', '吃'].map((c, k) => <span key={c} lang="zh-Hans" className={`hanzi ${chipW} text-lg ${k === 0 ? 'ring-2 ring-white/70' : 'opacity-90'}`}>{c}</span>)}
+            </span>
+          </span>
+        ))}
+        {tile('dialogue', 'lg:col-span-12', (
+          <span className="flex max-w-xl flex-col gap-2 text-sm font-semibold">
+            <span lang="zh-Hans" className={`hanzi ${chipW} self-start text-base`}>很高兴认识你。</span>
+            <span lang="zh-Hans" className={`hanzi ${chipW} self-end text-base`}>我也很高兴认识你。</span>
+          </span>
+        ))}
       </div>
     </div>
   );
@@ -878,7 +682,7 @@ function ExercisesContent() {
 
 export default function ExercisesPage() {
   return (
-    <Suspense fallback={<div className="editorial-card h-48 flex items-center justify-center text-xs text-[#777184]">Đang tải phòng luyện tập…</div>}>
+    <Suspense fallback={<div className="lab-surface flex h-48 items-center justify-center text-sm text-stone-600">Đang tải phòng luyện tập…</div>}>
       <ExercisesContent />
     </Suspense>
   );

@@ -23,8 +23,8 @@ export function GameHeader({ i, total, score, combo }: { i: number; total: numbe
   return (
     <div className="space-y-2.5">
       <div className="flex items-center justify-between text-xs">
-        <span className="font-bold text-[#302B3D]">
-          Câu {i + 1} <span className="font-normal text-[#777184]">/ {total}</span>
+        <span className="font-bold text-ink">
+          Câu {i + 1} <span className="font-normal text-stone-600">/ {total}</span>
         </span>
         <div className="flex items-center gap-2">
           {combo >= 2 && (
@@ -43,15 +43,15 @@ export function GameHeader({ i, total, score, combo }: { i: number; total: numbe
             <span
               key={k}
               className={`h-1.5 flex-1 rounded-full transition-all duration-300 ${
-                k < i ? 'bg-[#A99AE8]' : k === i ? 'bg-[#A99AE8] ring-2 ring-[#A99AE8]/30' : 'bg-[#EEE9FC]'
+                k < i ? 'g-bar' : k === i ? 'g-bar ring-2 ring-[rgb(var(--g,184,162,248)/.3)]' : 'bg-stone-100'
               }`}
             />
           ))}
         </div>
       ) : (
-        <div className="h-1.5 overflow-hidden rounded-full bg-[#EEE9FC]">
+        <div className="h-1.5 overflow-hidden rounded-full bg-stone-100">
           <div
-            className="bar-fill h-full rounded-full bg-[#A99AE8] transition-[width] duration-500"
+            className="bar-fill g-bar h-full rounded-full transition-[width] duration-500"
             style={{ width: `${(i / total) * 100}%` }}
           />
         </div>
@@ -91,23 +91,23 @@ export function GameResult({
       <div
         className="mx-auto flex h-36 w-36 items-center justify-center rounded-full p-2.5"
         style={{
-          background: `conic-gradient(#A99AE8 ${pct * 3.6}deg, #EEE9FC 0deg)`,
+          background: `conic-gradient(rgb(var(--g, 91 63 209)) ${pct * 3.6}deg, rgb(var(--muted)) 0deg)`,
         }}
       >
-        <div className="flex h-full w-full flex-col items-center justify-center rounded-full bg-white shadow-2xs">
-          <span className="text-3xl font-extrabold leading-none text-[#302B3D]">
+        <div className="flex h-full w-full flex-col items-center justify-center rounded-full bg-white ">
+          <span className="text-3xl font-extrabold leading-none text-ink">
             {pct}<span className="text-lg font-bold">%</span>
           </span>
-          <span className="mt-1 text-xs font-semibold text-[#777184]">
+          <span className="mt-1 text-xs font-semibold text-stone-600">
             {score} / {total} câu
           </span>
         </div>
       </div>
 
       <div>
-        <h3 className="text-lg font-bold text-[#302B3D]">{msg}</h3>
-        <p className="mt-1 text-xs text-[#777184]">
-          Chuỗi trả lời đúng liên tiếp dài nhất: <strong className="font-bold text-[#55449E]">{best} câu</strong>
+        <h3 className="text-lg font-bold text-ink">{msg}</h3>
+        <p className="mt-1 text-xs text-stone-600">
+          Chuỗi trả lời đúng liên tiếp dài nhất: <strong className="font-bold text-brand-ink">{best} câu</strong>
         </p>
       </div>
 
@@ -148,20 +148,20 @@ export function AnswerPanel({
           <div className={`text-xs font-bold ${ok ? 'text-emerald-800' : 'text-rose-800'}`}>
             {ok ? '✓ Chính xác!' : '✕ Chưa đúng. Đáp án chuẩn là:'}
           </div>
-          <div lang="zh-Hans" className="hanzi mt-1 break-words text-3xl font-bold leading-tight text-[#302B3D]">
+          <div lang="zh-Hans" className="hanzi mt-1 break-words text-3xl font-bold leading-tight text-ink">
             {hanzi}
           </div>
           {pinyin && (
-            <div className="pinyin mt-0.5 text-sm font-semibold text-[#55449E]">
+            <div className="pinyin mt-0.5 text-sm font-semibold text-brand-ink">
               {pinyin}
             </div>
           )}
-          <ul className="mt-2 space-y-1 text-xs text-[#504A5D]">
+          <ul className="mt-2 space-y-1 text-xs text-stone-700">
             {splitMeaning(meaning)
               .slice(0, 3)
               .map((m, idx) => (
                 <li key={idx} className="flex items-start gap-1.5 break-words">
-                  <span aria-hidden className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-[#A99AE8]" />
+                  <span aria-hidden className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-brand" />
                   <span>{m}</span>
                 </li>
               ))}

@@ -18,16 +18,16 @@ export default function CountPicker({ value, onChange }: { value: number; onChan
           type="button"
           onClick={() => onChange(n)}
           aria-pressed={n === value}
-          className={`min-h-[38px] min-w-[38px] rounded border px-3 text-xs font-bold transition-all active:translate-y-px ${
+          className={`min-h-[44px] min-w-[44px] rounded-lg border px-3 text-sm font-bold transition-colors active:translate-y-px ${
             n === value
-              ? 'border-[#C94B3C] bg-[#C94B3C] text-white shadow-xs'
-              : 'border-[#DFD8CC] bg-white text-[#4A4754] hover:border-stone-400 hover:text-[#18181B]'
+              ? 'border-brand-ink/50 bg-brand text-ink'
+              : 'border-line bg-white text-stone-600 hover:border-stone-400 hover:text-ink'
           }`}
         >
           {n}
         </button>
       ))}
-      <label className="ml-2 flex items-center gap-2 text-xs text-stone-500">
+      <label className="ml-2 flex items-center gap-2 text-sm text-stone-600">
         <span>hoặc nhập:</span>
         <input
           type="number"
@@ -41,7 +41,7 @@ export default function CountPicker({ value, onChange }: { value: number; onChan
             if (!Number.isNaN(n) && n >= MIN_Q && n <= MAX_Q) onChange(n);
           }}
           onBlur={() => setText(String(value))}
-          className="min-h-[38px] w-16 rounded border border-[#DFD8CC] bg-white px-2 text-center text-xs font-bold text-[#18181B] outline-none transition focus:border-[#C94B3C] focus:ring-1 focus:ring-[#C94B3C]"
+          className="min-h-[44px] w-16 rounded-lg border border-stone-300 bg-white px-2 text-center text-sm font-bold text-ink outline-none transition focus:border-brand-ink focus:ring-2 focus:ring-brand/40"
         />
         <span>câu</span>
       </label>

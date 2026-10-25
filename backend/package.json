@@ -11,7 +11,8 @@
     "prisma:deploy": "prisma migrate deploy",
     "seed": "ts-node prisma/seed.ts",
     "postinstall": "prisma generate",
-    "seed:force": "ts-node prisma/seed.ts --force"
+    "seed:force": "ts-node prisma/seed.ts --force",
+    "import:hsk": "ts-node prisma/import-hsk-master.ts"
   },
   "dependencies": {
     "@nestjs/common": "^11.2.7",

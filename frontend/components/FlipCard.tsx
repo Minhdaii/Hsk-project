@@ -14,7 +14,7 @@ function Highlight({ text, word }: { text: string; word: string }) {
         <span key={i}>
           {p}
           {i < parts.length - 1 && (
-            <b className="rounded bg-[#EEE9FC] px-1 font-semibold text-[#55449E]">{word}</b>
+            <b className="rounded bg-brand-soft px-1 font-semibold text-brand-ink">{word}</b>
           )}
         </span>
       ))}
@@ -63,7 +63,7 @@ export default function FlipCard({
           style={face}
           aria-hidden={flipped}
           {...inert(flipped)}
-          className="relative flex h-full min-h-[300px] sm:min-h-[350px] lg:min-h-[420px] flex-col items-center justify-between rounded-2xl border-2 border-[#D8D1EE] bg-white p-5 sm:p-6 text-center shadow-sm"
+          className="relative flex h-full min-h-[300px] sm:min-h-[350px] lg:min-h-[420px] flex-col items-center justify-between rounded-2xl border-2 border-line bg-white p-5 sm:p-6 text-center shadow-sm"
         >
           {/* Top meta */}
           <div className="flex w-full items-center justify-between">
@@ -72,20 +72,20 @@ export default function FlipCard({
             </span>
             <div className="flex items-center gap-2">
               <span className="editorial-badge">HSK {w.hskLevel}</span>
-              <FavoriteButton wordId={w.id} className="!h-8 !w-8 !text-xs sm:!h-9 sm:!w-9 sm:!text-sm" />
+              <FavoriteButton wordId={w.id} className="!text-base" />
             </div>
           </div>
 
           {/* Center Glyph Box */}
           <div className="my-auto flex flex-col items-center py-2">
             <div
-              className={`flex items-center justify-center rounded-xl border border-[#E7E2F0] bg-[#FAF9FD] ${
+              className={`flex items-center justify-center rounded-xl border border-line bg-stone-50 ${
                 single ? 'mi-grid-ink aspect-square w-28 sm:w-36 lg:w-40' : 'min-w-[10rem] max-w-full px-5 py-4 sm:py-6'
               }`}
             >
               <span
                 lang="zh-Hans"
-                className="hanzi break-words leading-none text-[#302B3D]"
+                className="hanzi break-words leading-none text-ink"
                 style={{ fontSize: single ? 'clamp(3.5rem, 9vw, 5.25rem)' : 'clamp(2.5rem, 6.5vw, 3.75rem)' }}
               >
                 {w.hanzi}
@@ -98,7 +98,7 @@ export default function FlipCard({
           </div>
 
           {/* Bottom helper */}
-          <p className="text-[11px] sm:text-xs font-medium text-[#777184]">
+          <p className="text-[11px] sm:text-xs font-medium text-stone-600">
             {canFlip ? 'Chạm vào thẻ hoặc nhấn Space để lật thẻ' : 'Lựa chọn đáp án chính xác ở cột bên phải (phím 1–4)'}
           </p>
         </div>
@@ -108,21 +108,21 @@ export default function FlipCard({
           style={{ ...face, transform: 'rotateY(180deg)' }}
           aria-hidden={!flipped}
           {...inert(!flipped)}
-          className="relative flex h-full min-h-[300px] sm:min-h-[350px] lg:min-h-[420px] flex-col justify-between rounded-2xl border-2 border-[#D8D1EE] bg-[#FAF9FD] p-5 sm:p-6 text-left shadow-sm"
+          className="relative flex h-full min-h-[300px] sm:min-h-[350px] lg:min-h-[420px] flex-col justify-between rounded-2xl border-2 border-line bg-stone-50 p-5 sm:p-6 text-left shadow-sm"
         >
           {/* Header */}
           <div>
-            <div className="flex items-start justify-between gap-3 border-b border-[#E7E2F0] pb-3">
+            <div className="flex items-start justify-between gap-3 border-b border-line pb-3">
               <div className="min-w-0">
-                <div lang="zh-Hans" className="hanzi break-words text-3xl sm:text-4xl font-bold leading-tight text-[#302B3D]">
+                <div lang="zh-Hans" className="hanzi break-words text-3xl sm:text-4xl font-bold leading-tight text-ink">
                   {w.hanzi}
                 </div>
-                <div className="pinyin mt-0.5 break-words text-lg sm:text-xl font-bold text-[#55449E]">
+                <div className="pinyin mt-0.5 break-words text-lg sm:text-xl font-bold text-brand-ink">
                   {w.pinyin}
                 </div>
               </div>
               <div className="flex items-center gap-1.5">
-                <FavoriteButton wordId={w.id} className="!h-8 !w-8 !text-xs sm:!h-9 sm:!w-9 sm:!text-sm" />
+                <FavoriteButton wordId={w.id} className="!text-base" />
                 <SpeakButton text={w.hanzi} audioUrl={w.audioUrl} />
               </div>
             </div>
@@ -134,10 +134,10 @@ export default function FlipCard({
                   <li
                     key={i}
                     className={`flex items-start gap-2 break-words leading-snug ${
-                      i === 0 ? 'text-base font-bold text-[#302B3D]' : 'text-xs sm:text-sm text-[#484256]'
+                      i === 0 ? 'text-base font-bold text-ink' : 'text-xs sm:text-sm text-stone-700'
                     }`}
                   >
-                    <span aria-hidden className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#A99AE8]" />
+                    <span aria-hidden className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand" />
                     <span className="min-w-0 flex-1">{m}</span>
                   </li>
                 ))}
@@ -158,28 +158,28 @@ export default function FlipCard({
 
           {/* Context Example */}
           {ex && (
-            <div className="my-2 rounded-xl border border-[#E7E2F0] bg-white p-3">
-              <div className="text-[10px] font-bold uppercase tracking-wider text-[#777184]">
+            <div className="my-2 rounded-xl border border-line bg-white p-3">
+              <div className="text-[10px] font-bold uppercase tracking-wider text-stone-600">
                 Ví dụ ngữ cảnh
               </div>
-              <div lang="zh-Hans" className="hanzi mt-1 break-words text-sm sm:text-base leading-snug text-[#302B3D]">
+              <div lang="zh-Hans" className="hanzi mt-1 break-words text-sm sm:text-base leading-snug text-ink">
                 <Highlight text={ex.hanzi} word={w.hanzi} />
               </div>
               {ex.pinyin && (
-                <div className="pinyin mt-0.5 break-words text-[11px] text-[#55449E]">{ex.pinyin}</div>
+                <div className="pinyin mt-0.5 break-words text-[11px] text-brand-ink">{ex.pinyin}</div>
               )}
               {ex.meaningVi && (
-                <div className="mt-0.5 break-words text-[11px] text-[#777184]">{ex.meaningVi}</div>
+                <div className="mt-0.5 break-words text-[11px] text-stone-600">{ex.meaningVi}</div>
               )}
             </div>
           )}
 
           {/* Footer Link */}
-          <div className="border-t border-[#E7E2F0] pt-2">
+          <div className="border-t border-line pt-2">
             <Link
               href={`/word/${w.id}`}
               onClick={(e) => e.stopPropagation()}
-              className="inline-flex min-h-[30px] items-center text-xs font-semibold text-[#55449E] underline-offset-4 hover:underline"
+              className="inline-flex min-h-[44px] items-center text-xs font-semibold text-brand-ink underline-offset-4 hover:underline"
             >
               Xem nét bút thuận & chi tiết từ điển →
             </Link>

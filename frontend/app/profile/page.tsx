@@ -53,11 +53,11 @@ export default function ProfilePage() {
   if (!user) {
     return (
       <div className="editorial-card mx-auto max-w-md p-8 text-center">
-        <p lang="zh-Hans" aria-hidden className="hanzi text-5xl font-bold text-[#55449E]">
+        <p lang="zh-Hans" aria-hidden className="hanzi text-5xl font-bold text-brand-ink">
           个人
         </p>
-        <h2 className="mt-4 text-base font-bold text-[#302B3D]">Yêu cầu đăng nhập</h2>
-        <p className="mt-1.5 text-xs text-[#777184]">
+        <h2 className="mt-4 text-base font-bold text-ink">Yêu cầu đăng nhập</h2>
+        <p className="mt-1.5 text-xs text-stone-600">
           Đăng nhập để xem thông tin hồ sơ và tùy chỉnh mục tiêu học tập cá nhân của bạn.
         </p>
         <div className="mt-5">
@@ -82,15 +82,15 @@ export default function ProfilePage() {
         <div className="flex items-center gap-4">
           <span
             aria-hidden
-            className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-[#A99AE8] text-2xl font-bold uppercase text-[#241D45] shadow-xs"
+            className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-brand text-2xl font-bold uppercase text-ink "
           >
             {user.username.slice(0, 1)}
           </span>
           <div className="min-w-0 flex-1">
-            <h2 id="thong-tin-hoc-vien" className="text-lg font-bold text-[#302B3D]">
+            <h2 id="thong-tin-hoc-vien" className="text-lg font-bold text-ink">
               {user.username}
             </h2>
-            <p className="text-xs text-[#777184]">{user.email}</p>
+            <p className="text-xs text-stone-600">{user.email}</p>
             <div className="mt-2 flex flex-wrap gap-2">
               <span className="editorial-badge">Chuỗi {stats?.streak ?? 0} ngày</span>
               <span className="editorial-badge-stone">{stats?.xp ?? 0} XP tích lũy</span>
@@ -102,10 +102,10 @@ export default function ProfilePage() {
       {/* Thiết lập mục tiêu học tập hằng ngày */}
       <section className="editorial-card p-6 space-y-4" aria-labelledby="muc-tieu-ngay">
         <div>
-          <h3 id="muc-tieu-ngay" className="text-sm font-bold text-[#302B3D]">
+          <h3 id="muc-tieu-ngay" className="text-sm font-bold text-ink">
             Chỉ tiêu học từ vựng mỗi ngày
           </h3>
-          <p className="mt-0.5 text-xs text-[#777184]">
+          <p className="mt-0.5 text-xs text-stone-600">
             Hệ thống sẽ dựa vào chỉ tiêu này để tính tỷ lệ hoàn thành mục tiêu ngày trên trang Tổng quan.
           </p>
         </div>
@@ -116,10 +116,10 @@ export default function ProfilePage() {
               key={goal}
               type="button"
               onClick={() => handleSaveGoal(goal)}
-              className={`min-h-[40px] rounded-lg border px-4 text-xs font-bold transition-all ${
+              className={`min-h-[44px] rounded-lg border px-4 text-xs font-bold transition-all ${
                 dailyGoal === goal
-                  ? 'border-[#D8CFF2] bg-[#EEE9FC] text-[#3B2D78] shadow-xs'
-                  : 'border-[#E7E2F0] bg-white text-[#777184] hover:border-[#A99AE8]'
+                  ? 'border-line bg-brand-soft text-brand-ink '
+                  : 'border-line bg-white text-stone-600 hover:border-brand'
               }`}
             >
               {goal} từ / ngày
@@ -137,21 +137,21 @@ export default function ProfilePage() {
       {/* Tùy chọn trợ năng & Âm thanh */}
       <section className="editorial-card p-6 space-y-4" aria-labelledby="tuy-chon-am-thanh">
         <div>
-          <h3 id="tuy-chon-am-thanh" className="text-sm font-bold text-[#302B3D]">
+          <h3 id="tuy-chon-am-thanh" className="text-sm font-bold text-ink">
             Cài đặt âm thanh phát âm
           </h3>
-          <p className="mt-0.5 text-xs text-[#777184]">
+          <p className="mt-0.5 text-xs text-stone-600">
             Tự động đọc từ khi mở thẻ từ mới trong phòng học flashcard.
           </p>
         </div>
 
-        <div className="flex items-center justify-between border-t border-[#F0ECF6] pt-3">
-          <span className="text-xs font-medium text-[#302B3D]">Tự động phát âm khi chuyển thẻ</span>
+        <div className="flex items-center justify-between border-t border-line pt-3">
+          <span className="text-xs font-medium text-ink">Tự động phát âm khi chuyển thẻ</span>
           <button
             onClick={toggleAutoSpeak}
             aria-pressed={autoSpeak}
-            className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-              autoSpeak ? 'bg-[#A99AE8]' : 'bg-stone-300'
+            className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer before:absolute before:-inset-x-0 before:-inset-y-[10px] before:content-[''] rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+              autoSpeak ? 'bg-brand' : 'bg-stone-300'
             }`}
           >
             <span

@@ -20,26 +20,26 @@ export default function StreakCard({ stats, days }: { stats: Stats; days: { date
         : ['Thắp ngọn lửa đầu tiên', 'Hoàn thành một bài học để bắt đầu chuỗi ngày học.'];
 
   return (
-    <section aria-label="Chuỗi ngày học" className="editorial-card rounded-2xl border-2 border-[#D8D1EE] bg-white flex min-w-0 w-full flex-col justify-between gap-4 p-5 shadow-sm">
+    <section aria-label="Chuỗi ngày học" className="editorial-card rounded-2xl border-2 border-line bg-white flex min-w-0 w-full flex-col justify-between gap-4 p-5 shadow-sm">
       <div className="flex min-w-0 items-start gap-3 sm:gap-4">
-        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-[#DED7F0] bg-[#EEE9FC]">
+        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl border border-line bg-brand-soft">
           <Flame size={40} state={stats.studiedToday ? 'lit' : 'off'} />
         </div>
         <div className="min-w-0 flex-1">
           <div className="flex items-baseline gap-1.5 flex-wrap">
             <span
               className={`text-3xl font-extrabold tracking-tight tabular-nums sm:text-4xl ${
-                stats.studiedToday ? 'text-[#55449E]' : 'text-[#777184]'
+                stats.studiedToday ? 'text-brand-ink' : 'text-stone-600'
               }`}
             >
               {n}
             </span>
-            <span className="text-xs font-semibold uppercase tracking-wider text-[#777184]">
+            <span className="text-xs font-semibold uppercase tracking-wider text-stone-600">
               ngày liên tiếp
             </span>
           </div>
-          <h3 className="mt-0.5 truncate text-sm font-bold text-[#302B3D]">{title}</h3>
-          <p className="line-clamp-2 text-xs text-[#777184]">{text}</p>
+          <h3 className="mt-0.5 truncate text-sm font-bold text-ink">{title}</h3>
+          <p className="line-clamp-2 text-xs text-stone-600">{text}</p>
         </div>
       </div>
 

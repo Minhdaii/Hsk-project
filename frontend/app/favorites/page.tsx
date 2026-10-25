@@ -33,11 +33,11 @@ export default function FavoritesPage() {
   if (!user) {
     return (
       <div className="editorial-card mx-auto max-w-md p-8 text-center">
-        <p lang="zh-Hans" aria-hidden className="hanzi text-5xl font-bold text-[#A99AE8]">
+        <p lang="zh-Hans" aria-hidden className="hanzi text-5xl font-bold text-brand-ink">
           收藏
         </p>
-        <h2 className="mt-4 text-base font-bold text-[#302B3D]">Sổ tay từ vựng cá nhân</h2>
-        <p className="mt-1.5 text-xs text-[#777184]">
+        <h2 className="mt-4 text-base font-bold text-ink">Sổ tay từ vựng cá nhân</h2>
+        <p className="mt-1.5 text-xs text-stone-600">
           Vui lòng đăng nhập để lưu giữ những từ vựng khó nhớ hoặc cần ôn luyện trọng điểm vào sổ tay riêng.
         </p>
         <div className="mt-5">
@@ -69,12 +69,12 @@ export default function FavoritesPage() {
 
       {words && words.length === 0 && (
         <div className="editorial-card space-y-4 p-10 text-center">
-          <p lang="zh-Hans" aria-hidden className="hanzi text-5xl font-bold text-[#A99AE8]/40">
+          <p lang="zh-Hans" aria-hidden className="hanzi text-5xl font-bold text-brand-ink/40">
             收藏
           </p>
           <div>
-            <h3 className="text-base font-bold text-[#302B3D]">Chưa có từ vựng nào trong sổ tay</h3>
-            <p className="mt-1 text-xs text-[#777184]">
+            <h3 className="text-base font-bold text-ink">Chưa có từ vựng nào trong sổ tay</h3>
+            <p className="mt-1 text-xs text-stone-600">
               Trong khi học hoặc tra cứu từ điển, hãy bấm vào biểu tượng ngôi sao ☆ để lưu lại những từ bạn muốn ôn tập riêng.
             </p>
           </div>
@@ -88,24 +88,24 @@ export default function FavoritesPage() {
 
       {words && words.length > 0 && (
         <div className="editorial-card overflow-hidden">
-          <ul className="divide-y divide-[#E7E2F0]">
+          <ul className="divide-y divide-line">
             {words.map((w) => (
               <li
                 key={w.id}
-                className="group flex items-center gap-3 px-4 py-3.5 transition-colors hover:bg-[#EEE9FC]/30 sm:gap-4 sm:px-5"
+                className="group flex min-h-[56px] items-center gap-3 px-4 py-3.5 transition-colors hover:bg-brand-soft/30 sm:gap-4 sm:px-5"
               >
                 <Link href={`/word/${w.id}`} className="flex min-w-0 flex-1 items-center gap-4">
                   <span
                     lang="zh-Hans"
-                    className="hanzi min-w-[3.5rem] max-w-[40%] shrink-0 break-all text-3xl font-bold leading-tight text-[#302B3D] sm:min-w-[4.75rem] sm:text-4xl"
+                    className="hanzi min-w-[3.5rem] max-w-[40%] shrink-0 break-all text-3xl font-bold leading-tight text-ink sm:min-w-[4.75rem] sm:text-4xl"
                   >
                     {w.hanzi}
                   </span>
                   <span className="min-w-0 flex-1">
-                    <span className="pinyin block break-words text-sm font-semibold text-[#55449E]">
+                    <span className="pinyin block break-words text-sm font-semibold text-brand-ink">
                       {w.pinyin}
                     </span>
-                    <span className="line-clamp-2 break-words text-xs text-[#504A5D]">
+                    <span className="line-clamp-2 break-words text-xs text-stone-700">
                       {w.meaningVi || w.meaningEn}
                     </span>
                   </span>
@@ -113,7 +113,7 @@ export default function FavoritesPage() {
 
                 <div className="flex shrink-0 items-center gap-2">
                   <span className="editorial-badge">HSK {w.hskLevel}</span>
-                  <FavoriteButton wordId={w.id} className="!h-9 !w-9 !text-sm" />
+                  <FavoriteButton wordId={w.id} className="!text-base" />
                   <SpeakButton text={w.hanzi} audioUrl={w.audioUrl} />
                 </div>
               </li>

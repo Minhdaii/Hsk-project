@@ -89,19 +89,19 @@ function QuizInner() {
 
         <section className="editorial-card space-y-4 p-5 sm:p-6">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-6">
-            <span className="w-28 shrink-0 text-xs font-bold uppercase tracking-wider text-[#777184]">
+            <span className="w-28 shrink-0 text-xs font-bold uppercase tracking-wider text-stone-600">
               Cấp độ HSK
             </span>
-            <div role="group" aria-label="Chọn cấp độ trắc nghiệm" className="inline-flex rounded-xl border border-[#E7E2F0] bg-[#EEE9FC]/40 p-1">
+            <div role="group" aria-label="Chọn cấp độ trắc nghiệm" className="inline-flex rounded-xl border border-line bg-brand-soft/40 p-1">
               {[1, 2, 3].map((l) => (
                 <button
                   key={l}
                   onClick={() => setLevel(l)}
                   aria-pressed={l === level}
-                  className={`min-h-[36px] rounded-lg px-4 text-xs font-bold transition-all ${
+                  className={`min-h-[44px] rounded-lg px-4 text-xs font-bold transition-all ${
                     l === level
-                      ? 'border border-[#A99AE8]/40 bg-white text-[#55449E] shadow-sm'
-                      : 'text-[#777184] hover:text-[#302B3D]'
+                      ? 'border border-brand/40 bg-white text-brand-ink shadow-sm'
+                      : 'text-stone-600 hover:text-ink'
                   }`}
                 >
                   HSK {l}
@@ -110,8 +110,8 @@ function QuizInner() {
             </div>
           </div>
 
-          <div className="flex flex-col gap-2 border-t border-[#E7E2F0] pt-4 sm:flex-row sm:items-center sm:gap-6">
-            <span className="w-28 shrink-0 text-xs font-bold uppercase tracking-wider text-[#777184]">
+          <div className="flex flex-col gap-2 border-t border-line pt-4 sm:flex-row sm:items-center sm:gap-6">
+            <span className="w-28 shrink-0 text-xs font-bold uppercase tracking-wider text-stone-600">
               Số câu hỏi
             </span>
             <CountPicker value={count} onChange={changeCount} />
@@ -119,19 +119,19 @@ function QuizInner() {
         </section>
 
         <div className="editorial-card overflow-hidden">
-          <div className="border-b border-[#E7E2F0] bg-[#EEE9FC]/30 px-5 py-3">
-            <span className="text-xs font-bold uppercase tracking-wider text-[#777184]">
+          <div className="border-b border-line bg-brand-soft/30 px-5 py-3">
+            <span className="text-xs font-bold uppercase tracking-wider text-stone-600">
               Chế độ kiểm tra
             </span>
           </div>
-          <ul className="divide-y divide-[#E7E2F0]">
+          <ul className="divide-y divide-line">
             {MODES.map((m) => (
               <li key={m.id}>
                 <button
                   onClick={() => setMode(m.id)}
                   aria-pressed={mode === m.id}
                   className={`flex min-h-[72px] w-full items-center gap-4 px-5 py-4 text-left transition-colors ${
-                    mode === m.id ? 'bg-[#EEE9FC]/40' : 'hover:bg-[#EEE9FC]/20'
+                    mode === m.id ? 'bg-brand-soft/40' : 'hover:bg-brand-soft/20'
                   }`}
                 >
                   <span
@@ -139,20 +139,20 @@ function QuizInner() {
                     aria-hidden
                     className={`hanzi flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-2xl font-bold transition-colors ${
                       mode === m.id
-                        ? 'bg-[#A99AE8] text-white'
-                        : 'bg-[#EEE9FC] text-[#55449E]'
+                        ? 'bg-brand text-white'
+                        : 'bg-brand-soft text-brand-ink'
                     }`}
                   >
                     {m.glyph}
                   </span>
                   <div className="min-w-0 flex-1">
-                    <h3 className="text-sm font-bold text-[#302B3D]">{m.title}</h3>
-                    <p className="mt-0.5 text-xs text-[#777184]">{m.desc}</p>
+                    <h3 className="text-sm font-bold text-ink">{m.title}</h3>
+                    <p className="mt-0.5 text-xs text-stone-600">{m.desc}</p>
                   </div>
                   <span
                     aria-hidden
                     className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border ${
-                      mode === m.id ? 'border-[#A99AE8] bg-[#A99AE8]' : 'border-[#E7E2F0]'
+                      mode === m.id ? 'border-brand bg-brand' : 'border-line'
                     }`}
                   >
                     {mode === m.id && <span className="h-1.5 w-1.5 rounded-full bg-white" />}
@@ -208,10 +208,10 @@ function QuizInner() {
         </span>
         {mode === 'meaning' ? (
           <>
-            <div lang="zh-Hans" className="hanzi break-words text-5xl font-bold leading-tight text-[#302B3D] sm:text-6xl">
+            <div lang="zh-Hans" className="hanzi break-words text-5xl font-bold leading-tight text-ink sm:text-6xl">
               {q.word.hanzi}
             </div>
-            <div className="pinyin mt-1 h-5 text-xs font-semibold text-[#55449E]">
+            <div className="pinyin mt-1 h-5 text-xs font-semibold text-brand-ink">
               {answered ? q.word.pinyin : ''}
             </div>
           </>
@@ -231,12 +231,12 @@ function QuizInner() {
         {q.options.map((o, k) => {
           const correct = o.id === q.word.id;
           const state = !answered
-            ? 'border-[#E7E2F0] bg-white hover:border-[#A99AE8] hover:bg-[#EEE9FC]/30 text-[#302B3D] active:translate-y-px shadow-sm'
+            ? 'border-line bg-white hover:border-brand hover:bg-brand-soft/30 text-ink active:translate-y-px shadow-sm'
             : correct
             ? 'border-emerald-500 bg-emerald-50 text-emerald-950 font-semibold shadow-sm'
             : o.id === picked
             ? 'border-rose-400 bg-rose-50 text-rose-800 font-semibold'
-            : 'border-[#E7E2F0] bg-white opacity-40 text-[#777184]';
+            : 'border-line bg-white opacity-40 text-stone-600';
           return (
             <button
               key={o.id}
@@ -250,7 +250,7 @@ function QuizInner() {
                     ? 'bg-emerald-600 text-white'
                     : answered && o.id === picked
                     ? 'bg-rose-500 text-white'
-                    : 'bg-[#EEE9FC] text-[#55449E]'
+                    : 'bg-brand-soft text-brand-ink'
                 }`}
               >
                 {answered && correct ? '✓' : answered && o.id === picked ? '✕' : k + 1}
@@ -258,9 +258,9 @@ function QuizInner() {
               {mode === 'meaning' ? (
                 <span className="min-w-0 break-words text-xs font-medium">{short(o)}</span>
               ) : (
-                <span className="hanzi min-w-0 text-xl font-bold text-[#302B3D]">
+                <span className="hanzi min-w-0 text-xl font-bold text-ink">
                   {o.hanzi}
-                  {answered && <span className="pinyin ml-2 font-sans text-xs text-[#55449E]">{o.pinyin}</span>}
+                  {answered && <span className="pinyin ml-2 font-sans text-xs text-brand-ink">{o.pinyin}</span>}
                 </span>
               )}
             </button>

@@ -29,15 +29,13 @@ export default function StreakBadge({ stats }: { stats: Stats | null }) {
       href="/study"
       title={tip}
       aria-label={`${tip}. Bấm để vào ôn tập`}
-      className={`relative flex min-h-[38px] items-center gap-1.5 rounded-lg border px-3 text-xs font-bold transition-all duration-300 ${
-        on
-          ? 'border-[#D8CFF2] bg-[#EEE9FC] text-[#55449E] shadow-xs'
-          : 'border-[#E7E2F0] bg-white text-[#777184] hover:border-[#D4CFE0]'
+      className={`relative flex min-h-[44px] items-center gap-1.5 rounded-lg border px-3 text-sm font-bold transition-colors duration-300 ${
+        on ? 'border-brand/60 bg-brand-soft text-ink' : 'border-line bg-white text-stone-600 hover:border-stone-400'
       }`}
     >
       <Flame size={18} state={igniting ? 'ignite' : on ? 'lit' : 'off'} />
       <span key={stats.streak} className="animate-pop tabular-nums">
-        {stats.streak} <span className="font-medium text-[#777184]">ngày</span>
+        {stats.streak} <span className="font-medium text-stone-600">ngày</span>
       </span>
     </Link>
   );

@@ -229,3 +229,47 @@ h1, h2, h3 { letter-spacing: -0.02em; }
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M50 0V100M0 50H100M0 0L100 100M100 0L0 100' fill='none' stroke='%23A99AE8' stroke-opacity='.35' stroke-width='1' stroke-dasharray='4 4' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
   background-size: 100% 100%;
 }
+
+/* ============================================================
+   LAB UI: lớp giao diện dùng cho các trang ứng dụng (thêm mới, không sửa quy tắc cũ nên Landing/Đăng nhập không đổi).
+   Mỗi cơ chế trò chơi có một màu riêng qua biến --g (dạng "R G B"); chữ trên nền trắng đều đạt tối thiểu 4,8:1.
+   ============================================================ */
+.lab-game { --g: 111 85 204; }                       /* ghép cặp: tím */
+.lab-game[data-game="order"]    { --g: 174 90 12; }   /* sắp xếp: cam đất */
+.lab-game[data-game="cloze"]    { --g: 168 52 75; }   /* điền từ: hồng đỏ */
+.lab-game[data-game="listen"]   { --g: 36 91 150; }   /* nghe: xanh dương */
+.lab-game[data-game="dialogue"] { --g: 4 120 87; }    /* hội thoại: lục */
+.g-ink   { color: rgb(var(--g)); }
+.g-solid { background-color: rgb(var(--g)); color: #fff; }
+.g-soft  { background-color: rgb(var(--g) / .08); }
+.g-line  { border-color: rgb(var(--g) / .35); }
+.g-rule  { border-top: 3px solid rgb(var(--g)); }
+.lab-surface { background: #fff; border: 1px solid rgb(var(--line)); border-radius: 12px; box-shadow: 0 1px 2px rgba(41, 40, 51, .04); }
+/* Ô thao tác kiểu "phím": cạnh dưới dày, nhấn xuống 2px */
+.lab-key { border: 1px solid rgb(var(--line)); border-bottom-width: 3px; border-radius: 10px; background: #fff; transition: transform .12s ease, border-color .15s ease, background-color .15s ease; }
+.lab-key:hover:not(:disabled) { border-color: rgb(var(--g) / .55); }
+.lab-key:active:not(:disabled) { transform: translateY(2px); border-bottom-width: 1px; }
+@media (hover: hover) {
+  .lab-tile .lab-nudge { transition: transform .35s ease; }
+  .lab-tile:hover .lab-nudge { transform: translateX(3px); }
+  .lab-tile:hover .lab-glyph { transform: rotate(-5deg) scale(1.08); }
+}
+.lab-glyph { transition: transform .35s ease; }
+
+/* ============================================================
+   LAB UI: làm phẳng các lớp cũ của khu vực học (.editorial-*). Chỉ các trang ứng dụng dùng các lớp này;
+   Landing và trang đăng nhập không dùng nên không bị ảnh hưởng. Viền mảnh, bo 10-12px, gần như không bóng,
+   lavender cho nút chính và trạng thái đang chọn.
+   ============================================================ */
+.editorial-card { background: #fff; border: 1px solid rgb(var(--line)); border-radius: 12px; box-shadow: none; transition: border-color .15s ease; }
+.editorial-card:hover { border-color: rgb(var(--line)); box-shadow: none; }
+.editorial-card-soft { background: rgb(var(--lav-soft)); border: 1px solid rgb(var(--line)); border-radius: 12px; }
+.editorial-badge { display: inline-flex; align-items: center; padding: .15rem .55rem; font-size: .75rem; font-weight: 600; border-radius: 6px; border: 0; background: rgb(var(--lav-soft)); color: rgb(var(--lav-ink)); text-transform: none; letter-spacing: 0; }
+.editorial-badge-stone { display: inline-flex; align-items: center; padding: .15rem .55rem; font-size: .75rem; font-weight: 600; border-radius: 6px; border: 1px solid rgb(var(--line)); background: #fff; color: rgb(var(--ink-2)); }
+.btn-editorial-primary { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; gap: .375rem; border-radius: 10px; background: rgb(var(--lav)); color: rgb(var(--ink)); padding: .5rem 1.25rem; font-size: .9375rem; font-weight: 700; border: 1px solid rgb(var(--lav-ink) / .35); box-shadow: none; transition: background-color .15s ease, transform .1s ease; cursor: pointer; }
+.btn-editorial-primary:hover:not(:disabled) { background: rgb(var(--lav-hover)); color: rgb(var(--ink)); transform: none; box-shadow: none; }
+.btn-editorial-primary:active:not(:disabled) { transform: translateY(1px); }
+.btn-editorial-ghost, .btn-editorial-soft { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; gap: .375rem; border-radius: 10px; border: 1px solid #D3D1DC; background: #fff; color: rgb(var(--ink)); padding: .5rem 1.1rem; font-size: .9375rem; font-weight: 600; box-shadow: none; transition: border-color .15s ease; cursor: pointer; }
+.btn-editorial-ghost:hover:not(:disabled), .btn-editorial-soft:hover:not(:disabled) { border-color: #6E707B; background: #fff; box-shadow: none; transform: none; }
+.btn-editorial-primary:disabled, .btn-editorial-ghost:disabled, .btn-editorial-soft:disabled { opacity: .5; cursor: not-allowed; }
+.g-bar { background-color: rgb(var(--g, 184 162 248)); }

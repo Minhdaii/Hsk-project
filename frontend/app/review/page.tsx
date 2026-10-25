@@ -45,11 +45,11 @@ export default function ReviewCenterPage() {
   if (!user) {
     return (
       <div className="editorial-card mx-auto max-w-md p-8 text-center">
-        <p lang="zh-Hans" aria-hidden className="hanzi text-5xl font-bold text-[#55449E]">
+        <p lang="zh-Hans" aria-hidden className="hanzi text-5xl font-bold text-brand-ink">
           复习
         </p>
-        <h2 className="mt-4 text-base font-bold text-[#302B3D]">Yêu cầu đăng nhập</h2>
-        <p className="mt-1.5 text-xs text-[#777184]">
+        <h2 className="mt-4 text-base font-bold text-ink">Yêu cầu đăng nhập</h2>
+        <p className="mt-1.5 text-xs text-stone-600">
           Đăng nhập để xem danh sách từ vựng đến hạn ôn tập được tính toán riêng theo tiến độ của bạn.
         </p>
         <div className="mt-5">
@@ -83,43 +83,43 @@ export default function ReviewCenterPage() {
       <div className="grid gap-4 sm:grid-cols-3">
         <div className="editorial-card p-5">
           <span className="editorial-badge">ĐẾN HẠN HÔM NAY</span>
-          <div className="mt-2 text-3xl font-extrabold text-[#55449E] tabular-nums">
-            {dueCount} <span className="text-sm font-normal text-[#777184]">từ</span>
+          <div className="mt-2 text-3xl font-extrabold text-brand-ink tabular-nums">
+            {dueCount} <span className="text-sm font-normal text-stone-600">từ</span>
           </div>
-          <p className="mt-1 text-xs text-[#777184]">Đã đến chu kỳ lặp lại cần ôn ngay</p>
+          <p className="mt-1 text-xs text-stone-600">Đã đến chu kỳ lặp lại cần ôn ngay</p>
         </div>
 
         <div className="editorial-card p-5">
           <span className="editorial-badge-stone">ĐANG CỦNG CỐ</span>
-          <div className="mt-2 text-3xl font-extrabold text-[#302B3D] tabular-nums">
-            {started - mastered} <span className="text-sm font-normal text-[#777184]">từ</span>
+          <div className="mt-2 text-3xl font-extrabold text-ink tabular-nums">
+            {started - mastered} <span className="text-sm font-normal text-stone-600">từ</span>
           </div>
-          <p className="mt-1 text-xs text-[#777184]">Đang trong chu kỳ lặp lại SM-2</p>
+          <p className="mt-1 text-xs text-stone-600">Đang trong chu kỳ lặp lại SM-2</p>
         </div>
 
         <div className="editorial-card p-5">
           <span className="editorial-badge-stone">ĐÃ THUỘC VỮNG</span>
           <div className="mt-2 text-3xl font-extrabold text-emerald-700 tabular-nums">
-            {mastered} <span className="text-sm font-normal text-[#777184]">từ</span>
+            {mastered} <span className="text-sm font-normal text-stone-600">từ</span>
           </div>
-          <p className="mt-1 text-xs text-[#777184]">Đạt khoảng cách lặp lại xa</p>
+          <p className="mt-1 text-xs text-stone-600">Đạt khoảng cách lặp lại xa</p>
         </div>
       </div>
 
       {/* Bộ lọc cấp độ */}
-      <div className="flex items-center justify-between border-b border-[#E7E2F0] pb-3">
+      <div className="flex items-center justify-between border-b border-line pb-3">
         <div className="flex items-center gap-2">
-          <span className="text-xs font-bold uppercase tracking-wider text-[#777184]">Cấp độ:</span>
-          <div role="group" aria-label="Chọn cấp độ ôn tập" className="inline-flex rounded-lg border border-[#E7E2F0] bg-[#FAF9FD] p-0.5">
+          <span className="text-xs font-bold uppercase tracking-wider text-stone-600">Cấp độ:</span>
+          <div role="group" aria-label="Chọn cấp độ ôn tập" className="inline-flex rounded-lg border border-line bg-stone-50 p-0.5">
             {[1, 2, 3].map((l) => (
               <button
                 key={l}
                 onClick={() => setLevel(l)}
                 aria-pressed={l === level}
-                className={`min-h-[34px] rounded-md px-3.5 text-xs font-bold transition-all ${
+                className={`min-h-[44px] rounded-md px-3.5 text-xs font-bold transition-all ${
                   l === level
-                    ? 'border border-[#D8CFF2] bg-[#EEE9FC] text-[#3B2D78] shadow-xs'
-                    : 'text-[#777184] hover:text-[#302B3D]'
+                    ? 'border border-line bg-brand-soft text-brand-ink '
+                    : 'text-stone-600 hover:text-ink'
                 }`}
               >
                 HSK {l}
@@ -128,39 +128,39 @@ export default function ReviewCenterPage() {
           </div>
         </div>
 
-        <Link href={`/study?level=${level}`} className="btn-editorial-soft !min-h-[36px] text-xs">
+        <Link href={`/study?level=${level}`} className="btn-editorial-soft !min-h-[44px] text-xs">
           Ôn tập HSK {level} →
         </Link>
       </div>
 
       {/* Danh sách từ đến hạn hôm nay */}
       <section className="editorial-card overflow-hidden" aria-labelledby="danh-sach-den-han">
-        <div className="flex items-center justify-between border-b border-[#E7E2F0] bg-[#FAF9FD] px-5 py-3">
-          <h2 id="danh-sach-den-han" className="text-xs font-bold uppercase tracking-wider text-[#302B3D]">
+        <div className="flex items-center justify-between border-b border-line bg-stone-50 px-5 py-3">
+          <h2 id="danh-sach-den-han" className="text-xs font-bold uppercase tracking-wider text-ink">
             Hàng đợi ôn tập HSK {level} ({dueCards.length} từ)
           </h2>
-          <span className="text-[11px] text-[#777184]">Sắp xếp theo ngày đến hạn</span>
+          <span className="text-[11px] text-stone-600">Sắp xếp theo ngày đến hạn</span>
         </div>
 
         {fetching ? (
-          <div className="p-6 text-center text-xs text-[#777184]">Đang kiểm tra dữ liệu lịch ôn…</div>
+          <div className="p-6 text-center text-xs text-stone-600">Đang kiểm tra dữ liệu lịch ôn…</div>
         ) : dueCards.length === 0 ? (
-          <div className="p-8 text-center text-xs text-[#777184]">
+          <div className="p-8 text-center text-xs text-stone-600">
             Hiện tại không có từ nào ở HSK {level} bị quá hạn ôn tập. Tuyệt vời!
           </div>
         ) : (
-          <ul className="divide-y divide-[#E7E2F0]">
+          <ul className="divide-y divide-line">
             {dueCards.slice(0, 8).map((c) => (
-              <li key={c.word.id} className="flex items-center justify-between gap-3 px-5 py-3.5 hover:bg-[#FAF9FD]">
+              <li key={c.word.id} className="flex items-center justify-between gap-3 px-5 py-3.5 hover:bg-stone-50">
                 <div className="flex items-center gap-4 min-w-0">
-                  <span lang="zh-Hans" className="hanzi text-3xl font-bold text-[#302B3D] min-w-[3.5rem]">
+                  <span lang="zh-Hans" className="hanzi text-3xl font-bold text-ink min-w-[3.5rem]">
                     {c.word.hanzi}
                   </span>
                   <div className="min-w-0">
-                    <span className="pinyin block text-xs font-semibold text-[#55449E]">
+                    <span className="pinyin block text-xs font-semibold text-brand-ink">
                       {c.word.pinyin}
                     </span>
-                    <span className="line-clamp-1 text-xs text-[#777184]">
+                    <span className="line-clamp-1 text-xs text-stone-600">
                       {c.word.meaningVi || c.word.meaningEn}
                     </span>
                   </div>
@@ -178,30 +178,30 @@ export default function ReviewCenterPage() {
 
       {/* Từ khó ghi nhớ từ Sổ tay (Favorites) */}
       <section className="editorial-card overflow-hidden" aria-labelledby="tu-kho-so-tay">
-        <div className="flex items-center justify-between border-b border-[#E7E2F0] bg-[#FAF9FD] px-5 py-3">
-          <h2 id="tu-kho-so-tay" className="text-xs font-bold uppercase tracking-wider text-[#302B3D]">
+        <div className="flex items-center justify-between border-b border-line bg-stone-50 px-5 py-3">
+          <h2 id="tu-kho-so-tay" className="text-xs font-bold uppercase tracking-wider text-ink">
             Từ khó được lưu riêng trong sổ tay ({favorites.length} từ)
           </h2>
-          <Link href="/favorites" className="text-xs font-semibold text-[#55449E] hover:underline">
+          <Link href="/favorites" className="inline-flex min-h-[44px] items-center text-sm font-semibold text-brand-ink hover:underline">
             Xem toàn bộ sổ tay →
           </Link>
         </div>
 
         {favorites.length === 0 ? (
-          <div className="p-8 text-center text-xs text-[#777184]">
+          <div className="p-8 text-center text-xs text-stone-600">
             Chưa có từ nào trong sổ tay. Khi học flashcard hoặc tra từ điển, bạn có thể bấm ☆ để lưu từ khó vào đây.
           </div>
         ) : (
-          <ul className="divide-y divide-[#E7E2F0]">
+          <ul className="divide-y divide-line">
             {favorites.slice(0, 6).map((w) => (
-              <li key={w.id} className="flex items-center justify-between gap-3 px-5 py-3 hover:bg-[#FAF9FD]">
+              <li key={w.id} className="flex items-center justify-between gap-3 px-5 py-3 hover:bg-stone-50">
                 <div className="flex items-center gap-4 min-w-0">
-                  <span lang="zh-Hans" className="hanzi text-2xl font-bold text-[#302B3D] min-w-[3rem]">
+                  <span lang="zh-Hans" className="hanzi text-2xl font-bold text-ink min-w-[3rem]">
                     {w.hanzi}
                   </span>
                   <div className="min-w-0">
-                    <span className="pinyin text-xs font-semibold text-[#55449E]">{w.pinyin}</span>
-                    <span className="ml-2 text-xs text-[#777184]">{w.meaningVi}</span>
+                    <span className="pinyin text-xs font-semibold text-brand-ink">{w.pinyin}</span>
+                    <span className="ml-2 text-xs text-stone-600">{w.meaningVi}</span>
                   </div>
                 </div>
                 <SpeakButton text={w.hanzi} audioUrl={w.audioUrl} />
