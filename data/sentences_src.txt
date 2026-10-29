@@ -1,0 +1,144 @@
+# Định dạng mỗi dòng:  từ cần điền | câu đã tách từ (cách nhau bằng dấu cách) | nghĩa tiếng Việt
+# Từ cần điền phải có trong danh sách từ vựng HSK 1-3 và xuất hiện nguyên vẹn trong câu.
+是 | 我 是 学生 。 | Tôi là học sinh.
+不 | 他 不 是 老师 。 | Anh ấy không phải là giáo viên.
+叫 | 你 叫 什么 名字 ? | Bạn tên là gì?
+名字 | 我 的 名字 是 小明 。 | Tên tôi là Tiểu Minh.
+认识 | 很 高兴 认识 你 。 | Rất vui được biết bạn.
+喝 | 我 喜欢 喝 茶 。 | Tôi thích uống trà.
+有 | 我 有 一 个 哥哥 。 | Tôi có một người anh trai.
+没有 | 我 没有 钱 。 | Tôi không có tiền.
+在 | 他 在 家 。 | Anh ấy ở nhà.
+去 | 我们 明天 去 北京 。 | Ngày mai chúng tôi đi Bắc Kinh.
+来 | 请 你 来 我 家 。 | Mời bạn đến nhà tôi.
+吃 | 我 想 吃 米饭 。 | Tôi muốn ăn cơm.
+想 | 你 想 喝 什么 ? | Bạn muốn uống gì?
+看 | 我 喜欢 看 电影 。 | Tôi thích xem phim.
+听 | 她 喜欢 听 音乐 。 | Cô ấy thích nghe nhạc.
+说 | 他 会 说 汉语 。 | Anh ấy biết nói tiếng Hán.
+会 | 我 会 游泳 。 | Tôi biết bơi.
+能 | 你 能 帮 我 吗 ? | Bạn có thể giúp tôi không?
+买 | 我 想 买 一 本 书 。 | Tôi muốn mua một quyển sách.
+本 | 这 本 书 很 好看 。 | Quyển sách này rất hay.
+多少 | 这 个 多少 钱 ? | Cái này bao nhiêu tiền?
+几 | 你 家 有 几 口 人 ? | Nhà bạn có mấy người?
+谁 | 他 是 谁 ? | Anh ấy là ai?
+什么 | 这 是 什么 ? | Đây là cái gì?
+哪 | 你 是 哪 国 人 ? | Bạn là người nước nào?
+怎么 | 去 学校 怎么 走 ? | Đi đến trường đi thế nào?
+吗 | 你 是 学生 吗 ? | Bạn là học sinh à?
+呢 | 我 很 好 , 你 呢 ? | Tôi rất khỏe, còn bạn thì sao?
+吧 | 我们 走 吧 。 | Chúng ta đi thôi.
+很 | 今天 天气 很 好 。 | Hôm nay thời tiết rất đẹp.
+太 | 这 个 太 贵 了 。 | Cái này đắt quá.
+都 | 我们 都 是 学生 。 | Chúng tôi đều là học sinh.
+也 | 我 也 是 学生 。 | Tôi cũng là học sinh.
+和 | 我 和 朋友 一起 去 。 | Tôi và bạn cùng đi.
+一起 | 我们 一起 吃饭 吧 。 | Chúng ta cùng ăn cơm nhé.
+大 | 这 个 房子 很 大 。 | Ngôi nhà này rất lớn.
+小 | 他 的 孩子 很 小 。 | Con của anh ấy còn nhỏ.
+多 | 这里 的 人 很 多 。 | Ở đây có rất nhiều người.
+今天 | 今天 是 星期五 。 | Hôm nay là thứ sáu.
+现在 | 现在 几 点 ? | Bây giờ mấy giờ?
+时候 | 你 什么 时候 来 ? | Khi nào bạn đến?
+工作 | 我 爸爸 在 医院 工作 。 | Bố tôi làm việc ở bệnh viện.
+家 | 我 家 有 四 口 人 。 | Nhà tôi có bốn người.
+孩子 | 她 有 两 个 孩子 。 | Cô ấy có hai đứa con.
+喜欢 | 我 喜欢 中国 菜 。 | Tôi thích món ăn Trung Quốc.
+爱 | 我 爱 我 的 家人 。 | Tôi yêu gia đình của tôi.
+知道 | 我 不 知道 他 在 哪儿 。 | Tôi không biết anh ấy ở đâu.
+觉得 | 我 觉得 汉语 很 有意思 。 | Tôi thấy tiếng Hán rất thú vị.
+比 | 他 比 我 高 。 | Anh ấy cao hơn tôi.
+还是 | 你 喝 茶 还是 喝 咖啡 ? | Bạn uống trà hay uống cà phê?
+非常 | 这 个 菜 非常 好吃 。 | Món này cực kỳ ngon.
+最 | 我 最 喜欢 苹果 。 | Tôi thích nhất là táo.
+再 | 请 再 说 一 次 。 | Xin hãy nói lại một lần nữa.
+过 | 我 去 过 北京 。 | Tôi đã từng đến Bắc Kinh.
+了 | 我 吃 了 早饭 。 | Tôi đã ăn sáng rồi.
+着 | 门 开 着 。 | Cửa đang mở.
+给 | 请 给 我 一 杯 水 。 | Làm ơn cho tôi một cốc nước.
+跟 | 我 跟 老师 学 汉语 。 | Tôi học tiếng Hán với thầy giáo.
+从 | 我 从 家 去 学校 。 | Tôi đi từ nhà đến trường.
+到 | 我 八 点 到 学校 。 | Tám giờ tôi đến trường.
+请 | 请 坐 。 | Mời ngồi.
+打 | 他 在 打 电话 。 | Anh ấy đang gọi điện thoại.
+找 | 我 在 找 我 的 手机 。 | Tôi đang tìm điện thoại của mình.
+开 | 请 你 开 门 。 | Xin bạn mở cửa.
+车 | 他 开 车 去 工作 。 | Anh ấy lái xe đi làm.
+东西 | 我 要 买 东西 。 | Tôi muốn đi mua đồ.
+重要 | 学习 很 重要 。 | Học tập rất quan trọng.
+新 | 我 有 一 个 新 手机 。 | Tôi có một chiếc điện thoại mới.
+快 | 他 跑 得 很 快 。 | Anh ấy chạy rất nhanh.
+这里 | 这里 有 很 多 人 。 | Ở đây có rất nhiều người.
+手 | 我 的 手 很 冷 。 | Tay tôi rất lạnh.
+别 | 别 说话 。 | Đừng nói chuyện.
+点 | 现在 八 点 了 。 | Bây giờ là tám giờ rồi.
+年 | 他 学 了 三 年 汉语 。 | Anh ấy đã học tiếng Hán ba năm.
+月 | 一 年 有 十二 个 月 。 | Một năm có mười hai tháng.
+天 | 我 每 天 学习 汉语 。 | Mỗi ngày tôi học tiếng Hán.
+里 | 书 在 包 里 。 | Sách ở trong cặp.
+上 | 书 在 桌子 上 。 | Sách ở trên bàn.
+用 | 我 用 手机 打 电话 。 | Tôi dùng điện thoại để gọi.
+等 | 请 等 一下 。 | Xin chờ một chút.
+走 | 我 每 天 走 路 去 学校 。 | Mỗi ngày tôi đi bộ đến trường.
+回 | 我 想 回 家 。 | Tôi muốn về nhà.
+两 | 我 有 两 个 朋友 。 | Tôi có hai người bạn.
+个 | 我 买 了 三 个 苹果 。 | Tôi đã mua ba quả táo.
+一些 | 我 买 了 一些 水果 。 | Tôi đã mua một ít hoa quả.
+这些 | 这些 书 都 是 我 的 。 | Những quyển sách này đều là của tôi.
+那 | 那 是 我 的 老师 。 | Kia là thầy giáo của tôi.
+这 | 这 是 我 的 手机 。 | Đây là điện thoại của tôi.
+他们 | 他们 都 在 学校 。 | Họ đều ở trường.
+你们 | 你们 好 ! | Chào các bạn!
+我们 | 我们 是 好 朋友 。 | Chúng tôi là bạn tốt.
+她 | 她 是 我 的 老师 。 | Cô ấy là giáo viên của tôi.
+他 | 他 是 我 的 朋友 。 | Anh ấy là bạn của tôi.
+对 | 你 说 得 对 。 | Bạn nói đúng.
+真 | 这 个 苹果 真 大 。 | Quả táo này to thật.
+还有 | 桌子 上 有 书 , 还有 笔 。 | Trên bàn có sách, còn có cả bút.
+事 | 你 有 什么 事 ? | Bạn có việc gì không?
+看到 | 我 看到 他 了 。 | Tôi đã nhìn thấy anh ấy.
+见 | 明天 见 ! | Mai gặp nhé!
+起来 | 天气 冷 起来 了 。 | Thời tiết bắt đầu lạnh rồi.
+时间 | 我 没有 时间 。 | Tôi không có thời gian.
+后 | 吃 饭 后 我 去 学校 。 | Sau khi ăn cơm tôi đến trường.
+次 | 我 去 过 三 次 。 | Tôi đã đi ba lần.
+一样 | 他 和 我 一样 高 。 | Anh ấy cao bằng tôi.
+因为 | 因为 下雨 , 所以 我 没 去 。 | Vì trời mưa nên tôi không đi.
+所以 | 因为 下雨 , 所以 我 没 去 。 | Vì trời mưa nên tôi không đi.
+但是 | 他 很 忙 , 但是 很 高兴 。 | Anh ấy bận nhưng rất vui.
+虽然 | 虽然 很 累 , 但是 他 很 开心 。 | Tuy mệt nhưng anh ấy rất vui.
+如果 | 如果 明天 下雨 , 我们 就 不 去 。 | Nếu mai trời mưa thì chúng ta sẽ không đi.
+已经 | 他 已经 走 了 。 | Anh ấy đã đi rồi.
+正在 | 他 正在 看 书 。 | Anh ấy đang đọc sách.
+比较 | 今天 比较 冷 。 | Hôm nay khá lạnh.
+经常 | 我 经常 去 图书馆 。 | Tôi thường đến thư viện.
+旅游 | 我们 想 去 中国 旅游 。 | Chúng tôi muốn đến Trung Quốc du lịch.
+准备 | 我 在 准备 考试 。 | Tôi đang chuẩn bị thi.
+帮助 | 谢谢 你 的 帮助 。 | Cảm ơn sự giúp đỡ của bạn.
+希望 | 我 希望 你 快乐 。 | Tôi mong bạn vui vẻ.
+特别 | 这 个 地方 特别 漂亮 。 | Nơi này đặc biệt đẹp.
+参加 | 我 想 参加 这 个 活动 。 | Tôi muốn tham gia hoạt động này.
+需要 | 我 需要 你 的 帮助 。 | Tôi cần sự giúp đỡ của bạn.
+告诉 | 请 告诉 我 你 的 名字 。 | Xin hãy cho tôi biết tên bạn.
+问题 | 我 有 一 个 问题 。 | Tôi có một câu hỏi.
+终于 | 他 终于 来 了 。 | Cuối cùng anh ấy cũng đến rồi.
+突然 | 天 突然 下 雨 了 。 | Trời đột nhiên mưa.
+努力 | 你 要 努力 学习 。 | Bạn phải nỗ lực học tập.
+习惯 | 我 已经 习惯 了 这里 的 生活 。 | Tôi đã quen với cuộc sống ở đây.
+欢迎 | 欢迎 你 来 中国 。 | Chào mừng bạn đến Trung Quốc.
+决定 | 我 决定 去 北京 学习 。 | Tôi quyết định đến Bắc Kinh học.
+一直 | 他 一直 在 等 你 。 | Anh ấy luôn luôn đợi bạn.
+容易 | 这 个 问题 很 容易 。 | Câu hỏi này rất dễ.
+办法 | 我 有 一 个 好 办法 。 | Tôi có một cách hay.
+关系 | 我们 的 关系 很 好 。 | Quan hệ của chúng tôi rất tốt.
+环境 | 这里 的 环境 很 好 。 | Môi trường ở đây rất tốt.
+健康 | 身体 健康 最 重要 。 | Sức khỏe là quan trọng nhất.
+成绩 | 他 的 成绩 很 好 。 | Thành tích của anh ấy rất tốt.
+机会 | 这 是 一 个 好 机会 。 | Đây là một cơ hội tốt.
+经验 | 他 有 很 多 工作 经验 。 | Anh ấy có nhiều kinh nghiệm làm việc.
+相信 | 我 相信 你 。 | Tôi tin bạn.
+解决 | 我们 一定 能 解决 这 个 问题 。 | Chúng ta nhất định có thể giải quyết vấn đề này.
+同意 | 我 同意 你 的 看法 。 | Tôi đồng ý với quan điểm của bạn.
+以后 | 以后 我 会 常常 来 。 | Sau này tôi sẽ thường xuyên đến.
+以前 | 我 以前 住 在 北京 。 | Trước đây tôi sống ở Bắc Kinh.

@@ -1,0 +1,124 @@
+generator client {
+  provider   = "prisma-client-js"
+  engineType = "client"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int        @id @default(autoincrement())
+  email        String     @unique @db.VarChar(191)
+  username     String     @db.VarChar(191)
+  passwordHash String     @map("password_hash") @db.VarChar(255)
+  streak       Int        @default(0)
+  xp           Int        @default(0)
+  lastStudy    String?    @map("last_study") @db.VarChar(10) // YYYY-MM-DD
+  createdAt    DateTime   @default(now()) @map("created_at")
+  progress     Progress[]
+  favorites    Favorite[]
+  activity     DailyActivity[]
+
+  @@map("users")
+}
+
+model Word {
+  id          Int        @id @default(autoincrement())
+  hanzi       String     @db.VarChar(64)
+  traditional String?    @db.VarChar(64)
+  pinyin      String?    @db.VarChar(128)
+  meaningVi   String?    @map("meaning_vi") @db.Text
+  meaningEn   String?    @map("meaning_en") @db.Text
+  pos         String?    @db.VarChar(64)
+  hanviet     String?    @db.VarChar(128)
+  hskLevel    Int?       @map("hsk_level") // HSK 3.0
+  hskOld      Int?       @map("hsk_old")   // HSK 2.0
+  frequency   Int?       // càng nhỏ càng thông dụng; từ chưa có dữ liệu = 999999999
+  radical     String?    @db.VarChar(8)
+  audioUrl    String?    @map("audio_url") @db.VarChar(500)
+  examples    Example[]
+  progress    Progress[]
+  favorites   Favorite[]
+
+  @@index([hskLevel])
+  @@index([hanzi])
+  @@map("words")
+}
+
+model Example {
+  id        Int     @id @default(autoincrement())
+  wordId    Int     @map("word_id")
+  hanzi     String  @db.Text
+  pinyin    String? @db.Text
+  meaningVi String? @map("meaning_vi") @db.Text
+  source    String? @db.VarChar(64)
+  tokens    String? @db.VarChar(500) // câu đã tách từ, cách nhau bằng dấu cách
+  word      Word    @relation(fields: [wordId], references: [id], onDelete: Cascade)
+
+  @@index([wordId])
+  @@map("examples")
+}
+
+model Progress {
+  userId      Int    @map("user_id")
+  wordId      Int    @map("word_id")
+  easeFactor  Float  @default(2.5) @map("ease_factor")
+  interval    Int    @default(0)
+  repetitions Int    @default(0)
+  dueDate     String @map("due_date") @db.VarChar(10) // YYYY-MM-DD
+  user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  word        Word   @relation(fields: [wordId], references: [id], onDelete: Cascade)
+
+  @@id([userId, wordId])
+  @@index([userId, dueDate])
+  @@map("user_word_progress")
+}
+
+model GrammarPoint {
+  id          Int              @id @default(autoincrement())
+  level       Int
+  sortOrder   Int              @map("sort_order")
+  title       String           @db.VarChar(191)
+  pattern     String           @db.VarChar(500)
+  explanation String           @db.Text
+  notes       String?          @db.Text
+  examples    GrammarExample[]
+
+  @@index([level])
+  @@map("grammar_points")
+}
+
+model GrammarExample {
+  id        Int          @id @default(autoincrement())
+  grammarId Int          @map("grammar_id")
+  hanzi     String       @db.VarChar(500)
+  pinyin    String?      @db.Text
+  meaningVi String?      @map("meaning_vi") @db.Text
+  grammar   GrammarPoint @relation(fields: [grammarId], references: [id], onDelete: Cascade)
+
+  @@index([grammarId])
+  @@map("grammar_examples")
+}
+
+model Favorite {
+  userId    Int      @map("user_id")
+  wordId    Int      @map("word_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  word      Word     @relation(fields: [wordId], references: [id], onDelete: Cascade)
+
+  @@id([userId, wordId])
+  @@map("favorites")
+}
+
+model DailyActivity {
+  userId  Int    @map("user_id")
+  date    String @db.VarChar(10) // YYYY-MM-DD
+  reviews Int    @default(0)
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, date])
+  @@map("daily_activity")
+}

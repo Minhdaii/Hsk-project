@@ -1,0 +1,1138 @@
+[
+ {
+  "word": "是",
+  "level": 1,
+  "hanzi": "我是学生。",
+  "tokens": "我 是 学生 。",
+  "pinyin": "wǒ shì xuéshēng 。",
+  "meaningVi": "Tôi là học sinh."
+ },
+ {
+  "word": "不",
+  "level": 1,
+  "hanzi": "他不是老师。",
+  "tokens": "他 不 是 老师 。",
+  "pinyin": "tā bú shì lǎoshī 。",
+  "meaningVi": "Anh ấy không phải là giáo viên."
+ },
+ {
+  "word": "叫",
+  "level": 1,
+  "hanzi": "你叫什么名字?",
+  "tokens": "你 叫 什么 名字 ?",
+  "pinyin": "nǐ jiào shénme míngzì ?",
+  "meaningVi": "Bạn tên là gì?"
+ },
+ {
+  "word": "名字",
+  "level": 1,
+  "hanzi": "我的名字是小明。",
+  "tokens": "我 的 名字 是 小明 。",
+  "pinyin": "wǒ de míngzì shì xiǎomíng 。",
+  "meaningVi": "Tên tôi là Tiểu Minh."
+ },
+ {
+  "word": "认识",
+  "level": 1,
+  "hanzi": "很高兴认识你。",
+  "tokens": "很 高兴 认识 你 。",
+  "pinyin": "hěn gāoxìng rènshí nǐ 。",
+  "meaningVi": "Rất vui được biết bạn."
+ },
+ {
+  "word": "喝",
+  "level": 1,
+  "hanzi": "我喜欢喝茶。",
+  "tokens": "我 喜欢 喝 茶 。",
+  "pinyin": "wǒ xǐhuān hē chá 。",
+  "meaningVi": "Tôi thích uống trà."
+ },
+ {
+  "word": "有",
+  "level": 1,
+  "hanzi": "我有一个哥哥。",
+  "tokens": "我 有 一 个 哥哥 。",
+  "pinyin": "wǒ yǒu yí gè gēgē 。",
+  "meaningVi": "Tôi có một người anh trai."
+ },
+ {
+  "word": "没有",
+  "level": 1,
+  "hanzi": "我没有钱。",
+  "tokens": "我 没有 钱 。",
+  "pinyin": "wǒ méiyǒu qián 。",
+  "meaningVi": "Tôi không có tiền."
+ },
+ {
+  "word": "在",
+  "level": 1,
+  "hanzi": "他在家。",
+  "tokens": "他 在 家 。",
+  "pinyin": "tā zài jiā 。",
+  "meaningVi": "Anh ấy ở nhà."
+ },
+ {
+  "word": "去",
+  "level": 1,
+  "hanzi": "我们明天去北京。",
+  "tokens": "我们 明天 去 北京 。",
+  "pinyin": "wǒmen míngtiān qù běijīng 。",
+  "meaningVi": "Ngày mai chúng tôi đi Bắc Kinh."
+ },
+ {
+  "word": "来",
+  "level": 1,
+  "hanzi": "请你来我家。",
+  "tokens": "请 你 来 我 家 。",
+  "pinyin": "qǐng nǐ lái wǒ jiā 。",
+  "meaningVi": "Mời bạn đến nhà tôi."
+ },
+ {
+  "word": "吃",
+  "level": 1,
+  "hanzi": "我想吃米饭。",
+  "tokens": "我 想 吃 米饭 。",
+  "pinyin": "wǒ xiǎng chī mǐfàn 。",
+  "meaningVi": "Tôi muốn ăn cơm."
+ },
+ {
+  "word": "想",
+  "level": 1,
+  "hanzi": "你想喝什么?",
+  "tokens": "你 想 喝 什么 ?",
+  "pinyin": "nǐ xiǎng hē shénme ?",
+  "meaningVi": "Bạn muốn uống gì?"
+ },
+ {
+  "word": "看",
+  "level": 1,
+  "hanzi": "我喜欢看电影。",
+  "tokens": "我 喜欢 看 电影 。",
+  "pinyin": "wǒ xǐhuān kàn diànyǐng 。",
+  "meaningVi": "Tôi thích xem phim."
+ },
+ {
+  "word": "听",
+  "level": 1,
+  "hanzi": "她喜欢听音乐。",
+  "tokens": "她 喜欢 听 音乐 。",
+  "pinyin": "tā xǐhuān tīng yīnyuè 。",
+  "meaningVi": "Cô ấy thích nghe nhạc."
+ },
+ {
+  "word": "说",
+  "level": 1,
+  "hanzi": "他会说汉语。",
+  "tokens": "他 会 说 汉语 。",
+  "pinyin": "tā huì shuō hànyǔ 。",
+  "meaningVi": "Anh ấy biết nói tiếng Hán."
+ },
+ {
+  "word": "会",
+  "level": 1,
+  "hanzi": "我会游泳。",
+  "tokens": "我 会 游泳 。",
+  "pinyin": "wǒ huì yóuyǒng 。",
+  "meaningVi": "Tôi biết bơi."
+ },
+ {
+  "word": "能",
+  "level": 1,
+  "hanzi": "你能帮我吗?",
+  "tokens": "你 能 帮 我 吗 ?",
+  "pinyin": "nǐ néng bāng wǒ ma ?",
+  "meaningVi": "Bạn có thể giúp tôi không?"
+ },
+ {
+  "word": "买",
+  "level": 1,
+  "hanzi": "我想买一本书。",
+  "tokens": "我 想 买 一 本 书 。",
+  "pinyin": "wǒ xiǎng mǎi yì běn shū 。",
+  "meaningVi": "Tôi muốn mua một quyển sách."
+ },
+ {
+  "word": "本",
+  "level": 1,
+  "hanzi": "这本书很好看。",
+  "tokens": "这 本 书 很 好看 。",
+  "pinyin": "zhè běn shū hěn hǎokàn 。",
+  "meaningVi": "Quyển sách này rất hay."
+ },
+ {
+  "word": "多少",
+  "level": 1,
+  "hanzi": "这个多少钱?",
+  "tokens": "这 个 多少 钱 ?",
+  "pinyin": "zhè ge duōshǎo qián ?",
+  "meaningVi": "Cái này bao nhiêu tiền?"
+ },
+ {
+  "word": "几",
+  "level": 1,
+  "hanzi": "你家有几口人?",
+  "tokens": "你 家 有 几 口 人 ?",
+  "pinyin": "nǐ jiā yǒu jǐ kǒu rén ?",
+  "meaningVi": "Nhà bạn có mấy người?"
+ },
+ {
+  "word": "谁",
+  "level": 1,
+  "hanzi": "他是谁?",
+  "tokens": "他 是 谁 ?",
+  "pinyin": "tā shì shuí ?",
+  "meaningVi": "Anh ấy là ai?"
+ },
+ {
+  "word": "什么",
+  "level": 1,
+  "hanzi": "这是什么?",
+  "tokens": "这 是 什么 ?",
+  "pinyin": "zhè shì shénme ?",
+  "meaningVi": "Đây là cái gì?"
+ },
+ {
+  "word": "哪",
+  "level": 1,
+  "hanzi": "你是哪国人?",
+  "tokens": "你 是 哪 国 人 ?",
+  "pinyin": "nǐ shì nǎ guó rén ?",
+  "meaningVi": "Bạn là người nước nào?"
+ },
+ {
+  "word": "怎么",
+  "level": 1,
+  "hanzi": "去学校怎么走?",
+  "tokens": "去 学校 怎么 走 ?",
+  "pinyin": "qù xuéxiào zěnme zǒu ?",
+  "meaningVi": "Đi đến trường đi thế nào?"
+ },
+ {
+  "word": "吗",
+  "level": 1,
+  "hanzi": "你是学生吗?",
+  "tokens": "你 是 学生 吗 ?",
+  "pinyin": "nǐ shì xuéshēng ma ?",
+  "meaningVi": "Bạn là học sinh à?"
+ },
+ {
+  "word": "呢",
+  "level": 1,
+  "hanzi": "我很好,你呢?",
+  "tokens": "我 很 好 , 你 呢 ?",
+  "pinyin": "wǒ hěn hǎo , nǐ ne ?",
+  "meaningVi": "Tôi rất khỏe, còn bạn thì sao?"
+ },
+ {
+  "word": "吧",
+  "level": 1,
+  "hanzi": "我们走吧。",
+  "tokens": "我们 走 吧 。",
+  "pinyin": "wǒmen zǒu ba 。",
+  "meaningVi": "Chúng ta đi thôi."
+ },
+ {
+  "word": "很",
+  "level": 1,
+  "hanzi": "今天天气很好。",
+  "tokens": "今天 天气 很 好 。",
+  "pinyin": "jīntiān tiānqì hěn hǎo 。",
+  "meaningVi": "Hôm nay thời tiết rất đẹp."
+ },
+ {
+  "word": "太",
+  "level": 1,
+  "hanzi": "这个太贵了。",
+  "tokens": "这 个 太 贵 了 。",
+  "pinyin": "zhè ge tài guì le 。",
+  "meaningVi": "Cái này đắt quá."
+ },
+ {
+  "word": "都",
+  "level": 1,
+  "hanzi": "我们都是学生。",
+  "tokens": "我们 都 是 学生 。",
+  "pinyin": "wǒmen dōu shì xuéshēng 。",
+  "meaningVi": "Chúng tôi đều là học sinh."
+ },
+ {
+  "word": "也",
+  "level": 1,
+  "hanzi": "我也是学生。",
+  "tokens": "我 也 是 学生 。",
+  "pinyin": "wǒ yě shì xuéshēng 。",
+  "meaningVi": "Tôi cũng là học sinh."
+ },
+ {
+  "word": "和",
+  "level": 1,
+  "hanzi": "我和朋友一起去。",
+  "tokens": "我 和 朋友 一起 去 。",
+  "pinyin": "wǒ hé péngyǒu yìqǐ qù 。",
+  "meaningVi": "Tôi và bạn cùng đi."
+ },
+ {
+  "word": "一起",
+  "level": 1,
+  "hanzi": "我们一起吃饭吧。",
+  "tokens": "我们 一起 吃饭 吧 。",
+  "pinyin": "wǒmen yìqǐ chīfàn ba 。",
+  "meaningVi": "Chúng ta cùng ăn cơm nhé."
+ },
+ {
+  "word": "大",
+  "level": 1,
+  "hanzi": "这个房子很大。",
+  "tokens": "这 个 房子 很 大 。",
+  "pinyin": "zhè ge fángzi hěn dà 。",
+  "meaningVi": "Ngôi nhà này rất lớn."
+ },
+ {
+  "word": "小",
+  "level": 1,
+  "hanzi": "他的孩子很小。",
+  "tokens": "他 的 孩子 很 小 。",
+  "pinyin": "tā de háizi hěn xiǎo 。",
+  "meaningVi": "Con của anh ấy còn nhỏ."
+ },
+ {
+  "word": "多",
+  "level": 1,
+  "hanzi": "这里的人很多。",
+  "tokens": "这里 的 人 很 多 。",
+  "pinyin": "zhèlǐ de rén hěn duō 。",
+  "meaningVi": "Ở đây có rất nhiều người."
+ },
+ {
+  "word": "今天",
+  "level": 1,
+  "hanzi": "今天是星期五。",
+  "tokens": "今天 是 星期五 。",
+  "pinyin": "jīntiān shì xīngqīwǔ 。",
+  "meaningVi": "Hôm nay là thứ sáu."
+ },
+ {
+  "word": "现在",
+  "level": 1,
+  "hanzi": "现在几点?",
+  "tokens": "现在 几 点 ?",
+  "pinyin": "xiànzài jǐ diǎn ?",
+  "meaningVi": "Bây giờ mấy giờ?"
+ },
+ {
+  "word": "时候",
+  "level": 1,
+  "hanzi": "你什么时候来?",
+  "tokens": "你 什么 时候 来 ?",
+  "pinyin": "nǐ shénme shíhòu lái ?",
+  "meaningVi": "Khi nào bạn đến?"
+ },
+ {
+  "word": "工作",
+  "level": 1,
+  "hanzi": "我爸爸在医院工作。",
+  "tokens": "我 爸爸 在 医院 工作 。",
+  "pinyin": "wǒ bàbà zài yīyuàn gōngzuò 。",
+  "meaningVi": "Bố tôi làm việc ở bệnh viện."
+ },
+ {
+  "word": "家",
+  "level": 1,
+  "hanzi": "我家有四口人。",
+  "tokens": "我 家 有 四 口 人 。",
+  "pinyin": "wǒ jiā yǒu sì kǒu rén 。",
+  "meaningVi": "Nhà tôi có bốn người."
+ },
+ {
+  "word": "孩子",
+  "level": 1,
+  "hanzi": "她有两个孩子。",
+  "tokens": "她 有 两 个 孩子 。",
+  "pinyin": "tā yǒu liǎng gè háizi 。",
+  "meaningVi": "Cô ấy có hai đứa con."
+ },
+ {
+  "word": "喜欢",
+  "level": 1,
+  "hanzi": "我喜欢中国菜。",
+  "tokens": "我 喜欢 中国 菜 。",
+  "pinyin": "wǒ xǐhuān zhōngguó cài 。",
+  "meaningVi": "Tôi thích món ăn Trung Quốc."
+ },
+ {
+  "word": "爱",
+  "level": 1,
+  "hanzi": "我爱我的家人。",
+  "tokens": "我 爱 我 的 家人 。",
+  "pinyin": "wǒ ài wǒ de jiārén 。",
+  "meaningVi": "Tôi yêu gia đình của tôi."
+ },
+ {
+  "word": "知道",
+  "level": 1,
+  "hanzi": "我不知道他在哪儿。",
+  "tokens": "我 不 知道 他 在 哪儿 。",
+  "pinyin": "wǒ bù zhīdào tā zài nǎr 。",
+  "meaningVi": "Tôi không biết anh ấy ở đâu."
+ },
+ {
+  "word": "觉得",
+  "level": 1,
+  "hanzi": "我觉得汉语很有意思。",
+  "tokens": "我 觉得 汉语 很 有意思 。",
+  "pinyin": "wǒ juéde hànyǔ hěn yǒuyìsi 。",
+  "meaningVi": "Tôi thấy tiếng Hán rất thú vị."
+ },
+ {
+  "word": "比",
+  "level": 1,
+  "hanzi": "他比我高。",
+  "tokens": "他 比 我 高 。",
+  "pinyin": "tā bǐ wǒ gāo 。",
+  "meaningVi": "Anh ấy cao hơn tôi."
+ },
+ {
+  "word": "还是",
+  "level": 1,
+  "hanzi": "你喝茶还是喝咖啡?",
+  "tokens": "你 喝 茶 还是 喝 咖啡 ?",
+  "pinyin": "nǐ hē chá háishì hē kāfēi ?",
+  "meaningVi": "Bạn uống trà hay uống cà phê?"
+ },
+ {
+  "word": "非常",
+  "level": 1,
+  "hanzi": "这个菜非常好吃。",
+  "tokens": "这 个 菜 非常 好吃 。",
+  "pinyin": "zhè ge cài fēicháng hǎochī 。",
+  "meaningVi": "Món này cực kỳ ngon."
+ },
+ {
+  "word": "最",
+  "level": 1,
+  "hanzi": "我最喜欢苹果。",
+  "tokens": "我 最 喜欢 苹果 。",
+  "pinyin": "wǒ zuì xǐhuān píngguǒ 。",
+  "meaningVi": "Tôi thích nhất là táo."
+ },
+ {
+  "word": "再",
+  "level": 1,
+  "hanzi": "请再说一次。",
+  "tokens": "请 再 说 一 次 。",
+  "pinyin": "qǐng zài shuō yí cì 。",
+  "meaningVi": "Xin hãy nói lại một lần nữa."
+ },
+ {
+  "word": "过",
+  "level": 1,
+  "hanzi": "我去过北京。",
+  "tokens": "我 去 过 北京 。",
+  "pinyin": "wǒ qù guo běijīng 。",
+  "meaningVi": "Tôi đã từng đến Bắc Kinh."
+ },
+ {
+  "word": "了",
+  "level": 1,
+  "hanzi": "我吃了早饭。",
+  "tokens": "我 吃 了 早饭 。",
+  "pinyin": "wǒ chī le zǎofàn 。",
+  "meaningVi": "Tôi đã ăn sáng rồi."
+ },
+ {
+  "word": "着",
+  "level": 1,
+  "hanzi": "门开着。",
+  "tokens": "门 开 着 。",
+  "pinyin": "mén kāi zhe 。",
+  "meaningVi": "Cửa đang mở."
+ },
+ {
+  "word": "给",
+  "level": 1,
+  "hanzi": "请给我一杯水。",
+  "tokens": "请 给 我 一 杯 水 。",
+  "pinyin": "qǐng gěi wǒ yì bēi shuǐ 。",
+  "meaningVi": "Làm ơn cho tôi một cốc nước."
+ },
+ {
+  "word": "跟",
+  "level": 1,
+  "hanzi": "我跟老师学汉语。",
+  "tokens": "我 跟 老师 学 汉语 。",
+  "pinyin": "wǒ gēn lǎoshī xué hànyǔ 。",
+  "meaningVi": "Tôi học tiếng Hán với thầy giáo."
+ },
+ {
+  "word": "从",
+  "level": 1,
+  "hanzi": "我从家去学校。",
+  "tokens": "我 从 家 去 学校 。",
+  "pinyin": "wǒ cóng jiā qù xuéxiào 。",
+  "meaningVi": "Tôi đi từ nhà đến trường."
+ },
+ {
+  "word": "到",
+  "level": 1,
+  "hanzi": "我八点到学校。",
+  "tokens": "我 八 点 到 学校 。",
+  "pinyin": "wǒ bā diǎn dào xuéxiào 。",
+  "meaningVi": "Tám giờ tôi đến trường."
+ },
+ {
+  "word": "请",
+  "level": 1,
+  "hanzi": "请坐。",
+  "tokens": "请 坐 。",
+  "pinyin": "qǐng zuò 。",
+  "meaningVi": "Mời ngồi."
+ },
+ {
+  "word": "打",
+  "level": 1,
+  "hanzi": "他在打电话。",
+  "tokens": "他 在 打 电话 。",
+  "pinyin": "tā zài dǎ diànhuà 。",
+  "meaningVi": "Anh ấy đang gọi điện thoại."
+ },
+ {
+  "word": "找",
+  "level": 1,
+  "hanzi": "我在找我的手机。",
+  "tokens": "我 在 找 我 的 手机 。",
+  "pinyin": "wǒ zài zhǎo wǒ de shǒujī 。",
+  "meaningVi": "Tôi đang tìm điện thoại của mình."
+ },
+ {
+  "word": "开",
+  "level": 1,
+  "hanzi": "请你开门。",
+  "tokens": "请 你 开 门 。",
+  "pinyin": "qǐng nǐ kāi mén 。",
+  "meaningVi": "Xin bạn mở cửa."
+ },
+ {
+  "word": "车",
+  "level": 1,
+  "hanzi": "他开车去工作。",
+  "tokens": "他 开 车 去 工作 。",
+  "pinyin": "tā kāi chē qù gōngzuò 。",
+  "meaningVi": "Anh ấy lái xe đi làm."
+ },
+ {
+  "word": "东西",
+  "level": 1,
+  "hanzi": "我要买东西。",
+  "tokens": "我 要 买 东西 。",
+  "pinyin": "wǒ yào mǎi dōngxī 。",
+  "meaningVi": "Tôi muốn đi mua đồ."
+ },
+ {
+  "word": "重要",
+  "level": 1,
+  "hanzi": "学习很重要。",
+  "tokens": "学习 很 重要 。",
+  "pinyin": "xuéxí hěn zhòngyào 。",
+  "meaningVi": "Học tập rất quan trọng."
+ },
+ {
+  "word": "新",
+  "level": 1,
+  "hanzi": "我有一个新手机。",
+  "tokens": "我 有 一 个 新 手机 。",
+  "pinyin": "wǒ yǒu yí gè xīn shǒujī 。",
+  "meaningVi": "Tôi có một chiếc điện thoại mới."
+ },
+ {
+  "word": "快",
+  "level": 1,
+  "hanzi": "他跑得很快。",
+  "tokens": "他 跑 得 很 快 。",
+  "pinyin": "tā pǎo de hěn kuài 。",
+  "meaningVi": "Anh ấy chạy rất nhanh."
+ },
+ {
+  "word": "这里",
+  "level": 1,
+  "hanzi": "这里有很多人。",
+  "tokens": "这里 有 很 多 人 。",
+  "pinyin": "zhèlǐ yǒu hěn duō rén 。",
+  "meaningVi": "Ở đây có rất nhiều người."
+ },
+ {
+  "word": "手",
+  "level": 1,
+  "hanzi": "我的手很冷。",
+  "tokens": "我 的 手 很 冷 。",
+  "pinyin": "wǒ de shǒu hěn lěng 。",
+  "meaningVi": "Tay tôi rất lạnh."
+ },
+ {
+  "word": "别",
+  "level": 1,
+  "hanzi": "别说话。",
+  "tokens": "别 说话 。",
+  "pinyin": "bié shuōhuà 。",
+  "meaningVi": "Đừng nói chuyện."
+ },
+ {
+  "word": "点",
+  "level": 1,
+  "hanzi": "现在八点了。",
+  "tokens": "现在 八 点 了 。",
+  "pinyin": "xiànzài bā diǎn le 。",
+  "meaningVi": "Bây giờ là tám giờ rồi."
+ },
+ {
+  "word": "年",
+  "level": 1,
+  "hanzi": "他学了三年汉语。",
+  "tokens": "他 学 了 三 年 汉语 。",
+  "pinyin": "tā xué le sān nián hànyǔ 。",
+  "meaningVi": "Anh ấy đã học tiếng Hán ba năm."
+ },
+ {
+  "word": "月",
+  "level": 1,
+  "hanzi": "一年有十二个月。",
+  "tokens": "一 年 有 十二 个 月 。",
+  "pinyin": "yì nián yǒu shíèr gè yuè 。",
+  "meaningVi": "Một năm có mười hai tháng."
+ },
+ {
+  "word": "天",
+  "level": 1,
+  "hanzi": "我每天学习汉语。",
+  "tokens": "我 每 天 学习 汉语 。",
+  "pinyin": "wǒ měi tiān xuéxí hànyǔ 。",
+  "meaningVi": "Mỗi ngày tôi học tiếng Hán."
+ },
+ {
+  "word": "里",
+  "level": 1,
+  "hanzi": "书在包里。",
+  "tokens": "书 在 包 里 。",
+  "pinyin": "shū zài bāo lǐ 。",
+  "meaningVi": "Sách ở trong cặp."
+ },
+ {
+  "word": "上",
+  "level": 1,
+  "hanzi": "书在桌子上。",
+  "tokens": "书 在 桌子 上 。",
+  "pinyin": "shū zài zhuōzi shàng 。",
+  "meaningVi": "Sách ở trên bàn."
+ },
+ {
+  "word": "用",
+  "level": 1,
+  "hanzi": "我用手机打电话。",
+  "tokens": "我 用 手机 打 电话 。",
+  "pinyin": "wǒ yòng shǒujī dǎ diànhuà 。",
+  "meaningVi": "Tôi dùng điện thoại để gọi."
+ },
+ {
+  "word": "等",
+  "level": 1,
+  "hanzi": "请等一下。",
+  "tokens": "请 等 一下 。",
+  "pinyin": "qǐng děng yíxià 。",
+  "meaningVi": "Xin chờ một chút."
+ },
+ {
+  "word": "走",
+  "level": 1,
+  "hanzi": "我每天走路去学校。",
+  "tokens": "我 每 天 走 路 去 学校 。",
+  "pinyin": "wǒ měi tiān zǒu lù qù xuéxiào 。",
+  "meaningVi": "Mỗi ngày tôi đi bộ đến trường."
+ },
+ {
+  "word": "回",
+  "level": 1,
+  "hanzi": "我想回家。",
+  "tokens": "我 想 回 家 。",
+  "pinyin": "wǒ xiǎng huí jiā 。",
+  "meaningVi": "Tôi muốn về nhà."
+ },
+ {
+  "word": "两",
+  "level": 1,
+  "hanzi": "我有两个朋友。",
+  "tokens": "我 有 两 个 朋友 。",
+  "pinyin": "wǒ yǒu liǎng gè péngyǒu 。",
+  "meaningVi": "Tôi có hai người bạn."
+ },
+ {
+  "word": "个",
+  "level": 1,
+  "hanzi": "我买了三个苹果。",
+  "tokens": "我 买 了 三 个 苹果 。",
+  "pinyin": "wǒ mǎi le sān gè píngguǒ 。",
+  "meaningVi": "Tôi đã mua ba quả táo."
+ },
+ {
+  "word": "一些",
+  "level": 1,
+  "hanzi": "我买了一些水果。",
+  "tokens": "我 买 了 一些 水果 。",
+  "pinyin": "wǒ mǎi le yìxiē shuǐguǒ 。",
+  "meaningVi": "Tôi đã mua một ít hoa quả."
+ },
+ {
+  "word": "这些",
+  "level": 1,
+  "hanzi": "这些书都是我的。",
+  "tokens": "这些 书 都 是 我 的 。",
+  "pinyin": "zhèxiē shū dōu shì wǒ de 。",
+  "meaningVi": "Những quyển sách này đều là của tôi."
+ },
+ {
+  "word": "那",
+  "level": 1,
+  "hanzi": "那是我的老师。",
+  "tokens": "那 是 我 的 老师 。",
+  "pinyin": "nà shì wǒ de lǎoshī 。",
+  "meaningVi": "Kia là thầy giáo của tôi."
+ },
+ {
+  "word": "这",
+  "level": 1,
+  "hanzi": "这是我的手机。",
+  "tokens": "这 是 我 的 手机 。",
+  "pinyin": "zhè shì wǒ de shǒujī 。",
+  "meaningVi": "Đây là điện thoại của tôi."
+ },
+ {
+  "word": "他们",
+  "level": 1,
+  "hanzi": "他们都在学校。",
+  "tokens": "他们 都 在 学校 。",
+  "pinyin": "tāmen dōu zài xuéxiào 。",
+  "meaningVi": "Họ đều ở trường."
+ },
+ {
+  "word": "你们",
+  "level": 1,
+  "hanzi": "你们好!",
+  "tokens": "你们 好 !",
+  "pinyin": "nǐmen hǎo !",
+  "meaningVi": "Chào các bạn!"
+ },
+ {
+  "word": "我们",
+  "level": 1,
+  "hanzi": "我们是好朋友。",
+  "tokens": "我们 是 好 朋友 。",
+  "pinyin": "wǒmen shì hǎo péngyǒu 。",
+  "meaningVi": "Chúng tôi là bạn tốt."
+ },
+ {
+  "word": "她",
+  "level": 1,
+  "hanzi": "她是我的老师。",
+  "tokens": "她 是 我 的 老师 。",
+  "pinyin": "tā shì wǒ de lǎoshī 。",
+  "meaningVi": "Cô ấy là giáo viên của tôi."
+ },
+ {
+  "word": "他",
+  "level": 1,
+  "hanzi": "他是我的朋友。",
+  "tokens": "他 是 我 的 朋友 。",
+  "pinyin": "tā shì wǒ de péngyǒu 。",
+  "meaningVi": "Anh ấy là bạn của tôi."
+ },
+ {
+  "word": "对",
+  "level": 1,
+  "hanzi": "你说得对。",
+  "tokens": "你 说 得 对 。",
+  "pinyin": "nǐ shuō de duì 。",
+  "meaningVi": "Bạn nói đúng."
+ },
+ {
+  "word": "真",
+  "level": 1,
+  "hanzi": "这个苹果真大。",
+  "tokens": "这 个 苹果 真 大 。",
+  "pinyin": "zhè ge píngguǒ zhēn dà 。",
+  "meaningVi": "Quả táo này to thật."
+ },
+ {
+  "word": "还有",
+  "level": 1,
+  "hanzi": "桌子上有书,还有笔。",
+  "tokens": "桌子 上 有 书 , 还有 笔 。",
+  "pinyin": "zhuōzi shàng yǒu shū , háiyǒu bǐ 。",
+  "meaningVi": "Trên bàn có sách, còn có cả bút."
+ },
+ {
+  "word": "事",
+  "level": 1,
+  "hanzi": "你有什么事?",
+  "tokens": "你 有 什么 事 ?",
+  "pinyin": "nǐ yǒu shénme shì ?",
+  "meaningVi": "Bạn có việc gì không?"
+ },
+ {
+  "word": "看到",
+  "level": 1,
+  "hanzi": "我看到他了。",
+  "tokens": "我 看到 他 了 。",
+  "pinyin": "wǒ kàndào tā le 。",
+  "meaningVi": "Tôi đã nhìn thấy anh ấy."
+ },
+ {
+  "word": "见",
+  "level": 1,
+  "hanzi": "明天见!",
+  "tokens": "明天 见 !",
+  "pinyin": "míngtiān jiàn !",
+  "meaningVi": "Mai gặp nhé!"
+ },
+ {
+  "word": "起来",
+  "level": 1,
+  "hanzi": "天气冷起来了。",
+  "tokens": "天气 冷 起来 了 。",
+  "pinyin": "tiānqì lěng qǐlái le 。",
+  "meaningVi": "Thời tiết bắt đầu lạnh rồi."
+ },
+ {
+  "word": "时间",
+  "level": 1,
+  "hanzi": "我没有时间。",
+  "tokens": "我 没有 时间 。",
+  "pinyin": "wǒ méiyǒu shíjiān 。",
+  "meaningVi": "Tôi không có thời gian."
+ },
+ {
+  "word": "后",
+  "level": 1,
+  "hanzi": "吃饭后我去学校。",
+  "tokens": "吃 饭 后 我 去 学校 。",
+  "pinyin": "chī fàn hòu wǒ qù xuéxiào 。",
+  "meaningVi": "Sau khi ăn cơm tôi đến trường."
+ },
+ {
+  "word": "次",
+  "level": 1,
+  "hanzi": "我去过三次。",
+  "tokens": "我 去 过 三 次 。",
+  "pinyin": "wǒ qù guo sān cì 。",
+  "meaningVi": "Tôi đã đi ba lần."
+ },
+ {
+  "word": "一样",
+  "level": 1,
+  "hanzi": "他和我一样高。",
+  "tokens": "他 和 我 一样 高 。",
+  "pinyin": "tā hé wǒ yíyàng gāo 。",
+  "meaningVi": "Anh ấy cao bằng tôi."
+ },
+ {
+  "word": "因为",
+  "level": 2,
+  "hanzi": "因为下雨,所以我没去。",
+  "tokens": "因为 下雨 , 所以 我 没 去 。",
+  "pinyin": "yīnwèi xiàyǔ , suǒyǐ wǒ méi qù 。",
+  "meaningVi": "Vì trời mưa nên tôi không đi."
+ },
+ {
+  "word": "所以",
+  "level": 2,
+  "hanzi": "因为下雨,所以我没去。",
+  "tokens": "因为 下雨 , 所以 我 没 去 。",
+  "pinyin": "yīnwèi xiàyǔ , suǒyǐ wǒ méi qù 。",
+  "meaningVi": "Vì trời mưa nên tôi không đi."
+ },
+ {
+  "word": "但是",
+  "level": 2,
+  "hanzi": "他很忙,但是很高兴。",
+  "tokens": "他 很 忙 , 但是 很 高兴 。",
+  "pinyin": "tā hěn máng , dànshì hěn gāoxìng 。",
+  "meaningVi": "Anh ấy bận nhưng rất vui."
+ },
+ {
+  "word": "虽然",
+  "level": 2,
+  "hanzi": "虽然很累,但是他很开心。",
+  "tokens": "虽然 很 累 , 但是 他 很 开心 。",
+  "pinyin": "suīrán hěn lèi , dànshì tā hěn kāixīn 。",
+  "meaningVi": "Tuy mệt nhưng anh ấy rất vui."
+ },
+ {
+  "word": "如果",
+  "level": 2,
+  "hanzi": "如果明天下雨,我们就不去。",
+  "tokens": "如果 明天 下雨 , 我们 就 不 去 。",
+  "pinyin": "rúguǒ míngtiān xiàyǔ , wǒmen jiù bú qù 。",
+  "meaningVi": "Nếu mai trời mưa thì chúng ta sẽ không đi."
+ },
+ {
+  "word": "已经",
+  "level": 2,
+  "hanzi": "他已经走了。",
+  "tokens": "他 已经 走 了 。",
+  "pinyin": "tā yǐjīng zǒu le 。",
+  "meaningVi": "Anh ấy đã đi rồi."
+ },
+ {
+  "word": "正在",
+  "level": 1,
+  "hanzi": "他正在看书。",
+  "tokens": "他 正在 看 书 。",
+  "pinyin": "tā zhèngzài kàn shū 。",
+  "meaningVi": "Anh ấy đang đọc sách."
+ },
+ {
+  "word": "比较",
+  "level": 3,
+  "hanzi": "今天比较冷。",
+  "tokens": "今天 比较 冷 。",
+  "pinyin": "jīntiān bǐjiào lěng 。",
+  "meaningVi": "Hôm nay khá lạnh."
+ },
+ {
+  "word": "经常",
+  "level": 2,
+  "hanzi": "我经常去图书馆。",
+  "tokens": "我 经常 去 图书馆 。",
+  "pinyin": "wǒ jīngcháng qù túshūguǎn 。",
+  "meaningVi": "Tôi thường đến thư viện."
+ },
+ {
+  "word": "旅游",
+  "level": 2,
+  "hanzi": "我们想去中国旅游。",
+  "tokens": "我们 想 去 中国 旅游 。",
+  "pinyin": "wǒmen xiǎng qù zhōngguó lǚyóu 。",
+  "meaningVi": "Chúng tôi muốn đến Trung Quốc du lịch."
+ },
+ {
+  "word": "准备",
+  "level": 1,
+  "hanzi": "我在准备考试。",
+  "tokens": "我 在 准备 考试 。",
+  "pinyin": "wǒ zài zhǔnbèi kǎoshì 。",
+  "meaningVi": "Tôi đang chuẩn bị thi."
+ },
+ {
+  "word": "帮助",
+  "level": 2,
+  "hanzi": "谢谢你的帮助。",
+  "tokens": "谢谢 你 的 帮助 。",
+  "pinyin": "xièxiè nǐ de bāngzhù 。",
+  "meaningVi": "Cảm ơn sự giúp đỡ của bạn."
+ },
+ {
+  "word": "希望",
+  "level": 3,
+  "hanzi": "我希望你快乐。",
+  "tokens": "我 希望 你 快乐 。",
+  "pinyin": "wǒ xīwàng nǐ kuàilè 。",
+  "meaningVi": "Tôi mong bạn vui vẻ."
+ },
+ {
+  "word": "特别",
+  "level": 2,
+  "hanzi": "这个地方特别漂亮。",
+  "tokens": "这 个 地方 特别 漂亮 。",
+  "pinyin": "zhè ge dìfāng tèbié piàoliàng 。",
+  "meaningVi": "Nơi này đặc biệt đẹp."
+ },
+ {
+  "word": "参加",
+  "level": 2,
+  "hanzi": "我想参加这个活动。",
+  "tokens": "我 想 参加 这 个 活动 。",
+  "pinyin": "wǒ xiǎng cānjiā zhè ge huódòng 。",
+  "meaningVi": "Tôi muốn tham gia hoạt động này."
+ },
+ {
+  "word": "需要",
+  "level": 3,
+  "hanzi": "我需要你的帮助。",
+  "tokens": "我 需要 你 的 帮助 。",
+  "pinyin": "wǒ xūyào nǐ de bāngzhù 。",
+  "meaningVi": "Tôi cần sự giúp đỡ của bạn."
+ },
+ {
+  "word": "告诉",
+  "level": 1,
+  "hanzi": "请告诉我你的名字。",
+  "tokens": "请 告诉 我 你 的 名字 。",
+  "pinyin": "qǐng gàosù wǒ nǐ de míngzì 。",
+  "meaningVi": "Xin hãy cho tôi biết tên bạn."
+ },
+ {
+  "word": "问题",
+  "level": 2,
+  "hanzi": "我有一个问题。",
+  "tokens": "我 有 一 个 问题 。",
+  "pinyin": "wǒ yǒu yí gè wèntí 。",
+  "meaningVi": "Tôi có một câu hỏi."
+ },
+ {
+  "word": "终于",
+  "level": 3,
+  "hanzi": "他终于来了。",
+  "tokens": "他 终于 来 了 。",
+  "pinyin": "tā zhōngyú lái le 。",
+  "meaningVi": "Cuối cùng anh ấy cũng đến rồi."
+ },
+ {
+  "word": "突然",
+  "level": 3,
+  "hanzi": "天突然下雨了。",
+  "tokens": "天 突然 下 雨 了 。",
+  "pinyin": "tiān tūrán xià yǔ le 。",
+  "meaningVi": "Trời đột nhiên mưa."
+ },
+ {
+  "word": "努力",
+  "level": 2,
+  "hanzi": "你要努力学习。",
+  "tokens": "你 要 努力 学习 。",
+  "pinyin": "nǐ yào nǔlì xuéxí 。",
+  "meaningVi": "Bạn phải nỗ lực học tập."
+ },
+ {
+  "word": "习惯",
+  "level": 2,
+  "hanzi": "我已经习惯了这里的生活。",
+  "tokens": "我 已经 习惯 了 这里 的 生活 。",
+  "pinyin": "wǒ yǐjīng xíguàn le zhèlǐ de shēnghuó 。",
+  "meaningVi": "Tôi đã quen với cuộc sống ở đây."
+ },
+ {
+  "word": "欢迎",
+  "level": 2,
+  "hanzi": "欢迎你来中国。",
+  "tokens": "欢迎 你 来 中国 。",
+  "pinyin": "huānyíng nǐ lái zhōngguó 。",
+  "meaningVi": "Chào mừng bạn đến Trung Quốc."
+ },
+ {
+  "word": "决定",
+  "level": 3,
+  "hanzi": "我决定去北京学习。",
+  "tokens": "我 决定 去 北京 学习 。",
+  "pinyin": "wǒ juédìng qù běijīng xuéxí 。",
+  "meaningVi": "Tôi quyết định đến Bắc Kinh học."
+ },
+ {
+  "word": "一直",
+  "level": 2,
+  "hanzi": "他一直在等你。",
+  "tokens": "他 一直 在 等 你 。",
+  "pinyin": "tā yìzhí zài děng nǐ 。",
+  "meaningVi": "Anh ấy luôn luôn đợi bạn."
+ },
+ {
+  "word": "容易",
+  "level": 3,
+  "hanzi": "这个问题很容易。",
+  "tokens": "这 个 问题 很 容易 。",
+  "pinyin": "zhè ge wèntí hěn róngyì 。",
+  "meaningVi": "Câu hỏi này rất dễ."
+ },
+ {
+  "word": "办法",
+  "level": 2,
+  "hanzi": "我有一个好办法。",
+  "tokens": "我 有 一 个 好 办法 。",
+  "pinyin": "wǒ yǒu yí gè hǎo bànfǎ 。",
+  "meaningVi": "Tôi có một cách hay."
+ },
+ {
+  "word": "关系",
+  "level": 3,
+  "hanzi": "我们的关系很好。",
+  "tokens": "我们 的 关系 很 好 。",
+  "pinyin": "wǒmen de guānxì hěn hǎo 。",
+  "meaningVi": "Quan hệ của chúng tôi rất tốt."
+ },
+ {
+  "word": "环境",
+  "level": 3,
+  "hanzi": "这里的环境很好。",
+  "tokens": "这里 的 环境 很 好 。",
+  "pinyin": "zhèlǐ de huánjìng hěn hǎo 。",
+  "meaningVi": "Môi trường ở đây rất tốt."
+ },
+ {
+  "word": "健康",
+  "level": 2,
+  "hanzi": "身体健康最重要。",
+  "tokens": "身体 健康 最 重要 。",
+  "pinyin": "shēntǐ jiànkāng zuì zhòngyào 。",
+  "meaningVi": "Sức khỏe là quan trọng nhất."
+ },
+ {
+  "word": "成绩",
+  "level": 2,
+  "hanzi": "他的成绩很好。",
+  "tokens": "他 的 成绩 很 好 。",
+  "pinyin": "tā de chéngjì hěn hǎo 。",
+  "meaningVi": "Thành tích của anh ấy rất tốt."
+ },
+ {
+  "word": "机会",
+  "level": 2,
+  "hanzi": "这是一个好机会。",
+  "tokens": "这 是 一 个 好 机会 。",
+  "pinyin": "zhè shì yí gè hǎo jīhuì 。",
+  "meaningVi": "Đây là một cơ hội tốt."
+ },
+ {
+  "word": "经验",
+  "level": 3,
+  "hanzi": "他有很多工作经验。",
+  "tokens": "他 有 很 多 工作 经验 。",
+  "pinyin": "tā yǒu hěn duō gōngzuò jīngyàn 。",
+  "meaningVi": "Anh ấy có nhiều kinh nghiệm làm việc."
+ },
+ {
+  "word": "相信",
+  "level": 2,
+  "hanzi": "我相信你。",
+  "tokens": "我 相信 你 。",
+  "pinyin": "wǒ xiāngxìn nǐ 。",
+  "meaningVi": "Tôi tin bạn."
+ },
+ {
+  "word": "解决",
+  "level": 3,
+  "hanzi": "我们一定能解决这个问题。",
+  "tokens": "我们 一定 能 解决 这 个 问题 。",
+  "pinyin": "wǒmen yídìng néng jiějué zhè ge wèntí 。",
+  "meaningVi": "Chúng ta nhất định có thể giải quyết vấn đề này."
+ },
+ {
+  "word": "同意",
+  "level": 3,
+  "hanzi": "我同意你的看法。",
+  "tokens": "我 同意 你 的 看法 。",
+  "pinyin": "wǒ tóngyì nǐ de kànfǎ 。",
+  "meaningVi": "Tôi đồng ý với quan điểm của bạn."
+ },
+ {
+  "word": "以后",
+  "level": 2,
+  "hanzi": "以后我会常常来。",
+  "tokens": "以后 我 会 常常 来 。",
+  "pinyin": "yǐhòu wǒ huì chángcháng lái 。",
+  "meaningVi": "Sau này tôi sẽ thường xuyên đến."
+ },
+ {
+  "word": "以前",
+  "level": 2,
+  "hanzi": "我以前住在北京。",
+  "tokens": "我 以前 住 在 北京 。",
+  "pinyin": "wǒ yǐqián zhù zài běijīng 。",
+  "meaningVi": "Trước đây tôi sống ở Bắc Kinh."
+ }
+]

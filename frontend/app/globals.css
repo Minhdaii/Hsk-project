@@ -1,0 +1,275 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   DESIGN TOKENS — chỉnh màu / chữ / bo góc của cả giao diện tại đây.
+   Màu viết dạng "R G B" để Tailwind dùng được độ trong suốt (bg-brand/30).
+   ============================================================ */
+:root {
+  --ink: 41 40 51;          /* #292833 graphite: chữ chính, cấu trúc */
+  --ink-2: 111 109 122;     /* #6F6D7A chữ phụ (tối hơn #777582 một chút để đạt 4,6:1 trên nền trang #F5F4F8; #777582 chỉ đạt 4,1:1) */
+  --bg: 245 244 248;        /* #F5F4F8 nền trang */
+  --surface: 255 255 255;   /* #FFFFFF */
+  --line: 229 226 236;      /* #E5E2EC viền */
+  --muted: 240 239 244;     /* #F0EFF4 nền chìm */
+
+  --lav: 184 162 248;       /* #B8A2F8 nền nhấn: CTA, tiến độ, đang chọn (chữ trên nó dùng graphite, 6,6:1) */
+  --lav-hover: 163 140 238; /* #A38CEE */
+  --lav-soft: 240 235 255;  /* #F0EBFF */
+  --lav-ink: 91 63 209;     /* #5B3FD1 lavender đậm cho CHỮ/icon, 6.8:1 trên nền trắng (#B8A1FF trên trắng chỉ 2.2:1) */
+
+  --ivory: 247 243 234;     /* #F7F3EA nền trang giới thiệu */
+  --vermilion: 201 75 60;   /* #C94B3C chỉ dùng ở trang giới thiệu & con dấu thương hiệu */
+
+  --ok: 4 120 87;           /* trạng thái đúng */
+  --bad: 185 28 28;         /* trạng thái sai */
+
+  --focus: var(--lav-ink);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --nav-h: 4.25rem;         /* chiều cao thanh điều hướng dưới (điện thoại) */
+}
+
+html, body { overflow-x: clip; } /* clip (không phải hidden) để position: sticky của thanh trên và thanh Tiếp tục vẫn hoạt động */
+html { scroll-behavior: smooth; }
+body {
+  font-family: "Be Vietnam Pro","Noto Sans SC","PingFang SC","Microsoft YaHei","Segoe UI",system-ui,sans-serif;
+  line-height: 1.6; letter-spacing: -0.003em;
+  background: rgb(var(--bg)); color: rgb(var(--ink));
+  -webkit-font-smoothing: antialiased;
+}
+:focus-visible { outline: 2px solid rgb(var(--focus)); outline-offset: 2px; }
+::selection { background: rgb(var(--lav) / .45); }
+h1, h2, h3 { letter-spacing: -0.02em; }
+.hanzi { font-family: "Noto Serif SC","Songti SC","STSong","SimSun","Noto Sans SC",serif; font-weight: 600; letter-spacing: 0; }
+.pinyin { font-feature-settings: "kern"; letter-spacing: 0.01em; }
+
+@layer components {
+  .btn { @apply inline-flex min-h-[44px] items-center justify-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-50; }
+  /* CTA: nền lavender, chữ graphite (7.3:1) */
+  .btn-primary { @apply btn bg-brand text-ink hover:bg-brand-dark active:translate-y-px; }
+  .btn-ghost { @apply btn border border-stone-300 bg-white text-stone-700 hover:border-stone-500 hover:bg-white active:translate-y-px; }
+  .btn-ink { @apply btn bg-ink text-white hover:bg-stone-700 active:translate-y-px; }
+  .card { @apply rounded-xl border border-line bg-white p-5; }
+  .pill { @apply inline-flex items-center rounded-md bg-stone-100 px-2 py-0.5 text-xs font-medium text-stone-600; }
+  .input { @apply min-h-[44px] w-full rounded-lg border border-stone-300 bg-white px-4 py-2.5 outline-none transition focus:border-brand-ink focus:ring-2 focus:ring-brand/40; }
+  /* Con dấu vuông màu đỏ son: chi tiết thương hiệu nhỏ, dùng chọn lọc */
+  .seal { @apply inline-flex items-center justify-center bg-vermilion font-hanzi font-bold text-white; border-radius: 3px; }
+}
+
+/* Ô tập viết 米字格: nét đứt ngang, dọc và hai đường chéo. Dùng cho chữ Hán cỡ lớn ở thẻ học & trang giới thiệu */
+.mi-grid {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M50 0V100M0 50H100M0 0L100 100M100 0L0 100' fill='none' stroke='%235B3FD1' stroke-opacity='.28' stroke-width='1' stroke-dasharray='5 5' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
+  background-size: 100% 100%;
+}
+.mi-grid-vermilion {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M50 0V100M0 50H100M0 0L100 100M100 0L0 100' fill='none' stroke='%23C94B3C' stroke-opacity='.4' stroke-width='1' stroke-dasharray='5 5' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
+  background-size: 100% 100%;
+}
+
+/* Nền trang giới thiệu: cùng màu nền với toàn site, thêm vân giấy rất nhẹ */
+.paper {
+  background-color: rgb(var(--bg));
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .13 0 0 0 0 .13 0 0 0 0 .14 0 0 0 .05 0'/%3E%3C/svg%3E");
+}
+
+/* Card bài tập có màu riêng. Màu nền chuyển sắc rất nhẹ khi rê chuột (chỉ trên thiết bị có hover) */
+.tone-card {
+  background-image: linear-gradient(135deg, rgb(var(--c1)), rgb(var(--c2)));
+  background-size: 170% 170%; background-position: 0% 0%;
+  transition: background-position .5s ease, transform .3s ease, box-shadow .3s ease;
+}
+@media (hover: hover) { .tone-card:hover:not(:disabled) { background-position: 100% 100%; } }
+.tone-rose   { --c1: 201 71 95;  --c2: 168 52 75; }   /* hồng đỏ, chữ trắng 4.6:1 */
+.tone-amber  { --c1: 174 90 12;  --c2: 152 78 11; }   /* cam đất */
+.tone-sky    { --c1: 47 116 184; --c2: 36 91 150; }   /* xanh dương */
+.tone-violet { --c1: 111 85 204; --c2: 86 63 174; }   /* tím, đậm hơn lavender của thương hiệu để vẫn tách biệt */
+
+/* Thanh tiến độ: tô tĩnh, chỉ chuyển chiều rộng một lần khi dữ liệu đổi */
+.bar-fill { background-image: none; animation: none; }
+
+/* Tôn trọng người dùng tắt hiệu ứng chuyển động trong hệ điều hành */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================================
+   LAVENDER WHITE × LAVENDER LEARNING WORKSPACE
+   (Dành cho khu vực học tập bên trong AppShell)
+   ============================================================ */
+.editorial-workspace {
+  background-color: #F8F7FC;
+  color: #302B3D;
+}
+
+.editorial-card {
+  background-color: #FFFFFF;
+  border: 1.5px solid #D0C6EC;
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px rgba(48, 43, 61, 0.07), 0 1px 2px rgba(48, 43, 61, 0.04);
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.editorial-card:hover {
+  border-color: #A99AE8;
+  box-shadow: 0 4px 12px rgba(169, 154, 232, 0.12);
+}
+
+.editorial-card-soft {
+  background-color: #EEE9FC;
+  border: 1.5px solid #D0C4ED;
+  border-radius: 1rem;
+}
+
+.editorial-border {
+  border-color: #D8D1EE;
+}
+
+.editorial-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 0.5rem;
+  border: 1px solid #C8BCF0;
+  background-color: #EEE9FC;
+  color: #4D3996;
+}
+
+.editorial-badge-stone {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  border: 1px solid #DED7F0;
+  background-color: #FFFFFF;
+  color: #6A637A;
+}
+
+.btn-editorial-primary {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  border-radius: 0.75rem;
+  background-color: #A99AE8;
+  color: #1F1742;
+  padding: 0.625rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  border: 1px solid #9988DF;
+  box-shadow: 0 2px 4px rgba(169, 154, 232, 0.35);
+  transition: all 150ms ease;
+  cursor: pointer;
+}
+.btn-editorial-primary:hover:not(:disabled) {
+  background-color: #9988DF;
+  color: #150F33;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(169, 154, 232, 0.4);
+}
+.btn-editorial-primary:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.btn-editorial-ghost {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  border-radius: 0.75rem;
+  border: 1.5px solid #D8D1EE;
+  background-color: #FFFFFF;
+  color: #302B3D;
+  padding: 0.625rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  box-shadow: 0 1px 2px rgba(48, 43, 61, 0.04);
+  transition: all 150ms ease;
+  cursor: pointer;
+}
+.btn-editorial-ghost:hover:not(:disabled) {
+  border-color: #B8ACE3;
+  background-color: #F8F7FC;
+  color: #1B1538;
+}
+
+.btn-editorial-soft {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  border-radius: 0.75rem;
+  border: 1.5px solid #D0C4ED;
+  background-color: #EEE9FC;
+  color: #443285;
+  padding: 0.625rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  transition: all 150ms ease;
+  cursor: pointer;
+}
+.btn-editorial-soft:hover:not(:disabled) {
+  background-color: #E2DAF8;
+  color: #2F2166;
+}
+
+.mi-grid-ink {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M50 0V100M0 50H100M0 0L100 100M100 0L0 100' fill='none' stroke='%23A99AE8' stroke-opacity='.35' stroke-width='1' stroke-dasharray='4 4' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E");
+  background-size: 100% 100%;
+}
+
+/* ============================================================
+   LAB UI: lớp giao diện dùng cho các trang ứng dụng (thêm mới, không sửa quy tắc cũ nên Landing/Đăng nhập không đổi).
+   Mỗi cơ chế trò chơi có một màu riêng qua biến --g (dạng "R G B"); chữ trên nền trắng đều đạt tối thiểu 4,8:1.
+   ============================================================ */
+.lab-game { --g: 111 85 204; }                       /* ghép cặp: tím */
+.lab-game[data-game="order"]    { --g: 174 90 12; }   /* sắp xếp: cam đất */
+.lab-game[data-game="cloze"]    { --g: 168 52 75; }   /* điền từ: hồng đỏ */
+.lab-game[data-game="listen"]   { --g: 36 91 150; }   /* nghe: xanh dương */
+.lab-game[data-game="dialogue"] { --g: 4 120 87; }    /* hội thoại: lục */
+.g-ink   { color: rgb(var(--g)); }
+.g-solid { background-color: rgb(var(--g)); color: #fff; }
+.g-soft  { background-color: rgb(var(--g) / .08); }
+.g-line  { border-color: rgb(var(--g) / .35); }
+.g-rule  { border-top: 3px solid rgb(var(--g)); }
+.lab-surface { background: #fff; border: 1px solid rgb(var(--line)); border-radius: 12px; box-shadow: 0 1px 2px rgba(41, 40, 51, .04); }
+/* Ô thao tác kiểu "phím": cạnh dưới dày, nhấn xuống 2px */
+.lab-key { border: 1px solid rgb(var(--line)); border-bottom-width: 3px; border-radius: 10px; background: #fff; transition: transform .12s ease, border-color .15s ease, background-color .15s ease; }
+.lab-key:hover:not(:disabled) { border-color: rgb(var(--g) / .55); }
+.lab-key:active:not(:disabled) { transform: translateY(2px); border-bottom-width: 1px; }
+@media (hover: hover) {
+  .lab-tile .lab-nudge { transition: transform .35s ease; }
+  .lab-tile:hover .lab-nudge { transform: translateX(3px); }
+  .lab-tile:hover .lab-glyph { transform: rotate(-5deg) scale(1.08); }
+}
+.lab-glyph { transition: transform .35s ease; }
+
+/* ============================================================
+   LAB UI: làm phẳng các lớp cũ của khu vực học (.editorial-*). Chỉ các trang ứng dụng dùng các lớp này;
+   Landing và trang đăng nhập không dùng nên không bị ảnh hưởng. Viền mảnh, bo 10-12px, gần như không bóng,
+   lavender cho nút chính và trạng thái đang chọn.
+   ============================================================ */
+.editorial-card { background: #fff; border: 1px solid rgb(var(--line)); border-radius: 12px; box-shadow: none; transition: border-color .15s ease; }
+.editorial-card:hover { border-color: rgb(var(--line)); box-shadow: none; }
+.editorial-card-soft { background: rgb(var(--lav-soft)); border: 1px solid rgb(var(--line)); border-radius: 12px; }
+.editorial-badge { display: inline-flex; align-items: center; padding: .15rem .55rem; font-size: .75rem; font-weight: 600; border-radius: 6px; border: 0; background: rgb(var(--lav-soft)); color: rgb(var(--lav-ink)); text-transform: none; letter-spacing: 0; }
+.editorial-badge-stone { display: inline-flex; align-items: center; padding: .15rem .55rem; font-size: .75rem; font-weight: 600; border-radius: 6px; border: 1px solid rgb(var(--line)); background: #fff; color: rgb(var(--ink-2)); }
+.btn-editorial-primary { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; gap: .375rem; border-radius: 10px; background: rgb(var(--lav)); color: rgb(var(--ink)); padding: .5rem 1.25rem; font-size: .9375rem; font-weight: 700; border: 1px solid rgb(var(--lav-ink) / .35); box-shadow: none; transition: background-color .15s ease, transform .1s ease; cursor: pointer; }
+.btn-editorial-primary:hover:not(:disabled) { background: rgb(var(--lav-hover)); color: rgb(var(--ink)); transform: none; box-shadow: none; }
+.btn-editorial-primary:active:not(:disabled) { transform: translateY(1px); }
+.btn-editorial-ghost, .btn-editorial-soft { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; gap: .375rem; border-radius: 10px; border: 1px solid #D3D1DC; background: #fff; color: rgb(var(--ink)); padding: .5rem 1.1rem; font-size: .9375rem; font-weight: 600; box-shadow: none; transition: border-color .15s ease; cursor: pointer; }
+.btn-editorial-ghost:hover:not(:disabled), .btn-editorial-soft:hover:not(:disabled) { border-color: #6E707B; background: #fff; box-shadow: none; transform: none; }
+.btn-editorial-primary:disabled, .btn-editorial-ghost:disabled, .btn-editorial-soft:disabled { opacity: .5; cursor: not-allowed; }
+.g-bar { background-color: rgb(var(--g, 184 162 248)); }
