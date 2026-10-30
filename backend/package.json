@@ -12,7 +12,9 @@
     "seed": "ts-node prisma/seed.ts",
     "postinstall": "prisma generate",
     "seed:force": "ts-node prisma/seed.ts --force",
-    "import:hsk": "ts-node prisma/import-hsk-master.ts"
+    "import:categories": "ts-node prisma/import-categories.ts",
+    "import:hsk-sql": "ts-node prisma/import-hsk-sql.ts",
+    "import:grammar": "ts-node prisma/import-grammar.ts"
   },
   "dependencies": {
     "@nestjs/common": "^11.2.7",

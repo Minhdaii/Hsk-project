@@ -59,7 +59,12 @@ async function seedContent() {
 
   // Ngữ pháp
   const grammar: GrammarSrc[] = JSON.parse(readFileSync(join(DATA, 'grammar.json'), 'utf-8'));
-  await prisma.grammarPoint.deleteMany();
+  // Bảo vệ dữ liệu: nếu đã có ngữ pháp (kể cả bản nhập bằng import-grammar) thì không xoá nạp lại.
+  // Muốn nạp lại từ đầu hãy xoá bảng grammar_points thủ công hoặc dùng `npm run import:grammar`.
+  if ((await prisma.grammarPoint.count()) > 0) {
+    console.log('Đã có dữ liệu ngữ pháp, bỏ qua bước nạp ngữ pháp trong seed.');
+    return;
+  }
   for (const g of grammar) {
     await prisma.grammarPoint.create({
       data: {

@@ -1,0 +1,1349 @@
+{
+ "note": "Dữ liệu bổ sung do hệ thống soạn (build_grammar_extra.py). CHƯA được xác minh bởi giáo viên hoặc người bản ngữ.",
+ "enrich": {
+  "1": {
+   "slug": "shi-zi-ju",
+   "titleZh": "是字句",
+   "category": "Câu cơ bản",
+   "keywords": [
+    "是"
+   ],
+   "related": [
+    "you-zi-ju",
+    "hen-truoc-tinh-tu"
+   ],
+   "mistakes": [
+    {
+     "wrong": "她是高。",
+     "right": "她很高。",
+     "rightTokens": "她 很 高 。",
+     "rightPinyin": "tā hěn gāo 。",
+     "rightVi": "Cô ấy cao.",
+     "why": "Trước tính từ không dùng 是, mà dùng 很 hoặc trạng từ khác."
+    }
+   ]
+  },
+  "2": {
+   "slug": "ma-nghi-van",
+   "titleZh": "“吗”字问句",
+   "category": "Câu hỏi",
+   "keywords": [
+    "吗"
+   ],
+   "related": [
+    "chinh-phan",
+    "ne-rut-gon"
+   ],
+   "mistakes": [
+    {
+     "wrong": "你喜欢不喜欢茶吗？",
+     "right": "你喜欢茶吗？",
+     "rightTokens": "你 喜欢 茶 吗 ？",
+     "rightPinyin": "nǐ xǐhuān chá ma ？",
+     "rightVi": "Bạn có thích trà không?",
+     "why": "Câu hỏi chính phản (V不V) không dùng thêm 吗 ở cuối."
+    }
+   ]
+  },
+  "3": {
+   "slug": "phu-dinh-bu-mei",
+   "titleZh": "“不”和“没”的否定",
+   "category": "Phủ định",
+   "keywords": [
+    "不",
+    "没"
+   ],
+   "related": [
+    "you-zi-ju"
+   ],
+   "mistakes": [
+    {
+     "wrong": "我不有钱。",
+     "right": "我没有钱。",
+     "rightTokens": "我 没有 钱 。",
+     "rightPinyin": "wǒ méiyǒu qián 。",
+     "rightVi": "Tôi không có tiền.",
+     "why": "Phủ định của 有 luôn là 没有, không dùng 不有."
+    }
+   ]
+  },
+  "4": {
+   "slug": "you-zi-ju",
+   "titleZh": "“有”字句",
+   "category": "Câu cơ bản",
+   "keywords": [
+    "有"
+   ],
+   "related": [
+    "shi-zi-ju",
+    "luong-tu"
+   ],
+   "mistakes": [
+    {
+     "wrong": "他有三个书。",
+     "right": "他有三本书。",
+     "rightTokens": "他 有 三 本 书 。",
+     "rightPinyin": "tā yǒu sān běn shū 。",
+     "rightVi": "Anh ấy có ba quyển sách.",
+     "why": "Mỗi danh từ đi với lượng từ riêng: sách dùng 本, không dùng 个."
+    }
+   ]
+  },
+  "5": {
+   "slug": "de-so-huu",
+   "titleZh": "结构助词“的”",
+   "category": "Trợ từ",
+   "keywords": [
+    "的"
+   ],
+   "related": [
+    "luong-tu"
+   ],
+   "mistakes": [
+    {
+     "wrong": "这是我书。",
+     "right": "这是我的书。",
+     "rightTokens": "这 是 我 的 书 。",
+     "rightPinyin": "zhè shì wǒ de shū 。",
+     "rightVi": "Đây là sách của tôi.",
+     "why": "Sở hữu thông thường cần có 的 giữa người sở hữu và vật."
+    }
+   ]
+  },
+  "6": {
+   "slug": "dai-tu-nghi-van",
+   "titleZh": "疑问代词",
+   "category": "Câu hỏi",
+   "keywords": [
+    "什么",
+    "谁",
+    "哪",
+    "几",
+    "多少",
+    "怎么"
+   ],
+   "related": [
+    "ma-nghi-van"
+   ],
+   "mistakes": [
+    {
+     "wrong": "你是谁吗？",
+     "right": "你是谁？",
+     "rightTokens": "你 是 谁 ？",
+     "rightPinyin": "nǐ shì shuí ？",
+     "rightVi": "Bạn là ai?",
+     "why": "Câu đã có đại từ nghi vấn thì không thêm 吗."
+    }
+   ]
+  },
+  "7": {
+   "slug": "luong-tu",
+   "titleZh": "量词",
+   "category": "Lượng từ",
+   "keywords": [
+    "个",
+    "本"
+   ],
+   "related": [
+    "de-so-huu",
+    "you-zi-ju"
+   ],
+   "mistakes": [
+    {
+     "wrong": "我有三书。",
+     "right": "我有三本书。",
+     "rightTokens": "我 有 三 本 书 。",
+     "rightPinyin": "wǒ yǒu sān běn shū 。",
+     "rightVi": "Tôi có ba quyển sách.",
+     "why": "Giữa số từ và danh từ bắt buộc có lượng từ."
+    }
+   ]
+  },
+  "8": {
+   "slug": "zai-noi-chon",
+   "titleZh": "介词“在”",
+   "category": "Giới từ",
+   "keywords": [
+    "在"
+   ],
+   "related": [
+    "li-cong-dao"
+   ],
+   "mistakes": [
+    {
+     "wrong": "我学习在学校。",
+     "right": "我在学校学习。",
+     "rightTokens": "我 在 学校 学习 。",
+     "rightPinyin": "wǒ zài xuéxiào xuéxí 。",
+     "rightVi": "Tôi học ở trường.",
+     "why": "Cụm chỉ nơi chốn với 在 đứng trước động từ."
+    }
+   ]
+  },
+  "9": {
+   "slug": "hen-truoc-tinh-tu",
+   "titleZh": "副词“很”",
+   "category": "Trạng từ",
+   "keywords": [
+    "很"
+   ],
+   "related": [
+    "shi-zi-ju",
+    "ye-dou"
+   ],
+   "mistakes": [
+    {
+     "wrong": "他不很高。",
+     "right": "他不太高。",
+     "rightTokens": "他 不 太 高 。",
+     "rightPinyin": "tā bú tài gāo 。",
+     "rightVi": "Anh ấy không cao lắm.",
+     "why": "Phủ định mức độ dùng 不太, không nói 不很."
+    }
+   ]
+  },
+  "10": {
+   "slug": "ye-dou",
+   "titleZh": "副词“也”和“都”",
+   "category": "Trạng từ",
+   "keywords": [
+    "也",
+    "都"
+   ],
+   "related": [
+    "hen-truoc-tinh-tu"
+   ],
+   "mistakes": [
+    {
+     "wrong": "也我是学生。",
+     "right": "我也是学生。",
+     "rightTokens": "我 也 是 学生 。",
+     "rightPinyin": "wǒ yě shì xuéshēng 。",
+     "rightVi": "Tôi cũng là học sinh.",
+     "why": "Trạng từ 也 đứng sau chủ ngữ, trước động từ."
+    }
+   ]
+  },
+  "11": {
+   "slug": "le-hoan-thanh",
+   "titleZh": "动态助词“了”",
+   "category": "Trợ từ",
+   "keywords": [
+    "了"
+   ],
+   "related": [
+    "guo-kinh-nghiem",
+    "zhengzai-dang"
+   ],
+   "mistakes": [
+    {
+     "wrong": "我喜欢了他。",
+     "right": "我喜欢他。",
+     "rightTokens": "我 喜欢 他 。",
+     "rightPinyin": "wǒ xǐhuān tā 。",
+     "rightVi": "Tôi thích anh ấy.",
+     "why": "Động từ chỉ trạng thái như 喜欢 thường không thêm 了 để chỉ hoàn thành."
+    }
+   ]
+  },
+  "12": {
+   "slug": "chinh-phan",
+   "titleZh": "正反疑问句",
+   "category": "Câu hỏi",
+   "keywords": [
+    "不"
+   ],
+   "related": [
+    "ma-nghi-van"
+   ],
+   "mistakes": [
+    {
+     "wrong": "你是不是学生吗？",
+     "right": "你是不是学生？",
+     "rightTokens": "你 是 不 是 学生 ？",
+     "rightPinyin": "nǐ shì bu shì xuéshēng ？",
+     "rightVi": "Bạn có phải là học sinh không?",
+     "why": "Câu hỏi chính phản không thêm 吗."
+    }
+   ]
+  },
+  "13": {
+   "slug": "nang-nguyen",
+   "titleZh": "能愿动词",
+   "category": "Động từ năng nguyện",
+   "keywords": [
+    "想",
+    "会",
+    "能",
+    "可以"
+   ],
+   "related": [
+    "phu-dinh-bu-mei"
+   ],
+   "mistakes": [
+    {
+     "wrong": "我会去明天学校。",
+     "right": "我明天会去学校。",
+     "rightTokens": "我 明天 会 去 学校 。",
+     "rightPinyin": "wǒ míngtiān huì qù xuéxiào 。",
+     "rightVi": "Ngày mai tôi sẽ đến trường.",
+     "why": "Từ chỉ thời gian đứng trước động từ năng nguyện."
+    }
+   ]
+  },
+  "14": {
+   "slug": "ne-rut-gon",
+   "titleZh": "“呢”字问句",
+   "category": "Câu hỏi",
+   "keywords": [
+    "呢"
+   ],
+   "related": [
+    "ma-nghi-van"
+   ],
+   "mistakes": [
+    {
+     "wrong": "我是学生，你是呢？",
+     "right": "我是学生，你呢？",
+     "rightTokens": "我 是 学生 ， 你 呢 ？",
+     "rightPinyin": "wǒ shì xuéshēng ， nǐ ne ？",
+     "rightVi": "Tôi là học sinh, còn bạn?",
+     "why": "呢 thay cho phần đã nói, không giữ lại động từ 是."
+    }
+   ]
+  },
+  "15": {
+   "slug": "gio-giac",
+   "titleZh": "时间表达",
+   "category": "Thời gian",
+   "keywords": [
+    "点",
+    "半",
+    "刻"
+   ],
+   "related": [],
+   "mistakes": [
+    {
+     "wrong": "现在点三。",
+     "right": "现在三点。",
+     "rightTokens": "现在 三 点 。",
+     "rightPinyin": "xiànzài sān diǎn 。",
+     "rightVi": "Bây giờ là ba giờ.",
+     "why": "Số đứng trước 点: 三点, không nói 点三."
+    }
+   ]
+  },
+  "16": {
+   "slug": "guo-kinh-nghiem",
+   "titleZh": "动态助词“过”",
+   "category": "Trợ từ",
+   "keywords": [
+    "过"
+   ],
+   "related": [
+    "le-hoan-thanh"
+   ],
+   "mistakes": [
+    {
+     "wrong": "我去过了北京。",
+     "right": "我去过北京。",
+     "rightTokens": "我 去 过 北京 。",
+     "rightPinyin": "wǒ qù guo běijīng 。",
+     "rightVi": "Tôi đã từng đến Bắc Kinh.",
+     "why": "Khi nói kinh nghiệm với 过 thì thường không thêm 了 sau động từ."
+    }
+   ]
+  },
+  "17": {
+   "slug": "zhengzai-dang",
+   "titleZh": "“正在”表示进行",
+   "category": "Thời gian",
+   "keywords": [
+    "正在",
+    "在"
+   ],
+   "related": [
+    "le-hoan-thanh",
+    "zhe"
+   ],
+   "mistakes": [
+    {
+     "wrong": "我正在吃了饭。",
+     "right": "我正在吃饭。",
+     "rightTokens": "我 正在 吃饭 。",
+     "rightPinyin": "wǒ zhèngzài chīfàn 。",
+     "rightVi": "Tôi đang ăn cơm.",
+     "why": "正在 diễn tả hành động đang diễn ra, không đi với 了 sau động từ."
+    }
+   ]
+  },
+  "18": {
+   "slug": "bi-so-sanh",
+   "titleZh": "“比”字句",
+   "category": "So sánh",
+   "keywords": [
+    "比"
+   ],
+   "related": [
+    "de-bo-ngu-trang-thai"
+   ],
+   "mistakes": [
+    {
+     "wrong": "他比我很高。",
+     "right": "他比我高。",
+     "rightTokens": "他 比 我 高 。",
+     "rightPinyin": "tā bǐ wǒ gāo 。",
+     "rightVi": "Anh ấy cao hơn tôi.",
+     "why": "Sau 比 không dùng 很; dùng 更, 还 hoặc bỏ trạng từ mức độ."
+    }
+   ]
+  },
+  "19": {
+   "slug": "de-bo-ngu-trang-thai",
+   "titleZh": "状态补语“得”",
+   "category": "Bổ ngữ",
+   "keywords": [
+    "得"
+   ],
+   "related": [
+    "bi-so-sanh",
+    "bo-ngu-kha-nang"
+   ],
+   "mistakes": [
+    {
+     "wrong": "他说汉语得很好。",
+     "right": "他汉语说得很好。",
+     "rightTokens": "他 汉语 说 得 很 好 。",
+     "rightPinyin": "tā hànyǔ shuō de hěn hǎo 。",
+     "rightVi": "Anh ấy nói tiếng Trung rất tốt.",
+     "why": "Có tân ngữ thì đặt tân ngữ trước động từ, hoặc lặp lại động từ: 说汉语说得很好."
+    }
+   ]
+  },
+  "20": {
+   "slug": "haishi-huozhe",
+   "titleZh": "“还是”和“或者”",
+   "category": "Liên từ và quan hệ câu",
+   "keywords": [
+    "还是",
+    "或者"
+   ],
+   "related": [
+    "chinh-phan"
+   ],
+   "mistakes": [
+    {
+     "wrong": "你喝茶或者咖啡？",
+     "right": "你喝茶还是咖啡？",
+     "rightTokens": "你 喝 茶 还是 咖啡 ？",
+     "rightPinyin": "nǐ hē chá háishì kāfēi ？",
+     "rightVi": "Bạn uống trà hay cà phê?",
+     "why": "Câu hỏi lựa chọn dùng 还是; 或者 dùng trong câu trần thuật."
+    }
+   ]
+  },
+  "21": {
+   "slug": "yinwei-suoyi",
+   "titleZh": "“因为……所以……”",
+   "category": "Liên từ và quan hệ câu",
+   "keywords": [
+    "因为",
+    "所以"
+   ],
+   "related": [
+    "suiran-danshi",
+    "ruguo-jiu"
+   ],
+   "mistakes": [
+    {
+     "wrong": "因为下雨，但是我不去。",
+     "right": "因为下雨，所以我不去。",
+     "rightTokens": "因为 下雨 ， 所以 我 不 去 。",
+     "rightPinyin": "yīnwèi xiàyǔ ， suǒyǐ wǒ bú qù 。",
+     "rightVi": "Vì trời mưa nên tôi không đi.",
+     "why": "因为 đi với 所以 để chỉ nguyên nhân - kết quả, không dùng 但是."
+    }
+   ]
+  },
+  "22": {
+   "slug": "suiran-danshi",
+   "titleZh": "“虽然……但是……”",
+   "category": "Liên từ và quan hệ câu",
+   "keywords": [
+    "虽然",
+    "但是"
+   ],
+   "related": [
+    "yinwei-suoyi",
+    "budan-erqie"
+   ],
+   "mistakes": [
+    {
+     "wrong": "虽然他很忙，所以他来了。",
+     "right": "虽然他很忙，但是他来了。",
+     "rightTokens": "虽然 他 很 忙 ， 但是 他 来 了 。",
+     "rightPinyin": "suīrán tā hěn máng ， dànshì tā lái le 。",
+     "rightVi": "Tuy anh ấy bận nhưng anh ấy vẫn đến.",
+     "why": "虽然 đi với 但是 (chuyển ý), không dùng 所以."
+    }
+   ]
+  },
+  "23": {
+   "slug": "yao-le-sap",
+   "titleZh": "“要……了”“快……了”",
+   "category": "Thời gian",
+   "keywords": [
+    "要",
+    "快"
+   ],
+   "related": [
+    "le-hoan-thanh"
+   ],
+   "mistakes": [
+    {
+     "wrong": "我们明天快要到了。",
+     "right": "我们明天就要到了。",
+     "rightTokens": "我们 明天 就 要 到 了 。",
+     "rightPinyin": "wǒmen míngtiān jiù yào dào le 。",
+     "rightVi": "Ngày mai chúng tôi sẽ đến.",
+     "why": "快 không dùng cùng từ chỉ thời gian cụ thể; dùng 就要."
+    }
+   ]
+  },
+  "24": {
+   "slug": "li-cong-dao",
+   "titleZh": "“离”和“从……到……”",
+   "category": "Giới từ",
+   "keywords": [
+    "离",
+    "从",
+    "到"
+   ],
+   "related": [
+    "zai-noi-chon"
+   ],
+   "mistakes": [
+    {
+     "wrong": "我家从学校很近。",
+     "right": "我家离学校很近。",
+     "rightTokens": "我 家 离 学校 很 近 。",
+     "rightPinyin": "wǒ jiā lí xuéxiào hěn jìn 。",
+     "rightVi": "Nhà tôi gần trường.",
+     "why": "Khoảng cách giữa hai nơi dùng 离, không dùng 从."
+    }
+   ]
+  },
+  "25": {
+   "slug": "lien-dong",
+   "titleZh": "连动句",
+   "category": "Câu đặc biệt",
+   "keywords": [
+    "去",
+    "来"
+   ],
+   "related": [
+    "zai-noi-chon"
+   ],
+   "mistakes": [
+    {
+     "wrong": "我去买东西超市。",
+     "right": "我去超市买东西。",
+     "rightTokens": "我 去 超市 买 东西 。",
+     "rightPinyin": "wǒ qù chāoshì mǎi dōngxī 。",
+     "rightVi": "Tôi đi siêu thị mua đồ.",
+     "why": "Địa điểm đứng ngay sau 去, rồi mới đến động từ chỉ mục đích."
+    }
+   ]
+  },
+  "26": {
+   "slug": "yidianr-youdianr",
+   "titleZh": "“一点儿”和“有点儿”",
+   "category": "Trạng từ",
+   "keywords": [
+    "一点儿",
+    "有点儿"
+   ],
+   "related": [
+    "hen-truoc-tinh-tu"
+   ],
+   "mistakes": [
+    {
+     "wrong": "请说慢有点儿。",
+     "right": "请说慢一点儿。",
+     "rightTokens": "请 说 慢 一点儿 。",
+     "rightPinyin": "qǐng shuō màn yìdiǎnr 。",
+     "rightVi": "Xin hãy nói chậm một chút.",
+     "why": "Mệnh lệnh, đề nghị dùng tính từ + 一点儿; 有点儿 đứng trước tính từ."
+    }
+   ]
+  },
+  "27": {
+   "slug": "zai-you",
+   "titleZh": "“再”和“又”",
+   "category": "Trạng từ",
+   "keywords": [
+    "再",
+    "又"
+   ],
+   "related": [
+    "le-hoan-thanh"
+   ],
+   "mistakes": [
+    {
+     "wrong": "我明天又来。",
+     "right": "我明天再来。",
+     "rightTokens": "我 明天 再 来 。",
+     "rightPinyin": "wǒ míngtiān zài lái 。",
+     "rightVi": "Ngày mai tôi sẽ lại đến.",
+     "why": "Việc chưa xảy ra dùng 再; 又 dùng cho việc đã lặp lại."
+    }
+   ]
+  },
+  "28": {
+   "slug": "ba",
+   "titleZh": "“把”字句",
+   "category": "Câu đặc biệt",
+   "keywords": [
+    "把"
+   ],
+   "related": [
+    "bei"
+   ],
+   "mistakes": [
+    {
+     "wrong": "我把书看。",
+     "right": "我把书看完了。",
+     "rightTokens": "我 把 书 看 完 了 。",
+     "rightPinyin": "wǒ bǎ shū kàn wán le 。",
+     "rightVi": "Tôi đã đọc xong quyển sách.",
+     "why": "Sau động từ trong câu 把 phải có thành phần khác (bổ ngữ, 了…)."
+    }
+   ]
+  },
+  "29": {
+   "slug": "bei",
+   "titleZh": "“被”字句",
+   "category": "Câu đặc biệt",
+   "keywords": [
+    "被"
+   ],
+   "related": [
+    "ba"
+   ],
+   "mistakes": [
+    {
+     "wrong": "杯子被打。",
+     "right": "杯子被他打碎了。",
+     "rightTokens": "杯子 被 他 打 碎 了 。",
+     "rightPinyin": "bēizi bèi tā dǎ suì le 。",
+     "rightVi": "Cái cốc bị anh ấy làm vỡ.",
+     "why": "Sau động từ trong câu 被 cần có kết quả hoặc thành phần bổ sung."
+    }
+   ]
+  },
+  "30": {
+   "slug": "ruguo-jiu",
+   "titleZh": "“如果……就……”",
+   "category": "Liên từ và quan hệ câu",
+   "keywords": [
+    "如果",
+    "就"
+   ],
+   "related": [
+    "yinwei-suoyi"
+   ],
+   "mistakes": [
+    {
+     "wrong": "如果下雨，所以我不去。",
+     "right": "如果下雨，我就不去。",
+     "rightTokens": "如果 下雨 ， 我 就 不 去 。",
+     "rightPinyin": "rúguǒ xiàyǔ ， wǒ jiù bú qù 。",
+     "rightVi": "Nếu trời mưa thì tôi không đi.",
+     "why": "Vế điều kiện dùng 如果, vế kết quả dùng 就, không dùng 所以."
+    }
+   ]
+  },
+  "31": {
+   "slug": "yue-yue",
+   "titleZh": "“越……越……”",
+   "category": "Liên từ và quan hệ câu",
+   "keywords": [
+    "越"
+   ],
+   "related": [
+    "yue-lai-yue"
+   ],
+   "mistakes": [
+    {
+     "wrong": "他越说很快。",
+     "right": "他越说越快。",
+     "rightTokens": "他 越 说 越 快 。",
+     "rightPinyin": "tā yuè shuō yuè kuài 。",
+     "rightVi": "Anh ấy càng nói càng nhanh.",
+     "why": "Cả hai vế đều cần 越: 越…越…."
+    }
+   ]
+  },
+  "32": {
+   "slug": "yi-jiu",
+   "titleZh": "“一……就……”",
+   "category": "Liên từ và quan hệ câu",
+   "keywords": [
+    "一",
+    "就"
+   ],
+   "related": [
+    "jiu-cai"
+   ],
+   "mistakes": [
+    {
+     "wrong": "我一到家，所以就吃饭。",
+     "right": "我一到家就吃饭。",
+     "rightTokens": "我 一 到 家 就 吃饭 。",
+     "rightPinyin": "wǒ yí dào jiā jiù chīfàn 。",
+     "rightVi": "Tôi vừa về đến nhà là ăn cơm.",
+     "why": "一…就… nối hai hành động liên tiếp, không cần 所以."
+    }
+   ]
+  },
+  "33": {
+   "slug": "bo-ngu-kha-nang",
+   "titleZh": "可能补语",
+   "category": "Bổ ngữ",
+   "keywords": [
+    "得",
+    "不"
+   ],
+   "related": [
+    "bo-ngu-xu-huong",
+    "de-bo-ngu-trang-thai"
+   ],
+   "mistakes": [
+    {
+     "wrong": "我看得不懂。",
+     "right": "我看不懂。",
+     "rightTokens": "我 看 不 懂 。",
+     "rightPinyin": "wǒ kàn bù dǒng 。",
+     "rightVi": "Tôi đọc không hiểu.",
+     "why": "Dạng phủ định của bổ ngữ khả năng là V + 不 + bổ ngữ."
+    }
+   ]
+  },
+  "34": {
+   "slug": "bo-ngu-xu-huong",
+   "titleZh": "趋向补语",
+   "category": "Bổ ngữ",
+   "keywords": [
+    "来",
+    "去",
+    "上",
+    "下",
+    "进",
+    "出",
+    "回",
+    "过",
+    "起"
+   ],
+   "related": [
+    "bo-ngu-kha-nang"
+   ],
+   "mistakes": [
+    {
+     "wrong": "他走进去教室了。",
+     "right": "他走进教室去了。",
+     "rightTokens": "他 走 进 教室 去 了 。",
+     "rightPinyin": "tā zǒu jìn jiàoshì qù le 。",
+     "rightVi": "Anh ấy đi vào lớp học rồi.",
+     "why": "Khi có tân ngữ chỉ nơi chốn, đặt nó giữa phần 进 và 去."
+    }
+   ]
+  },
+  "35": {
+   "slug": "shi-de",
+   "titleZh": "“是……的”句",
+   "category": "Câu đặc biệt",
+   "keywords": [
+    "是",
+    "的"
+   ],
+   "related": [
+    "le-hoan-thanh"
+   ],
+   "mistakes": [
+    {
+     "wrong": "他是昨天来。",
+     "right": "他是昨天来的。",
+     "rightTokens": "他 是 昨天 来 的 。",
+     "rightPinyin": "tā shì zuótiān lái de 。",
+     "rightVi": "Anh ấy đến vào hôm qua.",
+     "why": "Câu 是…的 cần có 的 ở cuối để nhấn mạnh thời gian, nơi chốn, cách thức."
+    }
+   ]
+  },
+  "36": {
+   "slug": "chule-yiwai",
+   "titleZh": "“除了……以外”",
+   "category": "Liên từ và quan hệ câu",
+   "keywords": [
+    "除了",
+    "以外"
+   ],
+   "related": [],
+   "mistakes": []
+  },
+  "37": {
+   "slug": "budan-erqie",
+   "titleZh": "“不但……而且……”",
+   "category": "Liên từ và quan hệ câu",
+   "keywords": [
+    "不但",
+    "而且"
+   ],
+   "related": [
+    "suiran-danshi"
+   ],
+   "mistakes": [
+    {
+     "wrong": "他不但聪明，但是也很努力。",
+     "right": "他不但聪明，而且很努力。",
+     "rightTokens": "他 不但 聪明 ， 而且 很 努力 。",
+     "rightPinyin": "tā búdàn cōngmíng ， érqiě hěn nǔlì 。",
+     "rightVi": "Anh ấy không những thông minh mà còn chăm chỉ.",
+     "why": "不但 đi với 而且 (tăng tiến), không dùng 但是 (chuyển ý)."
+    }
+   ]
+  },
+  "38": {
+   "slug": "jiu-cai",
+   "titleZh": "“就”和“才”",
+   "category": "Trạng từ",
+   "keywords": [
+    "就",
+    "才"
+   ],
+   "related": [
+    "yi-jiu"
+   ],
+   "mistakes": [
+    {
+     "wrong": "他六点才起床了。",
+     "right": "他六点才起床。",
+     "rightTokens": "他 六 点 才 起床 。",
+     "rightPinyin": "tā liù diǎn cái qǐchuáng 。",
+     "rightVi": "Mãi đến sáu giờ anh ấy mới dậy.",
+     "why": "才 diễn tả muộn/chậm và thường không đi với 了."
+    }
+   ]
+  },
+  "39": {
+   "slug": "zhe",
+   "titleZh": "助词“着”",
+   "category": "Trợ từ",
+   "keywords": [
+    "着"
+   ],
+   "related": [
+    "zhengzai-dang"
+   ],
+   "mistakes": [
+    {
+     "wrong": "门开了着。",
+     "right": "门开着。",
+     "rightTokens": "门 开 着 。",
+     "rightPinyin": "mén kāi zhe 。",
+     "rightVi": "Cửa đang mở.",
+     "why": "着 chỉ trạng thái kéo dài, không dùng cùng 了."
+    }
+   ]
+  }
+ },
+ "newPoints": [
+  {
+   "slug": "tai-le",
+   "level": 1,
+   "title": "太……了",
+   "titleZh": "“太……了”",
+   "category": "Trạng từ",
+   "pattern": "太 + tính từ + 了",
+   "explanation": "Dùng để nhấn mạnh mức độ cao, có thể là khen (\"quá tốt\") hoặc chê (\"quá đắt\").",
+   "notes": "Khi mang nghĩa phủ định mức độ thì dùng 不太 + tính từ (không … lắm).",
+   "keywords": [
+    "太"
+   ],
+   "related": [
+    "hen-truoc-tinh-tu"
+   ],
+   "examples": [
+    {
+     "hanzi": "今天太热了。",
+     "tokens": "今天 太 热 了 。",
+     "pinyin": "jīntiān tài rè le 。",
+     "meaningVi": "Hôm nay nóng quá.",
+     "explanationVi": null
+    },
+    {
+     "hanzi": "这个菜太好吃了。",
+     "tokens": "这 个 菜 太 好吃 了 。",
+     "pinyin": "zhè ge cài tài hǎochī le 。",
+     "meaningVi": "Món này ngon quá.",
+     "explanationVi": null
+    },
+    {
+     "hanzi": "这件衣服太贵了。",
+     "tokens": "这 件 衣服 太 贵 了 。",
+     "pinyin": "zhè jiàn yīfú tài guì le 。",
+     "meaningVi": "Chiếc áo này đắt quá.",
+     "explanationVi": null
+    }
+   ],
+   "mistakes": [
+    {
+     "wrong": "今天太很热了。",
+     "right": "今天太热了。",
+     "rightTokens": "今天 太 热 了 。",
+     "rightPinyin": "jīntiān tài rè le 。",
+     "rightVi": "Hôm nay nóng quá.",
+     "why": "太 đã diễn tả mức độ cao nên không dùng thêm 很."
+    }
+   ]
+  },
+  {
+   "slug": "bie-bu-yao",
+   "level": 2,
+   "title": "Câu mệnh lệnh phủ định 别 / 不要",
+   "titleZh": "“别”“不要”祈使句",
+   "category": "Câu đặc biệt",
+   "pattern": "别 / 不要 + động từ (+ 了)",
+   "explanation": "Dùng để khuyên nhủ hoặc yêu cầu ai đó không làm việc gì. 别 thân mật hơn 不要.",
+   "notes": "Có thể thêm 了 ở cuối để bảo ngừng một việc đang làm.",
+   "keywords": [
+    "别",
+    "不要"
+   ],
+   "related": [
+    "phu-dinh-bu-mei"
+   ],
+   "examples": [
+    {
+     "hanzi": "别说话。",
+     "tokens": "别 说话 。",
+     "pinyin": "bié shuōhuà 。",
+     "meaningVi": "Đừng nói chuyện.",
+     "explanationVi": null
+    },
+    {
+     "hanzi": "你不要忘记。",
+     "tokens": "你 不要 忘记 。",
+     "pinyin": "nǐ búyào wàngjì 。",
+     "meaningVi": "Bạn đừng quên.",
+     "explanationVi": null
+    },
+    {
+     "hanzi": "别哭了。",
+     "tokens": "别 哭 了 。",
+     "pinyin": "bié kū le 。",
+     "meaningVi": "Đừng khóc nữa.",
+     "explanationVi": null
+    }
+   ],
+   "mistakes": [
+    {
+     "wrong": "别不要说话。",
+     "right": "别说话。",
+     "rightTokens": "别 说话 。",
+     "rightPinyin": "bié shuōhuà 。",
+     "rightVi": "Đừng nói chuyện.",
+     "why": "别 và 不要 đều là từ phủ định ra lệnh, không dùng chồng lên nhau."
+    }
+   ]
+  },
+  {
+   "slug": "xian-ranhou",
+   "level": 2,
+   "title": "先……然后……",
+   "titleZh": "“先……然后……”",
+   "category": "Liên từ và quan hệ câu",
+   "pattern": "先 + hành động 1 , 然后 + hành động 2",
+   "explanation": "Dùng để nói thứ tự của các hành động: làm việc này trước, sau đó làm việc kia.",
+   "notes": "Có thể thêm 再 trước hành động thứ hai: 先……，再……。",
+   "keywords": [
+    "先",
+    "然后"
+   ],
+   "related": [
+    "yi-jiu"
+   ],
+   "examples": [
+    {
+     "hanzi": "我先吃饭，然后去学校。",
+     "tokens": "我 先 吃饭 ， 然后 去 学校 。",
+     "pinyin": "wǒ xiān chīfàn ， ránhòu qù xuéxiào 。",
+     "meaningVi": "Tôi ăn cơm trước, sau đó đi đến trường.",
+     "explanationVi": null
+    },
+    {
+     "hanzi": "你先想一想，然后回答。",
+     "tokens": "你 先 想 一 想 ， 然后 回答 。",
+     "pinyin": "nǐ xiān xiǎng yì xiǎng ， ránhòu huídá 。",
+     "meaningVi": "Bạn nghĩ một chút trước, rồi hãy trả lời.",
+     "explanationVi": null
+    }
+   ],
+   "mistakes": [
+    {
+     "wrong": "我然后吃饭，先去学校。",
+     "right": "我先吃饭，然后去学校。",
+     "rightTokens": "我 先 吃饭 ， 然后 去 学校 。",
+     "rightPinyin": "wǒ xiān chīfàn ， ránhòu qù xuéxiào 。",
+     "rightVi": "Tôi ăn cơm trước, sau đó đến trường.",
+     "why": "先 chỉ việc làm trước, 然后 chỉ việc làm sau; không đảo vị trí."
+    }
+   ]
+  },
+  {
+   "slug": "you-you",
+   "level": 3,
+   "title": "又……又……",
+   "titleZh": "“又……又……”",
+   "category": "Liên từ và quan hệ câu",
+   "pattern": "又 + tính từ / động từ 1 + 又 + tính từ / động từ 2",
+   "explanation": "Diễn tả hai đặc điểm hoặc hai hành động cùng tồn tại ở một đối tượng.",
+   "notes": "Hai thành phần thường cùng loại (cùng tích cực hoặc cùng tiêu cực).",
+   "keywords": [
+    "又"
+   ],
+   "related": [
+    "zai-you",
+    "budan-erqie"
+   ],
+   "examples": [
+    {
+     "hanzi": "这个菜又便宜又好吃。",
+     "tokens": "这 个 菜 又 便宜 又 好吃 。",
+     "pinyin": "zhè ge cài yòu piányi yòu hǎochī 。",
+     "meaningVi": "Món này vừa rẻ vừa ngon.",
+     "explanationVi": null
+    },
+    {
+     "hanzi": "她又高又漂亮。",
+     "tokens": "她 又 高 又 漂亮 。",
+     "pinyin": "tā yòu gāo yòu piàoliàng 。",
+     "meaningVi": "Cô ấy vừa cao vừa xinh.",
+     "explanationVi": null
+    }
+   ],
+   "mistakes": [
+    {
+     "wrong": "这个菜又便宜也好吃。",
+     "right": "这个菜又便宜又好吃。",
+     "rightTokens": "这 个 菜 又 便宜 又 好吃 。",
+     "rightPinyin": "zhè ge cài yòu piányi yòu hǎochī 。",
+     "rightVi": "Món này vừa rẻ vừa ngon.",
+     "why": "Cấu trúc cố định là 又…又…, không thay vế sau bằng 也."
+    }
+   ]
+  },
+  {
+   "slug": "yue-lai-yue",
+   "level": 3,
+   "title": "越来越……",
+   "titleZh": "“越来越……”",
+   "category": "Liên từ và quan hệ câu",
+   "pattern": "越来越 + tính từ / động từ chỉ tâm lý",
+   "explanation": "Diễn tả mức độ tăng dần theo thời gian: ngày càng ….",
+   "notes": "Khác với 越……越……: 越来越 chỉ có một chủ thể thay đổi theo thời gian.",
+   "keywords": [
+    "越来越"
+   ],
+   "related": [
+    "yue-yue"
+   ],
+   "examples": [
+    {
+     "hanzi": "天气越来越热了。",
+     "tokens": "天气 越来越 热 了 。",
+     "pinyin": "tiānqì yuèláiyuè rè le 。",
+     "meaningVi": "Thời tiết ngày càng nóng.",
+     "explanationVi": null
+    },
+    {
+     "hanzi": "他的汉语越来越好了。",
+     "tokens": "他 的 汉语 越来越 好 了 。",
+     "pinyin": "tā de hànyǔ yuèláiyuè hǎo le 。",
+     "meaningVi": "Tiếng Trung của anh ấy ngày càng tốt.",
+     "explanationVi": null
+    }
+   ],
+   "mistakes": [
+    {
+     "wrong": "天气越来越很热。",
+     "right": "天气越来越热了。",
+     "rightTokens": "天气 越来越 热 了 。",
+     "rightPinyin": "tiānqì yuèláiyuè rè le 。",
+     "rightVi": "Thời tiết ngày càng nóng.",
+     "why": "Sau 越来越 không dùng thêm 很."
+    }
+   ]
+  },
+  {
+   "slug": "yibian-yibian",
+   "level": 3,
+   "title": "一边……一边……",
+   "titleZh": "“一边……一边……”",
+   "category": "Liên từ và quan hệ câu",
+   "pattern": "一边 + động từ 1 , 一边 + động từ 2",
+   "explanation": "Diễn tả hai hành động diễn ra đồng thời.",
+   "notes": "Chủ ngữ của hai động từ thường là cùng một người.",
+   "keywords": [
+    "一边"
+   ],
+   "related": [
+    "yue-yue"
+   ],
+   "examples": [
+    {
+     "hanzi": "他一边吃饭一边看电视。",
+     "tokens": "他 一边 吃饭 一边 看 电视 。",
+     "pinyin": "tā yìbiān chīfàn yìbiān kàn diànshì 。",
+     "meaningVi": "Anh ấy vừa ăn cơm vừa xem tivi.",
+     "explanationVi": null
+    },
+    {
+     "hanzi": "我们一边走一边聊天。",
+     "tokens": "我 们 一边 走 一边 聊天 。",
+     "pinyin": "wǒ men yìbiān zǒu yìbiān liáotiān 。",
+     "meaningVi": "Chúng tôi vừa đi vừa trò chuyện.",
+     "explanationVi": null
+    }
+   ],
+   "mistakes": [
+    {
+     "wrong": "他一边吃饭，然后看电视。",
+     "right": "他一边吃饭一边看电视。",
+     "rightTokens": "他 一边 吃饭 一边 看 电视 。",
+     "rightPinyin": "tā yìbiān chīfàn yìbiān kàn diànshì 。",
+     "rightVi": "Anh ấy vừa ăn cơm vừa xem tivi.",
+     "why": "Hành động đồng thời dùng 一边…一边…, không dùng 然后 (nối tiếp)."
+    }
+   ]
+  },
+  {
+   "slug": "zhiyao-jiu",
+   "level": 3,
+   "title": "只要……就……",
+   "titleZh": "“只要……就……”",
+   "category": "Liên từ và quan hệ câu",
+   "pattern": "只要 + điều kiện , 就 + kết quả",
+   "explanation": "Chỉ cần có điều kiện này thì sẽ có kết quả kia (điều kiện đủ).",
+   "notes": "Khác với 只有……才……: điều kiện đó là điều kiện duy nhất, bắt buộc.",
+   "keywords": [
+    "只要",
+    "就"
+   ],
+   "related": [
+    "zhiyou-cai",
+    "ruguo-jiu"
+   ],
+   "examples": [
+    {
+     "hanzi": "只要你努力，就能成功。",
+     "tokens": "只要 你 努力 ， 就 能 成功 。",
+     "pinyin": "zhǐyào nǐ nǔlì ， jiù néng chénggōng 。",
+     "meaningVi": "Chỉ cần bạn cố gắng thì sẽ thành công.",
+     "explanationVi": null
+    },
+    {
+     "hanzi": "只要有时间，我就去。",
+     "tokens": "只要 有 时间 ， 我 就 去 。",
+     "pinyin": "zhǐyào yǒu shíjiān ， wǒ jiù qù 。",
+     "meaningVi": "Chỉ cần có thời gian là tôi sẽ đi.",
+     "explanationVi": null
+    }
+   ],
+   "mistakes": [
+    {
+     "wrong": "只要你努力，才能成功。",
+     "right": "只要你努力，就能成功。",
+     "rightTokens": "只要 你 努力 ， 就 能 成功 。",
+     "rightPinyin": "zhǐyào nǐ nǔlì ， jiù néng chénggōng 。",
+     "rightVi": "Chỉ cần bạn cố gắng thì sẽ thành công.",
+     "why": "只要 đi với 就; 才 thuộc cấu trúc 只有…才…."
+    }
+   ]
+  },
+  {
+   "slug": "zhiyou-cai",
+   "level": 3,
+   "title": "只有……才……",
+   "titleZh": "“只有……才……”",
+   "category": "Liên từ và quan hệ câu",
+   "pattern": "只有 + điều kiện duy nhất , 才 + kết quả",
+   "explanation": "Chỉ khi có điều kiện này thì mới có kết quả kia (điều kiện cần).",
+   "notes": "So sánh với 只要……就……: 只有 nhấn mạnh điều kiện duy nhất.",
+   "keywords": [
+    "只有",
+    "才"
+   ],
+   "related": [
+    "zhiyao-jiu",
+    "jiu-cai"
+   ],
+   "examples": [
+    {
+     "hanzi": "只有多练习，才能学好汉语。",
+     "tokens": "只有 多 练习 ， 才 能 学好 汉语 。",
+     "pinyin": "zhǐyǒu duō liànxí ， cái néng xuéhǎo hànyǔ 。",
+     "meaningVi": "Chỉ có luyện tập nhiều mới học tốt tiếng Trung.",
+     "explanationVi": null
+    },
+    {
+     "hanzi": "只有你去，他才高兴。",
+     "tokens": "只有 你 去 ， 他 才 高兴 。",
+     "pinyin": "zhǐyǒu nǐ qù ， tā cái gāoxìng 。",
+     "meaningVi": "Chỉ có bạn đi thì anh ấy mới vui.",
+     "explanationVi": null
+    }
+   ],
+   "mistakes": [
+    {
+     "wrong": "只有多练习，就能学好汉语。",
+     "right": "只有多练习，才能学好汉语。",
+     "rightTokens": "只有 多 练习 ， 才 能 学好 汉语 。",
+     "rightPinyin": "zhǐyǒu duō liànxí ， cái néng xuéhǎo hànyǔ 。",
+     "rightVi": "Chỉ có luyện tập nhiều mới học tốt tiếng Trung.",
+     "why": "只有 đi với 才; 就 thuộc cấu trúc 只要…就…."
+    }
+   ]
+  },
+  {
+   "slug": "liandou",
+   "level": 0,
+   "title": "连……都 / 也……",
+   "titleZh": "“连……都/也……”",
+   "category": "Liên từ và quan hệ câu",
+   "pattern": "连 + thành phần nhấn mạnh + 都 / 也 + vị ngữ",
+   "explanation": "Dùng để nhấn mạnh một trường hợp cực đoan: ngay cả … cũng ….",
+   "notes": "Thường dùng với dạng phủ định: 连……都不/没……",
+   "keywords": [
+    "连",
+    "都",
+    "也"
+   ],
+   "related": [
+    "ye-dou"
+   ],
+   "examples": [
+    {
+     "hanzi": "他连自己的名字都不会写。",
+     "tokens": "他 连 自己 的 名字 都 不 会 写 。",
+     "pinyin": "tā lián zìjǐ de míngzì dōu bú huì xiě 。",
+     "meaningVi": "Anh ấy ngay cả tên mình cũng không biết viết.",
+     "explanationVi": null
+    },
+    {
+     "hanzi": "这么简单，连孩子都懂。",
+     "tokens": "这 么 简单 ， 连 孩子 都 懂 。",
+     "pinyin": "zhè me jiǎndān ， lián háizi dōu dǒng 。",
+     "meaningVi": "Đơn giản vậy, ngay cả trẻ con cũng hiểu.",
+     "explanationVi": null
+    }
+   ],
+   "mistakes": [
+    {
+     "wrong": "他连名字不会写。",
+     "right": "他连名字都不会写。",
+     "rightTokens": "他 连 名字 都 不 会 写 。",
+     "rightPinyin": "tā lián míngzì dōu bú huì xiě 。",
+     "rightVi": "Anh ấy ngay cả tên cũng không biết viết.",
+     "why": "Sau thành phần đi với 连 phải có 都 hoặc 也."
+    }
+   ]
+  },
+  {
+   "slug": "jishi-ye",
+   "level": 0,
+   "title": "即使……也……",
+   "titleZh": "“即使……也……”",
+   "category": "Liên từ và quan hệ câu",
+   "pattern": "即使 + giả thiết , 也 + kết quả không đổi",
+   "explanation": "Dù cho có tình huống đó thì kết quả vẫn không thay đổi.",
+   "notes": "Gần nghĩa với 就算……也……, mang tính văn viết hơn.",
+   "keywords": [
+    "即使",
+    "也"
+   ],
+   "related": [
+    "suiran-danshi"
+   ],
+   "examples": [
+    {
+     "hanzi": "即使下雨，我也要去。",
+     "tokens": "即使 下雨 ， 我 也 要 去 。",
+     "pinyin": "jíshǐ xiàyǔ ， wǒ yě yào qù 。",
+     "meaningVi": "Dù trời mưa tôi cũng phải đi.",
+     "explanationVi": null
+    },
+    {
+     "hanzi": "即使很累，他也不休息。",
+     "tokens": "即使 很 累 ， 他 也 不 休息 。",
+     "pinyin": "jíshǐ hěn lèi ， tā yě bù xiūxī 。",
+     "meaningVi": "Dù rất mệt anh ấy cũng không nghỉ.",
+     "explanationVi": null
+    }
+   ],
+   "mistakes": [
+    {
+     "wrong": "即使下雨，我就要去。",
+     "right": "即使下雨，我也要去。",
+     "rightTokens": "即使 下雨 ， 我 也 要 去 。",
+     "rightPinyin": "jíshǐ xiàyǔ ， wǒ yě yào qù 。",
+     "rightVi": "Dù trời mưa tôi cũng phải đi.",
+     "why": "即使 đi với 也 (kết quả không đổi), không dùng 就."
+    }
+   ]
+  },
+  {
+   "slug": "dui-laishuo",
+   "level": 0,
+   "title": "对……来说",
+   "titleZh": "“对……来说”",
+   "category": "Giới từ",
+   "pattern": "对 + người / đối tượng + 来说 , + nhận xét",
+   "explanation": "Dùng để đưa ra nhận xét từ góc nhìn của một đối tượng: đối với … mà nói.",
+   "notes": "Có thể thay bằng 对……而言 (văn viết).",
+   "keywords": [
+    "对",
+    "来说"
+   ],
+   "related": [
+    "zai-noi-chon"
+   ],
+   "examples": [
+    {
+     "hanzi": "对我来说，汉语很难。",
+     "tokens": "对 我 来说 ， 汉语 很 难 。",
+     "pinyin": "duì wǒ láishuō ， hànyǔ hěn nán 。",
+     "meaningVi": "Đối với tôi, tiếng Trung rất khó.",
+     "explanationVi": null
+    },
+    {
+     "hanzi": "对孩子来说，睡觉很重要。",
+     "tokens": "对 孩子 来说 ， 睡觉 很 重要 。",
+     "pinyin": "duì háizi láishuō ， shuìjiào hěn zhòngyào 。",
+     "meaningVi": "Đối với trẻ em, ngủ rất quan trọng.",
+     "explanationVi": null
+    }
+   ],
+   "mistakes": [
+    {
+     "wrong": "对我说来，汉语很难。",
+     "right": "对我来说，汉语很难。",
+     "rightTokens": "对 我 来说 ， 汉语 很 难 。",
+     "rightPinyin": "duì wǒ láishuō ， hànyǔ hěn nán 。",
+     "rightVi": "Đối với tôi, tiếng Trung rất khó.",
+     "why": "Cụm cố định là 对……来说; không đảo thành 说来."
+    }
+   ]
+  }
+ ]
+}

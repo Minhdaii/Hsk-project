@@ -1,0 +1,201 @@
+{
+ "note": "Danh mục cha (nhóm và chủ đề) do dự án định nghĩa. Danh mục con lấy từ bảng category_vocab của hanzilevelup_vocab.sql qua category_map.json.",
+ "categories": [
+  {
+   "slug": "doi-song-hang-ngay",
+   "name": "Đời sống hằng ngày",
+   "parent": null,
+   "sortOrder": 100,
+   "description": null
+  },
+  {
+   "slug": "doi-song-thuong-nhat",
+   "name": "Đời sống thường nhật",
+   "parent": "doi-song-hang-ngay",
+   "sortOrder": 101,
+   "description": null
+  },
+  {
+   "slug": "gia-dinh-quan-he",
+   "name": "Gia đình và quan hệ xã hội",
+   "parent": "doi-song-hang-ngay",
+   "sortOrder": 102,
+   "description": null
+  },
+  {
+   "slug": "nha-o-do-dung",
+   "name": "Nhà ở và đồ dùng gia đình",
+   "parent": "doi-song-hang-ngay",
+   "sortOrder": 103,
+   "description": null
+  },
+  {
+   "slug": "an-uong",
+   "name": "Ăn uống và thực phẩm",
+   "parent": "doi-song-hang-ngay",
+   "sortOrder": 104,
+   "description": null
+  },
+  {
+   "slug": "mua-sam",
+   "name": "Mua sắm và tiêu dùng",
+   "parent": "doi-song-hang-ngay",
+   "sortOrder": 105,
+   "description": null
+  },
+  {
+   "slug": "quan-ao",
+   "name": "Quần áo và phụ kiện",
+   "parent": "doi-song-hang-ngay",
+   "sortOrder": 106,
+   "description": null
+  },
+  {
+   "slug": "suc-khoe",
+   "name": "Sức khỏe và cơ thể",
+   "parent": "doi-song-hang-ngay",
+   "sortOrder": 107,
+   "description": null
+  },
+  {
+   "slug": "thoi-gian-thoi-tiet",
+   "name": "Thời gian, ngày tháng và thời tiết",
+   "parent": "doi-song-hang-ngay",
+   "sortOrder": 108,
+   "description": null
+  },
+  {
+   "slug": "giao-thong",
+   "name": "Du lịch, phương tiện và giao thông",
+   "parent": "doi-song-hang-ngay",
+   "sortOrder": 109,
+   "description": null
+  },
+  {
+   "slug": "dia-diem-phuong-huong",
+   "name": "Địa điểm và phương hướng",
+   "parent": "doi-song-hang-ngay",
+   "sortOrder": 110,
+   "description": null
+  },
+  {
+   "slug": "hoc-tap-cong-viec",
+   "name": "Học tập và công việc",
+   "parent": null,
+   "sortOrder": 200,
+   "description": null
+  },
+  {
+   "slug": "truong-hoc",
+   "name": "Trường học và giáo dục",
+   "parent": "hoc-tap-cong-viec",
+   "sortOrder": 201,
+   "description": null
+  },
+  {
+   "slug": "cong-viec",
+   "name": "Công việc và nghề nghiệp",
+   "parent": "hoc-tap-cong-viec",
+   "sortOrder": 202,
+   "description": null
+  },
+  {
+   "slug": "van-phong-kinh-doanh",
+   "name": "Văn phòng và kinh doanh",
+   "parent": "hoc-tap-cong-viec",
+   "sortOrder": 203,
+   "description": null
+  },
+  {
+   "slug": "cong-nghe-internet",
+   "name": "Công nghệ và Internet",
+   "parent": "hoc-tap-cong-viec",
+   "sortOrder": 204,
+   "description": null
+  },
+  {
+   "slug": "tien-bac-ngan-hang",
+   "name": "Tiền bạc và ngân hàng",
+   "parent": "hoc-tap-cong-viec",
+   "sortOrder": 205,
+   "description": null
+  },
+  {
+   "slug": "giao-tiep-hoi-thoai",
+   "name": "Giao tiếp và hội thoại",
+   "parent": "hoc-tap-cong-viec",
+   "sortOrder": 206,
+   "description": null
+  },
+  {
+   "slug": "ngon-ngu-hoc-tap",
+   "name": "Ngôn ngữ và hoạt động học tập",
+   "parent": "hoc-tap-cong-viec",
+   "sortOrder": 207,
+   "description": null
+  },
+  {
+   "slug": "xa-hoi-mo-rong",
+   "name": "Xã hội và mở rộng",
+   "parent": null,
+   "sortOrder": 300,
+   "description": null
+  },
+  {
+   "slug": "cam-xuc-tinh-cach",
+   "name": "Cảm xúc và tính cách",
+   "parent": "xa-hoi-mo-rong",
+   "sortOrder": 301,
+   "description": null
+  },
+  {
+   "slug": "hoat-dong-so-thich",
+   "name": "Hoạt động và sở thích",
+   "parent": "xa-hoi-mo-rong",
+   "sortOrder": 302,
+   "description": null
+  },
+  {
+   "slug": "the-thao-giai-tri",
+   "name": "Thể thao và giải trí",
+   "parent": "xa-hoi-mo-rong",
+   "sortOrder": 303,
+   "description": null
+  },
+  {
+   "slug": "thien-nhien-moi-truong",
+   "name": "Thiên nhiên và môi trường",
+   "parent": "xa-hoi-mo-rong",
+   "sortOrder": 304,
+   "description": null
+  },
+  {
+   "slug": "van-hoa-phong-tuc",
+   "name": "Văn hóa và phong tục Trung Quốc",
+   "parent": "xa-hoi-mo-rong",
+   "sortOrder": 305,
+   "description": null
+  },
+  {
+   "slug": "xa-hoi",
+   "name": "Xã hội và các vấn đề thường gặp",
+   "parent": "xa-hoi-mo-rong",
+   "sortOrder": 306,
+   "description": null
+  },
+  {
+   "slug": "du-lich-dich-vu",
+   "name": "Du lịch, dịch vụ và tình huống thực tế",
+   "parent": "xa-hoi-mo-rong",
+   "sortOrder": 307,
+   "description": null
+  },
+  {
+   "slug": "thanh-ngu",
+   "name": "Thành ngữ và cách diễn đạt thông dụng",
+   "parent": "xa-hoi-mo-rong",
+   "sortOrder": 308,
+   "description": null
+  }
+ ]
+}

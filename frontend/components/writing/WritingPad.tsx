@@ -17,7 +17,7 @@ type Info = { q: string; word: Word | null };
 
 /**
  * Giấy luyện viết: viết tự do bằng chuột, bút hoặc ngón tay; hệ thống tách chữ, nhận diện rồi tra kho từ HSK.
- * Nhận diện chạy hoàn toàn trên trình duyệt (xem lib/writing/recognizer.ts), nét viết không gửi lên máy chủ.
+ * Nhận diện bằng Groq AI qua backend, có HanziLookupJS trên trình duyệt làm phương án dự phòng (xem lib/writing/recognizer.ts).
  */
 export default function WritingPad() {
   const paperRef = useRef<HTMLDivElement>(null);

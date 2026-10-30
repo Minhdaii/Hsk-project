@@ -16,10 +16,13 @@ model User {
   streak       Int        @default(0)
   xp           Int        @default(0)
   lastStudy    String?    @map("last_study") @db.VarChar(10) // YYYY-MM-DD
+  role         String     @default("user") @db.VarChar(16) // user | admin (quản trị danh mục)
   createdAt    DateTime   @default(now()) @map("created_at")
   progress     Progress[]
   favorites    Favorite[]
   activity     DailyActivity[]
+  grammarProgress GrammarProgress[]
+  grammarAttempts GrammarAttempt[]
 
   @@map("users")
 }
@@ -41,6 +44,8 @@ model Word {
   examples    Example[]
   progress    Progress[]
   favorites   Favorite[]
+  categories  WordCategory[]
+  grammarLinks GrammarWord[]
 
   @@index([hskLevel])
   @@index([hanzi])
@@ -76,30 +81,145 @@ model Progress {
   @@map("user_word_progress")
 }
 
-model GrammarPoint {
-  id          Int              @id @default(autoincrement())
-  level       Int
-  sortOrder   Int              @map("sort_order")
-  title       String           @db.VarChar(191)
-  pattern     String           @db.VarChar(500)
-  explanation String           @db.Text
-  notes       String?          @db.Text
-  examples    GrammarExample[]
+// Danh mục chủ đề của từ vựng, tách biệt với cấp độ HSK. Cây nhiều tầng: nhóm > chủ đề > chủ đề con.
+model Category {
+  id          Int            @id @default(autoincrement())
+  name        String         @db.VarChar(191)
+  slug        String         @unique @db.VarChar(191)
+  description String?        @db.Text
+  parentId    Int?           @map("parent_id")
+  icon        String?        @db.VarChar(32)
+  sortOrder   Int            @default(0) @map("sort_order")
+  isActive    Boolean        @default(true) @map("is_active")
+  createdAt   DateTime       @default(now()) @map("created_at")
+  updatedAt   DateTime       @default(now()) @updatedAt @map("updated_at")
+  parent      Category?      @relation("CategoryTree", fields: [parentId], references: [id], onDelete: SetNull)
+  children    Category[]     @relation("CategoryTree")
+  words       WordCategory[]
 
-  @@index([level])
+  @@index([parentId, sortOrder])
+  @@map("categories")
+}
+
+// Một từ có thể thuộc nhiều danh mục mà không nhân bản bản ghi từ vựng
+model WordCategory {
+  wordId     Int      @map("word_id")
+  categoryId Int      @map("category_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  word       Word     @relation(fields: [wordId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([wordId, categoryId])
+  @@index([categoryId])
+  @@map("word_categories")
+}
+
+// Mở rộng bảng ngữ pháp có sẵn: level 0 = ngữ pháp mở rộng ngoài HSK
+model GrammarPoint {
+  id             Int              @id @default(autoincrement())
+  level          Int
+  sortOrder      Int              @map("sort_order")
+  title          String           @db.VarChar(191)
+  titleZh        String?          @map("title_zh") @db.VarChar(191)
+  slug           String?          @unique @db.VarChar(191)
+  category       String?          @db.VarChar(64)
+  keywords       String?          @db.VarChar(255) // thành phần then chốt, cách nhau bằng dấu cách (dùng cho bài điền từ)
+  pattern        String           @db.VarChar(500)
+  explanation    String           @db.Text
+  usageNotes     String?          @map("usage_notes") @db.Text
+  commonMistakes String?          @map("common_mistakes") @db.Text
+  notes          String?          @db.Text
+  isPublished    Boolean          @default(true) @map("is_published")
+  source         String           @default("imported") @db.VarChar(32) // imported | authored
+  verified       Boolean          @default(false) // đã được người có chuyên môn xác minh chưa
+  createdAt      DateTime         @default(now()) @map("created_at")
+  updatedAt      DateTime         @default(now()) @updatedAt @map("updated_at")
+  examples       GrammarExample[]
+  related        GrammarRelation[] @relation("GrammarFrom")
+  relatedBy      GrammarRelation[] @relation("GrammarTo")
+  words          GrammarWord[]
+  progress       GrammarProgress[]
+  attempts       GrammarAttempt[]
+
+  @@index([level, sortOrder])
+  @@index([category])
   @@map("grammar_points")
 }
 
 model GrammarExample {
-  id        Int          @id @default(autoincrement())
+  id               Int          @id @default(autoincrement())
+  grammarId        Int          @map("grammar_id")
+  hanzi            String       @db.VarChar(500)
+  tokens           String?      @db.VarChar(500) // câu tách từ, cách nhau bằng dấu cách (dùng cho bài sắp xếp câu)
+  pinyin           String?      @db.Text
+  meaningVi        String?      @map("meaning_vi") @db.Text
+  explanationVi    String?      @map("explanation_vi") @db.Text
+  isCorrect        Boolean      @default(true) @map("is_correct")
+  correctedHanzi   String?      @map("corrected_hanzi") @db.VarChar(500) // câu đúng tương ứng khi isCorrect = false
+  errorExplanation String?      @map("error_explanation") @db.Text
+  sortOrder        Int          @default(0) @map("sort_order")
+  grammar          GrammarPoint @relation(fields: [grammarId], references: [id], onDelete: Cascade)
+
+  @@unique([grammarId, hanzi])
+  @@index([grammarId, sortOrder])
+  @@map("grammar_examples")
+}
+
+// Cấu trúc liên quan (nhiều-nhiều, có hướng)
+model GrammarRelation {
   grammarId Int          @map("grammar_id")
-  hanzi     String       @db.VarChar(500)
-  pinyin    String?      @db.Text
-  meaningVi String?      @map("meaning_vi") @db.Text
+  relatedId Int          @map("related_id")
+  from      GrammarPoint @relation("GrammarFrom", fields: [grammarId], references: [id], onDelete: Cascade)
+  to        GrammarPoint @relation("GrammarTo", fields: [relatedId], references: [id], onDelete: Cascade)
+
+  @@id([grammarId, relatedId])
+  @@index([relatedId])
+  @@map("grammar_relations")
+}
+
+// Từ vựng quan trọng trong cấu trúc
+model GrammarWord {
+  grammarId Int          @map("grammar_id")
+  wordId    Int          @map("word_id")
+  grammar   GrammarPoint @relation(fields: [grammarId], references: [id], onDelete: Cascade)
+  word      Word         @relation(fields: [wordId], references: [id], onDelete: Cascade)
+
+  @@id([grammarId, wordId])
+  @@index([wordId])
+  @@map("grammar_words")
+}
+
+// Đánh dấu đã học / yêu thích và thống kê luyện tập theo từng người dùng
+model GrammarProgress {
+  userId        Int          @map("user_id")
+  grammarId     Int          @map("grammar_id")
+  learned       Boolean      @default(false)
+  favorite      Boolean      @default(false)
+  attempts      Int          @default(0)
+  correct       Int          @default(0)
+  lastPracticed DateTime?    @map("last_practiced")
+  updatedAt     DateTime     @default(now()) @updatedAt @map("updated_at")
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  grammar       GrammarPoint @relation(fields: [grammarId], references: [id], onDelete: Cascade)
+
+  @@id([userId, grammarId])
+  @@index([grammarId])
+  @@map("grammar_progress")
+}
+
+model GrammarAttempt {
+  id        Int          @id @default(autoincrement())
+  userId    Int          @map("user_id")
+  grammarId Int          @map("grammar_id")
+  kind      String       @db.VarChar(16) // order | cloze | choose | fix | match | translate
+  correct   Boolean
+  createdAt DateTime     @default(now()) @map("created_at")
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   grammar   GrammarPoint @relation(fields: [grammarId], references: [id], onDelete: Cascade)
 
+  @@index([userId, createdAt])
   @@index([grammarId])
-  @@map("grammar_examples")
+  @@map("grammar_attempts")
 }
 
 model Favorite {
