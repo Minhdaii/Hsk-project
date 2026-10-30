@@ -14,7 +14,7 @@ const PAGE = 30;
 function WordsInner() {
   const sp = useSearchParams();
   const [level, setLevel] = useState<number>(Number(sp.get('level') || '0'));
-  const [q, setQ] = useState('');
+  const [q, setQ] = useState(sp.get('q') ?? '');
   const [page, setPage] = useState(0);
   const [words, setWords] = useState<Word[]>([]);
   const [total, setTotal] = useState(0);

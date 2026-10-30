@@ -50,7 +50,7 @@ h1, h2, h3 { letter-spacing: -0.02em; }
   .btn-primary { @apply btn bg-brand text-ink hover:bg-brand-dark active:translate-y-px; }
   .btn-ghost { @apply btn border border-stone-300 bg-white text-stone-700 hover:border-stone-500 hover:bg-white active:translate-y-px; }
   .btn-ink { @apply btn bg-ink text-white hover:bg-stone-700 active:translate-y-px; }
-  .card { @apply rounded-xl border border-line bg-white p-5; }
+  .card { @apply rounded-2xl border border-line/60 bg-white p-5 shadow-card; }
   .pill { @apply inline-flex items-center rounded-md bg-stone-100 px-2 py-0.5 text-xs font-medium text-stone-600; }
   .input { @apply min-h-[44px] w-full rounded-lg border border-stone-300 bg-white px-4 py-2.5 outline-none transition focus:border-brand-ink focus:ring-2 focus:ring-brand/40; }
   /* Con dấu vuông màu đỏ son: chi tiết thương hiệu nhỏ, dùng chọn lọc */
@@ -244,7 +244,7 @@ h1, h2, h3 { letter-spacing: -0.02em; }
 .g-soft  { background-color: rgb(var(--g) / .08); }
 .g-line  { border-color: rgb(var(--g) / .35); }
 .g-rule  { border-top: 3px solid rgb(var(--g)); }
-.lab-surface { background: #fff; border: 1px solid rgb(var(--line)); border-radius: 12px; box-shadow: 0 1px 2px rgba(41, 40, 51, .04); }
+.lab-surface { background: #fff; border: 1px solid rgb(var(--line) / .6); border-radius: 20px; box-shadow: 0 1px 2px rgba(41, 40, 51, .04), 0 10px 28px -18px rgba(41, 40, 51, .18); }
 /* Ô thao tác kiểu "phím": cạnh dưới dày, nhấn xuống 2px */
 .lab-key { border: 1px solid rgb(var(--line)); border-bottom-width: 3px; border-radius: 10px; background: #fff; transition: transform .12s ease, border-color .15s ease, background-color .15s ease; }
 .lab-key:hover:not(:disabled) { border-color: rgb(var(--g) / .55); }
@@ -261,9 +261,9 @@ h1, h2, h3 { letter-spacing: -0.02em; }
    Landing và trang đăng nhập không dùng nên không bị ảnh hưởng. Viền mảnh, bo 10-12px, gần như không bóng,
    lavender cho nút chính và trạng thái đang chọn.
    ============================================================ */
-.editorial-card { background: #fff; border: 1px solid rgb(var(--line)); border-radius: 12px; box-shadow: none; transition: border-color .15s ease; }
-.editorial-card:hover { border-color: rgb(var(--line)); box-shadow: none; }
-.editorial-card-soft { background: rgb(var(--lav-soft)); border: 1px solid rgb(var(--line)); border-radius: 12px; }
+.editorial-card { background: #fff; border: 1px solid rgb(var(--line) / .6); border-radius: 20px; box-shadow: 0 1px 2px rgba(41, 40, 51, .04), 0 10px 28px -18px rgba(41, 40, 51, .18); transition: border-color .15s ease; }
+.editorial-card:hover { border-color: rgb(var(--line)); box-shadow: 0 1px 2px rgba(41, 40, 51, .04), 0 10px 28px -18px rgba(41, 40, 51, .18); }
+.editorial-card-soft { background: rgb(var(--lav-soft)); border: 1px solid rgb(var(--line) / .6); border-radius: 20px; }
 .editorial-badge { display: inline-flex; align-items: center; padding: .15rem .55rem; font-size: .75rem; font-weight: 600; border-radius: 6px; border: 0; background: rgb(var(--lav-soft)); color: rgb(var(--lav-ink)); text-transform: none; letter-spacing: 0; }
 .editorial-badge-stone { display: inline-flex; align-items: center; padding: .15rem .55rem; font-size: .75rem; font-weight: 600; border-radius: 6px; border: 1px solid rgb(var(--line)); background: #fff; color: rgb(var(--ink-2)); }
 .btn-editorial-primary { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; gap: .375rem; border-radius: 10px; background: rgb(var(--lav)); color: rgb(var(--ink)); padding: .5rem 1.25rem; font-size: .9375rem; font-weight: 700; border: 1px solid rgb(var(--lav-ink) / .35); box-shadow: none; transition: background-color .15s ease, transform .1s ease; cursor: pointer; }

@@ -29,7 +29,11 @@ module.exports = {
         },
       },
       borderRadius: { lg: '8px', xl: '10px', '2xl': '14px', '3xl': '18px' },
-      boxShadow: { soft: '0 1px 2px rgba(32,33,36,.05), 0 10px 24px -16px rgba(32,33,36,.30)' },
+      boxShadow: {
+        soft: '0 1px 2px rgba(32,33,36,.05), 0 10px 24px -16px rgba(32,33,36,.30)',
+        card: '0 1px 2px rgba(41,40,51,.04), 0 10px 28px -18px rgba(41,40,51,.18)',
+        pop: '0 14px 36px -14px rgba(41,40,51,.32)',
+      },
       fontFamily: {
         sans: ['"Be Vietnam Pro"', '"Noto Sans SC"', '"PingFang SC"', '"Microsoft YaHei"', '"Segoe UI"', 'system-ui', 'sans-serif'],
         hanzi: ['"Noto Serif SC"', '"Songti SC"', '"STSong"', '"SimSun"', 'serif'],
