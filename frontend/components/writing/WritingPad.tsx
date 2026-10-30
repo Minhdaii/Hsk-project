@@ -191,7 +191,7 @@ export default function WritingPad() {
         <div ref={paperRef} className={styles.paper}>
           <canvas ref={canvasRef} className={`${styles.canvas} ${eraser ? styles.eraser : ''}`} aria-label="Vùng viết chữ Hán bằng chuột hoặc ngón tay"
             onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up} onContextMenu={(e) => e.preventDefault()} />
-          {count === 0 && <p className={styles.hint}>Viết chữ Hán lên tờ giấy này bằng chuột hoặc ngón tay. Có thể viết liền nhiều chữ trên một dòng.</p>}
+          {count === 0 && <p className={styles.hint}>Viết chữ Hán lên tờ giấy này bằng chuột hoặc ngón tay. Có thể viết nhiều chữ, chừa một khoảng nhỏ giữa các chữ.</p>}
         </div>
         <p className="text-sm text-stone-600">Trên điện thoại, chạm vào tờ giấy để viết (trang sẽ không cuộn ở vùng này); chạm ra ngoài tờ giấy để cuộn trang.</p>
       </section>

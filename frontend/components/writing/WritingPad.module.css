@@ -5,11 +5,8 @@
   height: calc(var(--row) * 6);
   border: 1px solid rgb(var(--line, 229 226 236));
   border-radius: 10px;
-  background-color: #fffdf7;
-  /* dòng kẻ ngang nhẹ ở đáy mỗi hàng và đường dẫn chữ nét đứt ở giữa hàng */
-  background-image:
-    repeating-linear-gradient(to bottom, transparent 0, transparent calc(var(--row) - 1px), rgba(41, 40, 51, 0.16) calc(var(--row) - 1px), rgba(41, 40, 51, 0.16) var(--row)),
-    repeating-linear-gradient(to bottom, transparent 0, transparent calc(var(--row) / 2 - 1px), rgba(91, 63, 209, 0.12) calc(var(--row) / 2 - 1px), rgba(91, 63, 209, 0.12) calc(var(--row) / 2));
+  background-color: #fff;
+  /* giấy trắng, không dòng kẻ; --row chỉ còn là cỡ chữ chuẩn (px) để tính chiều cao giấy và tách chữ */
   overflow: hidden;
   user-select: none;
   -webkit-user-select: none;
