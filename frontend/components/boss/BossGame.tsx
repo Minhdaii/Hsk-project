@@ -170,36 +170,39 @@ export default function BossGame() {
   ), [hitKey, fx, mood, phase, Art]);
 
   /* ================= màn hình ================= */
+  // Mọi màn hình đều nằm gọn trong một khung nhìn (không cuộn trang): máy tính chia hai cột, điện thoại xếp dọc theo chiều cao màn hình.
+  const FRAME = 'mx-auto grid min-h-0 w-full max-w-5xl flex-1 grid-rows-[auto_minmax(0,1fr)] gap-3 lg:grid-cols-2 lg:grid-rows-1';
+
   if (phase === 'setup' || phase === 'loading') {
     return (
-      <div className="mx-auto max-w-2xl space-y-6">
+      <div className={FRAME}>
         <div className={styles.stage}>
           <div className={styles.ground} />
-          <div className="relative flex items-end justify-center gap-2 sm:gap-6">
+          <div className="relative flex flex-1 items-end justify-center gap-2 sm:gap-6">
             {[1, 2, 3].map((l) => { const B = BOSSES[l]; return (
               <button key={l} onClick={() => setLevel(l)} aria-pressed={level === l} aria-label={`HSK ${l}: ${B.name}`}
                 className={`relative z-10 flex w-1/3 flex-col items-center rounded-xl border-2 p-2 transition-colors ${level === l ? 'border-[rgb(91,63,209)] bg-white' : 'border-transparent bg-white/40 hover:bg-white/70'}`}>
-                <span className="block h-24 w-24 sm:h-28 sm:w-28"><B.Art mood={level === l ? 'happy' : 'idle'} /></span>
+                <span className="block aspect-square h-[clamp(56px,13dvh,170px)]"><B.Art mood={level === l ? 'happy' : 'idle'} /></span>
                 <span className="mt-1 text-sm font-bold">HSK {l}</span><span className="text-xs text-stone-600">{B.name}</span>
               </button>); })}
           </div>
         </div>
 
-        <div className="lab-surface space-y-4 p-4 sm:p-5">
+        <div className="lab-surface flex min-h-0 flex-col gap-3 overflow-y-auto p-4 sm:p-5">
           <div className="flex flex-wrap items-center gap-2">
             <span className="w-28 text-sm font-semibold text-stone-600">Thời gian mỗi từ</span>
             {TIME_OPTIONS.map((t) => <button key={t} onClick={() => setSecs(t)} aria-pressed={secs === t} className={`min-h-[44px] min-w-[56px] rounded-lg border px-3 text-sm font-bold ${secs === t ? 'border-brand-ink/50 bg-brand text-ink' : 'border-line bg-white text-stone-600 hover:border-stone-400'}`}>{t} giây</button>)}
           </div>
           <label className="flex min-h-[44px] items-center gap-3 text-sm text-stone-700">
-            <input type="checkbox" checked={strict} onChange={(e) => setStrict(e.target.checked)} className="h-5 w-5 accent-[rgb(91,63,209)]" />
-            Yêu cầu gõ đúng dấu thanh (mặc định không cần dấu, ví dụ gõ <b>nihao</b> cho nǐ hǎo)
+            <input type="checkbox" checked={strict} onChange={(e) => setStrict(e.target.checked)} className="h-5 w-5 shrink-0 accent-[rgb(91,63,209)]" />
+            <span>Yêu cầu gõ đúng dấu thanh (mặc định không cần dấu, ví dụ gõ <b>nihao</b> cho nǐ hǎo)</span>
           </label>
           <ul className="list-inside list-disc text-sm text-stone-600">
             <li>Gõ pinyin của chữ Hán hiện ra để tấn công Boss. Gõ sai không mất máu nhưng ngắt combo.</li>
             <li>Boss HSK {level} có {maxHp} HP; trả lời đúng liên tiếp để gây thêm sát thương.</li>
           </ul>
           {error && <p role="alert" className="rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-800">{error}</p>}
-          <button className="btn-primary !min-h-[52px] w-full text-base" onClick={start} disabled={phase === 'loading'}>{phase === 'loading' ? 'Đang tải từ vựng…' : `Đấu với ${bossName}`}</button>
+          <button className="btn-primary mt-auto !min-h-[52px] w-full shrink-0 text-base" onClick={start} disabled={phase === 'loading'}>{phase === 'loading' ? 'Đang tải từ vựng…' : `Đấu với ${bossName}`}</button>
         </div>
       </div>
     );
@@ -208,45 +211,50 @@ export default function BossGame() {
   if (phase === 'won' || phase === 'ended') {
     const won = phase === 'won';
     return (
-      <div className="mx-auto max-w-2xl space-y-5">
-        <div className={styles.stage}>
-          <div className={styles.ground} />
-          <div className={styles.bossWrap}>{won ? <div className={`${styles.boss} ${styles.win}`}><span className="block h-full text-center text-7xl leading-[10rem]" aria-hidden>🎉</span></div> : <div className={`${styles.boss} ${styles.idle}`}><Art mood="happy" /></div>}</div>
-          <h2 className="relative text-center text-2xl font-extrabold">{won ? `Bạn đã hạ ${bossName}!` : `${bossName} vẫn còn ${hp} HP`}</h2>
-          <p className="relative text-center text-stone-700">{won ? 'Chiến thắng! Xem kết quả trận đấu bên dưới.' : 'Đã hết từ trong lượt này. Thử lại để hạ Boss nhé.'}</p>
+      <div className={FRAME}>
+        <div className="flex min-h-0 flex-col gap-3">
+          <div className={styles.stage}>
+            <div className={styles.ground} />
+            <div className={styles.bossWrap}>{won ? <div className={`${styles.boss} ${styles.win}`}><span className="flex h-full items-center justify-center text-[clamp(3rem,11dvh,6rem)] leading-none" aria-hidden>🎉</span></div> : <div className={`${styles.boss} ${styles.idle}`}><Art mood="happy" /></div>}</div>
+            <h2 className="relative text-center text-xl font-extrabold sm:text-2xl">{won ? `Bạn đã hạ ${bossName}!` : `${bossName} vẫn còn ${hp} HP`}</h2>
+            <p className="relative text-center text-sm text-stone-700">{won ? 'Chiến thắng! Đây là kết quả trận đấu của bạn.' : 'Đã hết từ trong lượt này. Thử lại để hạ Boss nhé.'}</p>
+          </div>
+          <dl className="grid grid-cols-4 gap-2">
+            {[['Từ đúng', `${correct}/${presented}`], ['Chính xác', `${accuracy}%`], ['Tốc độ TB', avg ? `${avg.toFixed(1)}s` : '—'], ['Combo cao nhất', `${maxCombo}`]].map(([k, v]) => (
+              <div key={k} className="lab-surface px-1 py-2 text-center"><dt className="text-[11px] leading-tight text-stone-600">{k}</dt><dd className="mt-0.5 text-lg font-extrabold tabular-nums">{v}</dd></div>
+            ))}
+          </dl>
+          <p className="text-center text-sm text-stone-600">Điểm: <b className="tabular-nums text-ink">{score}</b> · Số lần gõ sai: {slips}</p>
         </div>
-        <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          {[['Từ đúng', `${correct}/${presented}`], ['Chính xác', `${accuracy}%`], ['Tốc độ TB', avg ? `${avg.toFixed(1)} giây` : '—'], ['Combo cao nhất', `${maxCombo}`]].map(([k, v]) => (
-            <div key={k} className="lab-surface p-3 text-center"><dt className="text-xs text-stone-600">{k}</dt><dd className="mt-0.5 text-xl font-extrabold tabular-nums">{v}</dd></div>
-          ))}
-        </dl>
-        <p className="text-center text-sm text-stone-600">Điểm: <b className="tabular-nums text-ink">{score}</b> · Số lần gõ sai: {slips}</p>
-        <section aria-labelledby="can-on">
-          <h2 id="can-on" className="mb-2 font-bold">Từ cần ôn ({misses.length})</h2>
-          {misses.length === 0 ? <p className="lab-surface p-4 text-stone-700">Không có từ nào bị bỏ lỡ. Tuyệt vời!</p> : (
-            <ul className="divide-y divide-line overflow-hidden rounded-xl border border-line bg-white">
-              {misses.map((m) => (
-                <li key={m.word.id}><Link href={`/word/${m.word.id}`} className="flex min-h-[64px] items-center gap-3 px-4 py-2 hover:bg-stone-50">
-                  <span lang="zh-Hans" className="hanzi w-20 shrink-0 text-3xl">{m.word.hanzi}</span>
-                  <span className="min-w-0 flex-1"><span className="pinyin block text-lg font-medium text-brand-ink">{m.word.pinyin}</span><span className="block truncate text-stone-700">{m.word.meaningVi || m.word.meaningEn}</span></span>
-                  <span className="text-xs text-stone-500">Hết giờ</span></Link></li>
-              ))}
-            </ul>
-          )}
+
+        <section aria-labelledby="can-on" className="lab-surface flex min-h-0 flex-col gap-3 p-4">
+          <h2 id="can-on" className="shrink-0 font-bold">Từ cần ôn ({misses.length})</h2>
+          <div className="min-h-0 flex-1 overflow-y-auto">
+            {misses.length === 0 ? <p className="text-stone-700">Không có từ nào bị bỏ lỡ. Tuyệt vời!</p> : (
+              <ul className="divide-y divide-line overflow-hidden rounded-xl border border-line bg-white">
+                {misses.map((m) => (
+                  <li key={m.word.id}><Link href={`/word/${m.word.id}`} className="flex min-h-[56px] items-center gap-3 px-3 py-2 hover:bg-stone-50">
+                    <span lang="zh-Hans" className="hanzi w-16 shrink-0 text-2xl">{m.word.hanzi}</span>
+                    <span className="min-w-0 flex-1"><span className="pinyin block font-medium text-brand-ink">{m.word.pinyin}</span><span className="block truncate text-sm text-stone-700">{m.word.meaningVi || m.word.meaningEn}</span></span>
+                    <span className="text-xs text-stone-500">Hết giờ</span></Link></li>
+                ))}
+              </ul>
+            )}
+          </div>
+          <div className="flex shrink-0 gap-2">
+            <button className="btn-primary !min-h-[48px] flex-1" onClick={start}>Chơi lại</button>
+            <button className="btn-ghost !min-h-[48px] flex-1" onClick={() => setPhase('setup')}>Đổi Boss</button>
+          </div>
         </section>
-        <div className="flex flex-col gap-2 sm:flex-row sm:justify-center">
-          <button className="btn-primary !min-h-[48px]" onClick={start}>Chơi lại</button>
-          <button className="btn-ghost !min-h-[48px]" onClick={() => setPhase('setup')}>Đổi Boss</button>
-        </div>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto max-w-xl space-y-3">
+    <div className={FRAME}>
       <div className={styles.stage}>
         <div className={styles.ground} />
-        <div className="relative mb-1 flex items-center gap-3">
+        <div className="relative mb-1 flex shrink-0 items-center gap-3">
           <span className="text-sm font-bold">{bossName}</span>
           <div className="h-5 flex-1 overflow-hidden rounded-full border-2 border-[#5b5a6b] bg-white" role="progressbar" aria-label="Máu của Boss" aria-valuemin={0} aria-valuemax={maxHp} aria-valuenow={hp}>
             <div className={`${styles.bar} h-full`} style={{ width: `${hpPct}%`, background: hpColor }} />
@@ -259,33 +267,34 @@ export default function BossGame() {
         </div>
       </div>
 
-      <div className="lab-surface space-y-3 p-4 text-center">
-        <div className="flex items-center justify-between text-sm">
+      <div className="lab-surface flex min-h-0 flex-col p-3 text-center sm:p-4">
+        <div className="flex shrink-0 items-center justify-between text-sm">
           <span>Từ {idx + 1}/{pool.length}</span>
           <span className="font-bold">Điểm <span className="tabular-nums" data-testid="score">{score}</span></span>
           <span className="font-bold">Combo <span key={combo} className={`${styles.combo} tabular-nums`} data-testid="combo">x{combo}</span></span>
         </div>
 
         {phase === 'paused' ? (
-          <div className="py-8"><p className="text-xl font-bold">Đã tạm dừng</p><button className="btn-primary mt-3 !min-h-[48px]" onClick={resume}>Tiếp tục</button></div>
+          <div className="flex flex-1 flex-col items-center justify-center gap-3"><p className="text-xl font-bold">Đã tạm dừng</p><button className="btn-primary !min-h-[48px]" onClick={resume}>Tiếp tục</button></div>
         ) : (
           <>
-            <p lang="zh-Hans" data-testid="word" className="hanzi text-7xl leading-tight sm:text-8xl">{word?.hanzi}</p>
-            <div className="h-3 overflow-hidden rounded-full bg-stone-100" role="timer" aria-label="Thời gian còn lại"><div className={`${styles.timer} h-full rounded-full`} style={{ width: `${timerPct}%`, background: timerPct > 30 ? '#4a90d9' : '#e0503c' }} /></div>
-            <p className="text-sm tabular-nums text-stone-600" data-testid="secs">{(remaining / 1000).toFixed(1)} giây</p>
-            <div className={shake ? styles.shake : undefined} key={shake}>
-              <label htmlFor="pinyin-input" className="sr-only">Gõ pinyin</label>
-              <input id="pinyin-input" ref={inputRef} value={value} disabled={reveal !== null}
-                onChange={(e) => onChange(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); onEnter(); } }}
-                onFocus={(e) => e.currentTarget.scrollIntoView({ block: 'center', behavior: 'smooth' })}
-                inputMode="text" enterKeyHint="send" autoCapitalize="off" autoCorrect="off" autoComplete="off" spellCheck={false}
-                placeholder={strict ? 'Gõ pinyin có dấu rồi nhấn Enter' : 'Gõ pinyin (không cần dấu) rồi nhấn Enter'} className="input !min-h-[56px] text-center text-xl" />
+            <div className="flex min-h-0 flex-1 flex-col items-stretch justify-center gap-[clamp(0.25rem,1.2dvh,0.75rem)]">
+              <p lang="zh-Hans" data-testid="word" className="hanzi text-[clamp(2.5rem,11dvh,7rem)] leading-[1.1] lg:text-[clamp(3.5rem,15dvh,8rem)]">{word?.hanzi}</p>
+              <div className="h-3 shrink-0 overflow-hidden rounded-full bg-stone-100" role="timer" aria-label="Thời gian còn lại"><div className={`${styles.timer} h-full rounded-full`} style={{ width: `${timerPct}%`, background: timerPct > 30 ? '#4a90d9' : '#e0503c' }} /></div>
+              <p className="text-sm tabular-nums text-stone-600" data-testid="secs">{(remaining / 1000).toFixed(1)} giây</p>
+              <div className={shake ? styles.shake : undefined} key={shake}>
+                <label htmlFor="pinyin-input" className="sr-only">Gõ pinyin</label>
+                <input id="pinyin-input" ref={inputRef} value={value} disabled={reveal !== null}
+                  onChange={(e) => onChange(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); onEnter(); } }}
+                  inputMode="text" enterKeyHint="send" autoCapitalize="off" autoCorrect="off" autoComplete="off" spellCheck={false}
+                  placeholder={strict ? 'Gõ pinyin có dấu rồi nhấn Enter' : 'Gõ pinyin (không cần dấu) rồi nhấn Enter'} className="input !min-h-[52px] text-center text-xl" />
+              </div>
+              <div aria-live="polite" className="min-h-[2rem] text-sm [@media(min-height:700px)]:min-h-[2.5rem]">
+                {reveal === 'ok' && <p className="font-bold text-emerald-700">✓ Trúng đòn! <span className="pinyin text-brand-ink">{word?.pinyin}</span> · {word?.meaningVi || word?.meaningEn}</p>}
+                {reveal === 'miss' && <p className="font-bold text-red-700">Hết giờ! Đáp án: <span className="pinyin text-lg text-brand-ink" data-testid="answer">{answerShown}</span> · {word?.meaningVi || word?.meaningEn}</p>}
+              </div>
             </div>
-            <div aria-live="polite" className="min-h-[2.75rem] text-sm">
-              {reveal === 'ok' && <p className="font-bold text-emerald-700">✓ Trúng đòn! <span className="pinyin text-brand-ink">{word?.pinyin}</span> · {word?.meaningVi || word?.meaningEn}</p>}
-              {reveal === 'miss' && <p className="font-bold text-red-700">Hết giờ! Đáp án: <span className="pinyin text-lg text-brand-ink" data-testid="answer">{answerShown}</span> · {word?.meaningVi || word?.meaningEn}</p>}
-            </div>
-            <button className="btn-ghost !min-h-[44px]" onClick={pause} disabled={reveal !== null}>Tạm dừng</button>
+            <div className="shrink-0 pt-1"><button className="btn-ghost !min-h-[44px]" onClick={pause} disabled={reveal !== null}>Tạm dừng</button></div>
           </>
         )}
       </div>

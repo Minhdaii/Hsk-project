@@ -1,5 +1,6 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { animate, reduced } from '@/lib/motion';
 import Flame from '../Flame';
 
 const face = { gridArea: '1 / 1', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' } as const;
@@ -7,6 +8,15 @@ const face = { gridArea: '1 / 1', backfaceVisibility: 'hidden', WebkitBackfaceVi
 /** Thẻ flashcard minh họa trên trang giới thiệu: tự lật qua lại, kèm các bong bóng nổi */
 export default function DemoCard() {
   const [flipped, setFlipped] = useState(false);
+  const streak = useRef<HTMLDivElement>(null);
+  const badge = useRef<HTMLDivElement>(null);
+  // Hai bong bóng nổi nhẹ lên xuống (vòng lặp chậm, tắt khi người dùng bật "giảm chuyển động")
+  useEffect(() => {
+    if (reduced() || !streak.current || !badge.current) return;
+    const a = animate(streak.current, { translateY: [0, -10], rotate: [0, 2], duration: 3500, loop: true, alternate: true, ease: 'inOutSine' });
+    const b = animate(badge.current, { translateY: [0, -8], rotate: [0, -1.5], duration: 3000, delay: 700, loop: true, alternate: true, ease: 'inOutSine' });
+    return () => { a.revert(); b.revert(); };
+  }, []);
   useEffect(() => {
     const t = setInterval(() => setFlipped((f) => !f), 3800);
     return () => clearInterval(t);
@@ -14,12 +24,12 @@ export default function DemoCard() {
 
   return (
     <div className="relative mx-auto w-full max-w-sm">
-      <div className="absolute -left-3 -top-5 z-10 flex animate-float items-center gap-1 rounded-2xl border border-orange-200 bg-white px-3 py-1.5 shadow-soft sm:-left-8">
+      <div ref={streak} className="absolute -left-3 -top-5 z-10 flex items-center gap-1 rounded-2xl border border-orange-200 bg-white px-3 py-1.5 shadow-soft sm:-left-8">
         <Flame size={28} state="lit" />
         <span className="text-xl font-extrabold text-orange-500">12</span>
         <span className="text-xs font-medium text-stone-500">ngày liên tiếp</span>
       </div>
-      <div className="absolute -bottom-4 -right-2 z-10 rounded-2xl bg-emerald-500 px-3.5 py-2 text-sm font-bold text-white shadow-soft sm:-right-6" style={{ animation: 'float 6s ease-in-out 1s infinite' }}>
+      <div ref={badge} className="absolute -bottom-4 -right-2 z-10 rounded-2xl bg-emerald-500 px-3.5 py-2 text-sm font-bold text-white shadow-soft sm:-right-6">
         ✓ Chính xác! +10 XP
       </div>
 

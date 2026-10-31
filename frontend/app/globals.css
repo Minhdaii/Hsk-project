@@ -273,3 +273,9 @@ h1, h2, h3 { letter-spacing: -0.02em; }
 .btn-editorial-ghost:hover:not(:disabled), .btn-editorial-soft:hover:not(:disabled) { border-color: #6E707B; background: #fff; box-shadow: none; transform: none; }
 .btn-editorial-primary:disabled, .btn-editorial-ghost:disabled, .btn-editorial-soft:disabled { opacity: .5; cursor: not-allowed; }
 .g-bar { background-color: rgb(var(--g, 184 162 248)); }
+
+/* Phần tử sắp được Anime.js cho hiện dần: ẩn sẵn để không bị nháy; chỉ áp dụng khi trình duyệt chạy JS, không JS thì vẫn thấy nội dung */
+@media (scripting: enabled) {
+  [data-anim='self'] { opacity: 0; }
+  [data-anim='kids'] > * { opacity: 0; }
+}

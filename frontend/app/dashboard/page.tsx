@@ -9,6 +9,7 @@ import { useStats } from '@/lib/useStats';
 import type { Activity, LeaderRow, LevelProgress } from '@/lib/types';
 import Skeleton from '@/components/Skeleton';
 import WeeklyChart from '@/components/dashboard/WeeklyChart';
+import Anim from '@/components/motion/Anim';
 
 const HAN: Record<number, string> = { 1: '一级', 2: '二级', 3: '三级' };
 const DESC: Record<number, string> = {
@@ -111,7 +112,7 @@ export default function Dashboard() {
 
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
         {/* Cột trái: khóa học và ba thẻ chức năng */}
-        <div className="space-y-5">
+        <Anim each={80} y={14} className="space-y-5">
           <section aria-labelledby="khoa-hoc" className={`${CARD} p-6`}>
             <div className="flex items-start justify-between gap-3">
               <div>
@@ -144,10 +145,10 @@ export default function Dashboard() {
           <ToneCard href="/exercises?mode=dialogue" tone="bg-gradient-to-br from-[#E7E1FF] to-[#CBD3FF]" glyph="说" title="Luyện giao tiếp" text="Làm chủ hội thoại đời sống bằng tiếng Trung, từ chào hỏi đến mua sắm." chip="Tình huống giao tiếp" />
           <ToneCard href={`/study?level=${current}`} tone="bg-gradient-to-br from-[#DAEEFF] to-[#BFE2FB]" glyph="学" title="Nắm vững kiến thức" text="Từ vựng và ngữ pháp cốt lõi để nói trôi chảy hơn." chip={due > 0 ? `Ôn ${due} từ đến hạn` : `Học từ mới HSK ${current}`} />
           <ToneCard href="/writing" tone="bg-gradient-to-br from-[#EAF7C6] to-[#D6F0A8]" glyph="写" title="Nghe và viết như người bản xứ" text="Luyện nghe, gõ pinyin và viết chữ Hán lên giấy để AI nhận diện." chip="Nhận diện chữ viết" />
-        </div>
+        </Anim>
 
         {/* Cột phải: hiệu suất tuần, nhiệm vụ, xếp hạng */}
-        <div className="space-y-6">
+        <Anim each={100} y={16} className="space-y-6">
           <section aria-labelledby="hieu-suat" className={`${CARD} p-6 sm:p-8`}>
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
@@ -215,7 +216,7 @@ export default function Dashboard() {
               )}
             </section>
           </div>
-        </div>
+        </Anim>
       </div>
     </div>
   );

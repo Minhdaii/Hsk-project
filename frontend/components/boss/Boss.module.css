@@ -6,6 +6,9 @@
   background: #eaf6ff;
   overflow: hidden;
   padding: 0.75rem 1rem 1rem;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 .ground {
   position: absolute;
@@ -20,9 +23,13 @@
   position: relative;
   display: flex;
   justify-content: center;
-  height: clamp(110px, 24vh, 190px);
+  flex: 1 1 auto;
+  min-height: 0;
+  height: clamp(72px, 17dvh, 190px); /* điện thoại: theo chiều cao màn hình */
   margin: 0.25rem 0 0.5rem;
 }
+@media (max-height: 700px) { .bossWrap { height: clamp(48px, 11dvh, 120px); margin: 0.1rem 0 0.25rem; } } /* màn hình thấp: thu nhỏ Boss để chừa chỗ cho ô gõ */
+@media (min-width: 1024px) { .bossWrap { height: auto; } } /* máy tính: Boss lớn dần theo khung hai cột */
 .boss { height: 100%; aspect-ratio: 1 / 1; transform-origin: 50% 100%; }
 .boss svg { width: 100%; height: 100%; overflow: visible; }
 .idle { animation: bob 1.5s ease-in-out infinite; }

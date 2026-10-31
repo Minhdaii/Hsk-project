@@ -2,6 +2,9 @@ import Link from 'next/link';
 import DemoCard from '@/components/landing/DemoCard';
 import WordOfDay from '@/components/landing/WordOfDay';
 import Reveal from '@/components/Reveal';
+import Anim from '@/components/motion/Anim';
+import SplitWords from '@/components/motion/SplitWords';
+import CountUp from '@/components/motion/CountUp';
 
 // Mỗi tính năng gắn với một chữ Hán đúng nghĩa của nó (ghi nhớ, ngữ pháp, luyện tập, nghe-viết, lửa, lưu giữ)
 const FEATURES = [
@@ -32,22 +35,20 @@ export default function LandingPage() {
       {/* ---------- Hero: bất đối xứng, chữ Hán trong ô tập viết là điểm nhớ duy nhất ---------- */}
       <section className="mx-auto grid max-w-6xl gap-10 px-4 pb-14 pt-8 sm:px-6 lg:grid-cols-12 lg:items-center lg:gap-8 lg:pb-24 lg:pt-16">
         <div className="lg:col-span-7">
-          <p className="animate-fade-up text-sm font-medium text-stone-600">Học tiếng Trung và ôn luyện HSK 1-3, hoàn toàn bằng tiếng Việt</p>
-          <h1 className="mt-4 animate-fade-up text-balance text-[2.5rem] font-extrabold leading-[1.08] tracking-tight [animation-delay:70ms] sm:text-6xl lg:text-[4.5rem]">
-            Mỗi ngày một chữ, nhớ lâu hơn.
-          </h1>
-          <p className="mt-5 max-w-xl animate-fade-up text-lg text-stone-700 [animation-delay:140ms]">
+          <Anim as="p" className="text-sm font-medium text-stone-600">Học tiếng Trung và ôn luyện HSK 1-3, hoàn toàn bằng tiếng Việt</Anim>
+          <SplitWords as="h1" delay={120} text="Mỗi ngày một chữ, nhớ lâu hơn." className="mt-4 text-balance text-[2.5rem] font-extrabold leading-[1.08] tracking-tight sm:text-6xl lg:text-[4.5rem]" />
+          <Anim as="p" delay={560} className="mt-5 max-w-xl text-lg text-stone-700">
             Hơn 2.200 từ vựng và 39 điểm ngữ pháp, học bằng flashcard lặp lại ngắt quãng, bài tập, nghe phát âm và tập viết từng nét.
-          </p>
-          <div className="mt-8 flex animate-fade-up flex-col gap-3 [animation-delay:210ms] sm:flex-row">
+          </Anim>
+          <Anim delay={680} className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Link href="/dashboard" className="btn-primary !min-h-[52px] !px-8 text-base">Bắt đầu học</Link>
             <Link href="/words" className="btn-ghost !min-h-[52px] !px-7 text-base">Khám phá kho từ vựng</Link>
-          </div>
-          <dl className="mt-10 hidden max-w-lg animate-fade-up sm:flex divide-x divide-ink/15 border-y border-ink/15 [animation-delay:280ms]">
-            {[['2.200+', 'từ vựng'], ['39', 'điểm ngữ pháp'], ['4', 'dạng bài tập']].map(([n, l], i) => (
-              <div key={l} className={`flex-1 py-3 ${i ? 'pl-4' : 'pr-4'}`}><dt className="text-2xl font-bold">{n}</dt><dd className="text-sm text-stone-600">{l}</dd></div>
+          </Anim>
+          <Anim as="dl" delay={800} className="mt-10 hidden max-w-lg divide-x divide-ink/15 border-y border-ink/15 sm:flex">
+            {([[2200, '+', 'từ vựng'], [39, '', 'điểm ngữ pháp'], [4, '', 'dạng bài tập']] as const).map(([n, suf, l], i) => (
+              <div key={l} className={`flex-1 py-3 ${i ? 'pl-4' : 'pr-4'}`}><dt className="text-2xl font-bold"><CountUp to={n} suffix={suf} /></dt><dd className="text-sm text-stone-600">{l}</dd></div>
             ))}
-          </dl>
+          </Anim>
         </div>
 
         <WordOfDay />
@@ -69,7 +70,7 @@ export default function LandingPage() {
       <section id="tinh-nang" className="scroll-mt-20 border-t border-ink/15 py-16 lg:py-24">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <h2 className="max-w-2xl text-balance text-3xl font-extrabold tracking-tight sm:text-4xl">Mọi thứ cần để học tiếng Trung đều ở một nơi</h2>
-          <ul className="mt-10 grid border-b border-ink/15 md:grid-cols-2 md:gap-x-12">
+          <Anim as="ul" view each={70} y={16} className="mt-10 grid border-b border-ink/15 md:grid-cols-2 md:gap-x-12">
             {FEATURES.map((f) => (
               <li key={f.title} className="flex items-start gap-5 border-t border-ink/15 py-6">
                 <span lang="zh-Hans" aria-hidden className="hanzi flex h-14 w-[4.25rem] shrink-0 items-center justify-center text-4xl leading-none">{f.han}</span>
@@ -79,7 +80,7 @@ export default function LandingPage() {
                 </div>
               </li>
             ))}
-          </ul>
+          </Anim>
         </div>
       </section>
 
@@ -131,15 +132,15 @@ export default function LandingPage() {
       {/* ---------- Kêu gọi hành động ---------- */}
       <section className="bg-ink text-ivory">
         <div className="mx-auto grid max-w-6xl items-center gap-8 px-4 py-16 sm:px-6 lg:grid-cols-12 lg:py-20">
-          <div className="lg:col-span-8">
+          <Anim view y={18} className="lg:col-span-8">
             <p lang="zh-Hans" className="hanzi text-5xl leading-none text-ivory/90 sm:text-6xl">开始</p>
             <h2 className="mt-4 text-balance text-3xl font-extrabold tracking-tight sm:text-4xl">Bắt đầu học tiếng Trung ngay hôm nay</h2>
             <p className="mt-3 max-w-xl text-ivory/80">Vào học ngay, không cần chờ đợi. Tạo tài khoản khi bạn muốn lưu tiến độ và giữ chuỗi ngày học.</p>
-          </div>
-          <div className="flex flex-col gap-3 sm:flex-row lg:col-span-4 lg:flex-col">
+          </Anim>
+          <Anim view delay={140} y={18} className="flex flex-col gap-3 sm:flex-row lg:col-span-4 lg:flex-col">
             <Link href="/dashboard" className="btn-primary !min-h-[52px] text-base">Học ngay</Link>
             <Link href="/login?mode=up" className="btn !min-h-[52px] border border-ivory/40 text-base text-ivory hover:bg-white/10">Tạo tài khoản</Link>
-          </div>
+          </Anim>
         </div>
       </section>
     </>

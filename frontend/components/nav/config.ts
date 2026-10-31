@@ -38,14 +38,15 @@ export const SECTIONS: Section[] = [
     ],
   },
   {
-    id: 'learn', label: 'Học tập', href: '/study', icon: BookOpen,
+    id: 'learn', label: 'Học tập', href: '/exercises', icon: BookOpen,
     owns: under('/study', '/words', '/word', '/grammar', '/exercises', '/quiz', '/writing', '/pinyin-boss', '/favorites'),
+    // "Học tập" và "Phòng luyện tập" là một: nút Học tập ở thanh trên mở thẳng Phòng luyện tập, cũng là mục đầu của thanh bên
     items: [
+      { href: '/exercises', label: 'Phòng luyện tập', icon: ClipboardCheck, usesMode: true, match: (p, mode) => under('/exercises')(p) && mode !== 'dialogue' },
+      { href: '/exercises?mode=dialogue', label: 'Tình huống giao tiếp', icon: MessageCircle, usesMode: true, match: (p, mode) => under('/exercises')(p) && mode === 'dialogue' },
       item('/words', 'Từ vựng', BookOpen, ['/words', '/word']),
       item('/study', 'Học thẻ ôn tập', Layers),
       item('/grammar', 'Ngữ pháp', Languages),
-      { href: '/exercises', label: 'Phòng luyện tập', icon: ClipboardCheck, usesMode: true, match: (p, mode) => under('/exercises')(p) && mode !== 'dialogue' },
-      { href: '/exercises?mode=dialogue', label: 'Tình huống giao tiếp', icon: MessageCircle, usesMode: true, match: (p, mode) => under('/exercises')(p) && mode === 'dialogue' },
       item('/writing', 'Nhận diện chữ viết', PenTool),
       item('/pinyin-boss', 'Game học tập', Gamepad2),
       item('/quiz', 'Quiz từ vựng', CircleHelp),

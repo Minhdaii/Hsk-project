@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { enter } from '@/lib/motion';
 import { api } from '@/lib/api';
 import { posLabels, splitMeaning } from '@/lib/pos';
 import type { DailyWord } from '@/lib/types';
@@ -25,6 +26,14 @@ type State = { kind: 'loading' } | { kind: 'ready'; data: DailyWord } | { kind: 
  */
 export default function WordOfDay() {
   const [state, setState] = useState<State>({ kind: 'loading' });
+  const root = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const el = root.current;
+    if (!el) return;
+    const safety = setTimeout(() => { el.style.opacity = '1'; }, 5000);
+    const anim = enter(el, { delay: 450, y: 22, duration: 700 });
+    return () => { clearTimeout(safety); anim.revert(); };
+  }, []);
 
   useEffect(() => {
     let alive = true;
@@ -49,7 +58,7 @@ export default function WordOfDay() {
   const pos = w ? posLabels(w.pos) : [];
 
   return (
-    <section aria-label="Chữ Hán hôm nay" className="relative mx-auto w-full max-w-[22rem] sm:max-w-sm lg:col-span-5 lg:max-w-none">
+    <section ref={root} data-anim="self" aria-label="Chữ Hán hôm nay" className="relative mx-auto w-full max-w-[22rem] sm:max-w-sm lg:col-span-5 lg:max-w-none">
       <p className="mb-3 flex flex-wrap items-baseline gap-x-2 text-sm font-medium text-stone-600">
         <span className="font-bold text-ink">Chữ Hán hôm nay</span>
         {state.kind === 'ready' && <span>{dateLabel(state.data.date)}</span>}
