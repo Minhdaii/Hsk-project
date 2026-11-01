@@ -1,5 +1,6 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { drawSvgPath, animate, reduced } from '@/lib/motion';
 
 type Day = { date: string; reviews: number };
 const WEEKDAY = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
@@ -16,16 +17,37 @@ const smooth = (p: { x: number; y: number }[]) => p.reduce((d, b, i) => (i === 0
 /** Biểu đồ vùng 7 ngày gần nhất (số lượt ôn mỗi ngày) kèm đường mục tiêu. Dữ liệu thật từ /study/activity. */
 export default function WeeklyChart({ days, goal }: { days: Day[]; goal: number }) {
   const [hover, setHover] = useState<number | null>(null);
+  const lineRef = useRef<SVGPathElement>(null);
+  const areaRef = useRef<SVGPathElement>(null);
   const n = days.length;
   const top = Math.max(0, ...days.map((d) => d.reviews));
   const { step, max } = scale(Math.max(goal, top, 1));
   const best = top > 0 ? days.findIndex((d) => d.reviews === top) : -1;
-  const shown = hover ?? (best >= 0 ? best : null);
+  const shown = hover;
   const pts = days.map((d, i) => ({ x: ((i + 0.5) / n) * W, y: H - (d.reviews / max) * H }));
   const line = n ? smooth(pts) : '';
   const area = n ? `${line} L${pts[n - 1].x},${H} L${pts[0].x},${H} Z` : '';
   const dayName = (d: string) => WEEKDAY[new Date(d + 'T00:00:00').getDay()];
   const dateText = (d: string) => { const t = new Date(d + 'T00:00:00'); return `${t.getDate()}/${t.getMonth() + 1}`; };
+
+  useEffect(() => {
+    if (!lineRef.current || reduced()) return;
+    const animLine = drawSvgPath(lineRef.current, 750);
+    let animArea: ReturnType<typeof animate> | null = null;
+    if (areaRef.current) {
+      animArea = animate(areaRef.current, {
+        opacity: [0, 1],
+        duration: 800,
+        ease: 'outCubic',
+      });
+    }
+    return () => {
+      try {
+        animLine?.revert();
+        animArea?.revert();
+      } catch {}
+    };
+  }, [line]);
 
   return (
     <div>
@@ -40,8 +62,8 @@ export default function WeeklyChart({ days, goal }: { days: Day[]; goal: number 
             </defs>
             {[0, 1, 2, 3, 4].map((k) => <line key={k} x1="0" x2={W} y1={(H * k) / 4} y2={(H * k) / 4} stroke="rgb(229 226 236)" strokeWidth="1" vectorEffect="non-scaling-stroke" />)}
             {goal > 0 && <line x1="0" x2={W} y1={H - (goal / max) * H} y2={H - (goal / max) * H} stroke="rgb(91 63 209)" strokeOpacity=".5" strokeWidth="1.2" strokeDasharray="5 5" vectorEffect="non-scaling-stroke" />}
-            {n > 0 && <path d={area} fill="url(#wk-fill)" />}
-            {n > 0 && <path d={line} fill="none" stroke="rgb(91 63 209)" strokeWidth="2.5" strokeLinecap="round" vectorEffect="non-scaling-stroke" />}
+            {n > 0 && <path ref={areaRef} d={area} fill="url(#wk-fill)" />}
+            {n > 0 && <path ref={lineRef} d={line} fill="none" stroke="rgb(91 63 209)" strokeWidth="2.5" strokeLinecap="round" vectorEffect="non-scaling-stroke" />}
           </svg>
 
           {shown !== null && (
@@ -50,11 +72,11 @@ export default function WeeklyChart({ days, goal }: { days: Day[]; goal: number 
               <span aria-hidden className="pointer-events-none absolute h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-brand-ink shadow" style={{ left: `${((shown + 0.5) / n) * 100}%`, top: `${(1 - days[shown].reviews / max) * 100}%` }} />
               <div
                 role="status"
-                className={`pointer-events-none absolute z-10 w-max max-w-[11rem] rounded-xl bg-ink px-3 py-2 text-white ${shown === 0 ? '' : shown === n - 1 ? '-translate-x-full' : '-translate-x-1/2'}`}
+                className={`pointer-events-none absolute z-10 w-max max-w-[11rem] animate-popover-in rounded-xl bg-ink px-3 py-2 text-white ${shown === 0 ? '' : shown === n - 1 ? '-translate-x-full' : '-translate-x-1/2'}`}
                 style={{ left: `${((shown + 0.5) / n) * 100}%`, top: `calc(${(1 - days[shown].reviews / max) * 100}% - 14px)`, transform: `${shown === 0 ? '' : shown === n - 1 ? 'translateX(-100%)' : 'translateX(-50%)'} translateY(-100%)` }}
               >
                 <span className="block text-sm font-bold leading-tight tabular-nums">{days[shown].reviews} lượt ôn</span>
-                <span className="block text-[11px] leading-tight text-white/75">{shown === best ? 'Ngày học nhiều nhất' : `${dayName(days[shown].date)}, ${dateText(days[shown].date)}`}</span>
+                <span className="block text-[11px] leading-tight text-white/75">{dayName(days[shown].date)}, {dateText(days[shown].date)}{shown === best && days[shown].reviews > 0 ? ' · Cao nhất' : ''}</span>
               </div>
             </>
           )}

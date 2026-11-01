@@ -8,6 +8,8 @@ import type { GExType, GGraded, GQuestion } from '@/lib/types';
 import SpeakButton from '@/components/SpeakButton';
 import Skeleton from '@/components/Skeleton';
 import ZhMix from '@/components/ZhMix';
+import Anim from '@/components/motion/Anim';
+import { ArrowLeft } from 'lucide-react';
 
 const TYPES: { id: GExType; title: string; desc: string; skin: string }[] = [
   { id: 'order', title: 'Sắp xếp từ thành câu', desc: 'Xếp các từ theo đúng trật tự ngữ pháp.', skin: 'order' },
@@ -68,7 +70,7 @@ function Practice() {
     return (
       <div data-game={skin} className="lab-game mx-auto max-w-lg space-y-4">
         <div className="flex items-center gap-3 border-b border-line pb-3">
-          <button className="btn-ghost !px-3" onClick={() => setQs(null)}>← Thoát</button>
+          <button className="btn-back" onClick={() => setQs(null)}><ArrowLeft className="h-3.5 w-3.5" /><span>Thoát</span></button>
           <h1 className="min-w-0 flex-1 truncate font-bold">{TYPES.find((t) => t.id === type)!.title}</h1>
           <span className="text-sm tabular-nums text-stone-600">Câu {i + 1}/{qs.length}</span>
         </div>
@@ -81,14 +83,14 @@ function Practice() {
   return (
     <div className="mx-auto max-w-2xl space-y-7">
       <header>
-        <Link href="/grammar" className="inline-flex min-h-[44px] items-center text-sm text-stone-600 hover:text-ink hover:underline">← Ngữ pháp</Link>
+        <Link href="/grammar" className="btn-back"><ArrowLeft className="h-3.5 w-3.5" /><span>Ngữ pháp</span></Link>
         <h1 className="mt-1 text-3xl font-extrabold tracking-tight sm:text-4xl">Luyện tập ngữ pháp</h1>
         <p className="mt-1 text-stone-600">{grammarId ? 'Bài tập về cấu trúc bạn vừa xem.' : 'Sáu dạng bài, câu hỏi sinh từ ví dụ ngữ pháp có trong hệ thống.'}</p>
       </header>
 
       <fieldset>
         <legend className="mb-2 font-bold">Dạng bài</legend>
-        <ul className="divide-y divide-line overflow-hidden rounded-xl border border-line bg-white">
+        <Anim as="ul" each={25} y={6} className="divide-y divide-line overflow-hidden rounded-xl border border-line bg-white">
           {TYPES.map((t) => (
             <li key={t.id}>
               <label className={`flex min-h-[64px] cursor-pointer items-center gap-3 px-4 py-2.5 ${type === t.id ? 'bg-brand-soft' : 'hover:bg-stone-50'}`}>
@@ -97,7 +99,7 @@ function Practice() {
               </label>
             </li>
           ))}
-        </ul>
+        </Anim>
       </fieldset>
 
       <div className="lab-surface flex flex-col gap-4 p-4 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-8">
@@ -147,10 +149,10 @@ function Question({ q, onDone, last }: { q: GQuestion; onDone: (ok: boolean) => 
   const done = result !== null || matchRes !== null;
   const ok = result ? result.correct : matchRes ? matchRes.every((r) => r.correct) : false;
   const choose = (o: string) => { if (done || busy) return; setPicked(o); submit(o); };
-  const optState = (o: string) => !result ? '' : o === result.solution || (q.type === 'cloze' && o === picked && result.correct) ? '!border-emerald-500 bg-emerald-50 text-emerald-950' : o === picked ? 'animate-shake !border-red-400 bg-red-50 text-red-900' : 'opacity-40';
+  const optState = (o: string) => !result ? '' : o === result.solution || (q.type === 'cloze' && o === picked && result.correct) ? 'animate-pop !border-emerald-500 bg-emerald-50 text-emerald-950' : o === picked ? 'animate-shake !border-red-400 bg-red-50 text-red-900' : 'opacity-40';
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 animate-slide-in">
       {(q.type === 'order' || q.type === 'translate') && (
         <>
           <div className="lab-surface g-rule p-5">
@@ -175,7 +177,7 @@ function Question({ q, onDone, last }: { q: GQuestion; onDone: (ok: boolean) => 
             <div lang="zh-Hans" className="hanzi break-words text-3xl leading-relaxed">{q.before}<span className={`mx-1.5 inline-block min-w-[3.5rem] border-b-[3px] px-1.5 text-center ${!result ? 'g-line text-transparent' : result.correct ? 'border-emerald-600 text-emerald-800' : 'border-red-500 text-red-600'}`}>{picked && result ? picked : '＿＿'}</span>{q.after}</div>
             {q.prompt && <figcaption className="text-sm text-stone-600">{q.prompt}</figcaption>}
           </figure>
-          <div className="grid grid-cols-2 gap-2.5">{q.options.map((o) => <button key={o} disabled={done || busy} onClick={() => choose(o)} className={`lab-key min-h-[64px] px-3 text-center ${optState(o)}`}><span lang="zh-Hans" className="hanzi text-3xl">{o}</span></button>)}</div>
+          <div className="grid grid-cols-2 gap-2.5">{q.options.map((o) => <button key={o} disabled={done || busy} onClick={() => choose(o)} className={`lab-key min-h-[64px] px-3 text-center active:scale-[0.98] transition-transform ${optState(o)}`}><span lang="zh-Hans" className="hanzi text-3xl">{o}</span></button>)}</div>
         </>
       )}
 
@@ -185,7 +187,7 @@ function Question({ q, onDone, last }: { q: GQuestion; onDone: (ok: boolean) => 
             <p className="text-xs font-semibold text-stone-600">{q.type === 'choose' ? `Câu nào đúng ngữ pháp? (${q.prompt})` : 'Câu sau có lỗi. Chọn cách sửa đúng:'}</p>
             {q.type === 'fix' && <><p lang="zh-Hans" className="hanzi mt-2 break-words text-2xl text-red-900 line-through decoration-red-400/70">{q.wrong}</p>{q.prompt && <p className="mt-1 text-sm text-stone-600">Ý định: {q.prompt}</p>}</>}
           </div>
-          <div className="space-y-2.5">{q.options.map((o) => <button key={o} disabled={done || busy} onClick={() => choose(o)} className={`lab-key block min-h-[60px] w-full px-4 py-3 text-left ${optState(o)}`}><span lang="zh-Hans" className="hanzi text-2xl">{o}</span></button>)}</div>
+          <div className="space-y-2.5">{q.options.map((o) => <button key={o} disabled={done || busy} onClick={() => choose(o)} className={`lab-key block min-h-[60px] w-full px-4 py-3 text-left active:scale-[0.98] transition-transform ${optState(o)}`}><span lang="zh-Hans" className="hanzi text-2xl">{o}</span></button>)}</div>
         </>
       )}
 

@@ -8,6 +8,8 @@ import SpeakButton from '@/components/SpeakButton';
 import FavoriteButton from '@/components/FavoriteButton';
 import { RowSkeleton } from '@/components/Skeleton';
 import PageHeader from '@/components/PageHeader';
+import Anim from '@/components/motion/Anim';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 const PAGE = 30;
 
@@ -48,6 +50,17 @@ function WordsInner() {
         glyph="库"
         title="Kho từ vựng HSK 1–3"
         subtitle={loading ? 'Đang tra cứu từ điển…' : `Tổng cộng ${total.toLocaleString('vi-VN')} từ vựng chuẩn`}
+        actions={
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+            <Link href="/categories" className="btn-editorial-ghost !min-h-[38px] !px-3.5 text-xs font-semibold">
+              Chủ đề
+            </Link>
+            <Link href="/study" className="btn-editorial-primary !min-h-[38px] !px-3.5 text-xs font-semibold">
+              <span>Học thẻ Flashcard</span>
+              <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+        }
       />
 
       {/* Bộ lọc cấp độ */}
@@ -94,7 +107,7 @@ function WordsInner() {
 
       {(words.length > 0 || (!loading && !error)) && (
         <div className="editorial-card overflow-hidden">
-          <ul className={`divide-y divide-line transition-opacity duration-200 ${loading && words.length > 0 ? 'opacity-50' : ''}`}>
+          <Anim as="ul" key={`${level}-${page}-${q}`} each={22} y={6} className={`divide-y divide-line transition-opacity duration-200 ${loading && words.length > 0 ? 'opacity-50' : ''}`}>
             {words.map((w) => (
               <li
                 key={w.id}
@@ -141,7 +154,7 @@ function WordsInner() {
                 Không tìm thấy từ vựng phù hợp với từ khóa của bạn.
               </li>
             )}
-          </ul>
+          </Anim>
         </div>
       )}
 
@@ -152,7 +165,8 @@ function WordsInner() {
           disabled={page === 0}
           onClick={() => setPage(page - 1)}
         >
-          ← Trang trước
+          <ArrowLeft className="h-3.5 w-3.5" />
+          <span>Trang trước</span>
         </button>
         <span className="text-xs font-semibold tabular-nums text-stone-600">
           Trang {page + 1} / {pages}
@@ -162,7 +176,8 @@ function WordsInner() {
           disabled={page + 1 >= pages}
           onClick={() => setPage(page + 1)}
         >
-          Trang sau →
+          <span>Trang sau</span>
+          <ArrowRight className="h-3.5 w-3.5" />
         </button>
       </nav>
     </div>

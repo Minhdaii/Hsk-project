@@ -25,7 +25,7 @@ function usePopover() {
 }
 
 // Điện thoại: bảng bật lên căng theo chiều ngang màn hình; máy tính: neo dưới nút
-const PANEL = 'fixed inset-x-3 top-[4.75rem] z-50 rounded-2xl border border-line bg-white p-2 shadow-pop sm:absolute sm:inset-x-auto sm:right-0 sm:top-full sm:mt-2 sm:w-80';
+const PANEL = 'fixed inset-x-3 top-[4.75rem] z-50 animate-popover-in rounded-2xl border border-line bg-white p-2 shadow-pop sm:absolute sm:inset-x-auto sm:right-0 sm:top-full sm:mt-2 sm:w-80';
 
 function SearchControl() {
   const { open, setOpen, ref } = usePopover();
@@ -102,14 +102,14 @@ export default function TopBar({ section, user, stats, onLogout }: { section: Se
   return (
     <header className="sticky top-0 z-30 bg-paper/90 px-3 pb-3 pt-[max(env(safe-area-inset-top),0.75rem)] backdrop-blur sm:px-6 lg:px-8">
       <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-2 lg:grid lg:grid-cols-[1fr_auto_1fr]">
-        <Link href="/dashboard" aria-label="学汉语, về Dashboard" className="hidden h-12 w-12 items-center justify-center rounded-2xl bg-ink text-white outline-none transition-transform duration-200 hover:scale-105 focus-visible:ring-2 focus-visible:ring-brand-ink focus-visible:ring-offset-2 sm:flex">
-          <span aria-hidden lang="zh-Hans" className="hanzi text-2xl leading-none">汉</span>
+        <Link href="/dashboard" aria-label="学汉语, về Dashboard" className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-xl sm:rounded-2xl bg-ink text-white outline-none transition-transform duration-200 hover:scale-105 focus-visible:ring-2 focus-visible:ring-brand-ink focus-visible:ring-offset-2">
+          <span aria-hidden lang="zh-Hans" className="hanzi text-xl sm:text-2xl leading-none">汉</span>
         </Link>
-        <nav aria-label="Khu vực chính" className="flex items-center rounded-full bg-white p-1 shadow-card lg:justify-self-center">
+        <nav aria-label="Khu vực chính" className="hidden lg:flex items-center rounded-full bg-white p-1 shadow-card lg:justify-self-center">
           {SECTIONS.map((s) => <IconLink key={s.id} href={s.href} label={s.label} icon={s.icon} active={s.id === section.id} size="pill" />)}
         </nav>
         <div className="flex items-center gap-1.5 lg:justify-self-end">
-          {user && <div className="mr-1 hidden md:block"><StreakBadge stats={stats} /></div>}
+          {user && <div className="mr-0.5 sm:mr-1"><StreakBadge stats={stats} /></div>}
           <SearchControl />
           {user && <Notices stats={stats} />}
           <Account user={user} onLogout={onLogout} />

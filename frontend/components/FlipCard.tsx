@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 import SpeakButton from './SpeakButton';
 import FavoriteButton from './FavoriteButton';
 import { posLabels, splitMeaning } from '@/lib/pos';
@@ -179,9 +180,10 @@ export default function FlipCard({
             <Link
               href={`/word/${w.id}`}
               onClick={(e) => e.stopPropagation()}
-              className="inline-flex min-h-[44px] items-center text-xs font-semibold text-brand-ink underline-offset-4 hover:underline"
+              className="inline-flex min-h-[38px] items-center gap-1 text-xs font-semibold text-brand-ink underline-offset-4 hover:underline"
             >
-              Xem nét bút thuận & chi tiết từ điển →
+              <span>Xem nét bút thuận & chi tiết từ điển</span>
+              <ArrowRight className="h-3 w-3" />
             </Link>
           </div>
         </div>

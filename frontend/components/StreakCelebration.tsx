@@ -9,12 +9,24 @@ import type { StreakStatus } from '@/lib/types';
 const MILESTONES = [3, 7, 14, 30, 50, 100, 365];
 
 type Props = {
-  status: StreakStatus; streak: number; previousStreak: number;
-  days: { date: string; reviews: number }[]; onClose: () => void;
+  status: StreakStatus;
+  streak: number;
+  previousStreak: number;
+  days: { date: string; reviews: number }[];
+  onClose: () => void;
 };
 
-/** Hiện sau khi hoàn thành một bài học: lửa tắt → được thắp lại, số ngày nhảy lên, pháo giấy */
-export default function StreakCelebration({ status, streak, previousStreak, days, onClose }: Props) {
+/**
+ * Modal chúc mừng chuỗi ngày học phong cách Animate UI × Anime.js:
+ * Lửa tắt → thắp sáng, số ngày nhảy lên, pháo hoa nổ, chuyển động modal mượt mà.
+ */
+export default function StreakCelebration({
+  status,
+  streak,
+  previousStreak,
+  days,
+  onClose,
+}: Props) {
   const celebrating = status !== 'same';
   const [lit, setLit] = useState(!celebrating);
   const [mounted, setMounted] = useState(false);
@@ -22,12 +34,14 @@ export default function StreakCelebration({ status, streak, previousStreak, days
 
   useEffect(() => {
     if (!celebrating) return;
-    const t = setTimeout(() => setLit(true), 650);
+    const t = setTimeout(() => setLit(true), 600);
     return () => clearTimeout(t);
   }, [celebrating]);
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape' || e.key === 'Enter') onClose(); };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' || e.key === 'Enter') onClose();
+    };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [onClose]);
@@ -48,27 +62,46 @@ export default function StreakCelebration({ status, streak, previousStreak, days
 
   if (!mounted) return null;
   return createPortal(
-    <div role="dialog" aria-modal="true" aria-label="Chuỗi ngày học"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-ink/60 p-4" onClick={onClose}>
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Chuỗi ngày học"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-ink/60 p-4 animate-modal-backdrop backdrop-blur-xs"
+      onClick={onClose}
+    >
       {lit && celebrating && <Confetti />}
-      <div className="card relative w-full max-w-sm animate-pop space-y-4 text-center shadow-soft" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="card relative w-full max-w-sm animate-modal-content space-y-4 text-center shadow-soft"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="relative mx-auto flex h-36 items-end justify-center">
           <Flame size={128} state={lit ? (celebrating ? 'ignite' : 'lit') : 'off'} />
           {lit && celebrating && <Sparks />}
         </div>
         <div>
-          <div key={shown} className="animate-pop text-6xl font-extrabold leading-none tabular-nums text-ink">{shown}</div>
+          <div
+            key={shown}
+            className="animate-pop text-6xl font-extrabold leading-none tabular-nums text-ink"
+          >
+            {shown}
+          </div>
           <div className="mt-1 text-sm font-medium text-stone-600">ngày liên tiếp</div>
         </div>
-        {milestone && <span className="pill animate-pop bg-brand-soft !px-3 !py-1 text-sm text-brand-ink">Mốc {streak} ngày!</span>}
+        {milestone && (
+          <span className="pill animate-pop bg-brand-soft !px-3 !py-1 text-sm text-brand-ink">
+            Mốc {streak} ngày!
+          </span>
+        )}
         <div>
           <h2 className="text-xl font-bold">{copy[status][0]}</h2>
           <p className="mt-1 text-sm text-stone-600">{copy[status][1]}</p>
         </div>
         <WeekFlames days={days} />
-        <button className="btn-primary w-full !min-h-[48px]" onClick={onClose} autoFocus>Tiếp tục</button>
+        <button className="btn-primary w-full !min-h-[48px]" onClick={onClose} autoFocus>
+          Tiếp tục
+        </button>
       </div>
     </div>,
-    document.body,
+    document.body
   );
 }

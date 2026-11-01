@@ -10,6 +10,8 @@ import type { Activity, Card, CardOption, ProgressRow, ReviewResult, StreakStatu
 import FlipCard from '@/components/FlipCard';
 import Skeleton from '@/components/Skeleton';
 import StreakCelebration from '@/components/StreakCelebration';
+import Anim from '@/components/motion/Anim';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 type StreakInfo = { status: StreakStatus; streak: number; previousStreak: number };
 type Outcome = { ok: boolean; rating: Rating; days: number | null; progress: ProgressRow };
@@ -241,8 +243,8 @@ function StudyInner() {
             </p>
           </div>
           <div className="flex flex-col justify-center gap-2.5 pt-2 sm:flex-row">
-            <Link href="/dashboard" className="btn-editorial-ghost text-xs">Về trang tổng quan</Link>
-            <Link href="/exercises" className="btn-editorial-primary text-xs">Luyện tập mini-games</Link>
+            <Link href="/dashboard" className="btn-back"><ArrowLeft className="h-3.5 w-3.5" /><span>Về trang tổng quan</span></Link>
+            <Link href="/exercises" className="btn-editorial-primary text-xs"><span>Luyện tập mini-games</span><ArrowRight className="h-3.5 w-3.5" /></Link>
           </div>
         </div>
       ) : (
@@ -312,30 +314,30 @@ function StudyInner() {
               </div>
             </div>
 
-            {/* Danh sách các phương án đáp án: mỗi hàng rõ ràng, căn chỉnh đồng đều */}
-            <div className="my-3 space-y-2.5">
+            {/* Danh sách các phương án đáp án: mỗi hàng rõ ràng, stagger reveal và tactile feedback */}
+            <Anim key={cardKey} each={45} y={6} className="my-3 space-y-2.5">
               {options.map((o, i) => {
                 const answered = !!outcome;
                 const isPicked = picked === i;
                 const state = !answered
-                  ? 'border-line bg-stone-50 hover:border-brand hover:bg-brand-soft/40 active:translate-y-px text-ink'
+                  ? 'border-line bg-stone-50 hover:border-brand hover:bg-brand-soft/40 active:scale-[0.98] text-ink'
                   : o.correct
-                  ? 'border-emerald-500 bg-emerald-50 text-emerald-950 font-semibold  ring-1 ring-emerald-400'
+                  ? 'animate-pop border-emerald-500 bg-emerald-50 text-emerald-950 font-semibold ring-1 ring-emerald-400'
                   : isPicked
-                  ? 'border-red-400 bg-red-50 text-red-900 font-semibold ring-1 ring-red-300'
+                  ? 'animate-shake border-red-400 bg-red-50 text-red-900 font-semibold ring-1 ring-red-300'
                   : 'border-line bg-white opacity-40 text-stone-400';
                 return (
                   <button
                     key={i}
                     disabled={answered || busy}
                     onClick={() => choose(i)}
-                    className={`flex min-h-[46px] w-full items-center gap-3 rounded-xl border px-3.5 py-2.5 text-left transition-all ${state}`}
+                    className={`flex min-h-[46px] w-full items-center gap-3 rounded-xl border px-3.5 py-2.5 text-left transition-[transform,background-color,border-color,box-shadow] duration-150 ${state}`}
                   >
                     <span
                       aria-hidden
-                      className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-xs font-bold ${
+                      className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md text-xs font-bold transition-transform duration-150 ${
                         answered && o.correct
-                          ? 'bg-emerald-600 text-white'
+                          ? 'bg-emerald-600 text-white scale-105'
                           : answered && isPicked
                           ? 'bg-red-500 text-white'
                           : 'bg-brand-soft text-brand-ink'
@@ -349,7 +351,7 @@ function StudyInner() {
                   </button>
                 );
               })}
-            </div>
+            </Anim>
 
             {/* Khu vực hành động phía dưới */}
             <div className="border-t border-line pt-3">
@@ -359,7 +361,7 @@ function StudyInner() {
                   onClick={() => choose(null)}
                   className="min-h-[44px] w-full rounded-xl border border-dashed border-line bg-stone-50 py-2 text-center text-sm font-semibold text-brand-ink transition-colors hover:bg-brand-soft"
                 >
-                  Chưa biết từ này, hiển thị đáp án học <span className="ml-1 opacity-70">(phím 0)</span>
+                  Chưa biết từ này, xem đáp án <span className="ml-1 opacity-70 hidden sm:inline">(phím 0)</span>
                 </button>
               ) : (
                 <div className="grid grid-cols-2 gap-2.5">
@@ -368,13 +370,13 @@ function StudyInner() {
                     aria-pressed={shown}
                     className="btn-editorial-ghost !min-h-[42px] !px-3 text-xs font-semibold"
                   >
-                    {shown ? 'Xem mặt trước' : 'Lật xem nghĩa (Space)'}
+                    <span>{shown ? 'Xem chữ Hán' : 'Lật xem nghĩa'}</span><span className="hidden sm:inline">&nbsp;(Space)</span>
                   </button>
                   <button
                     onClick={next}
                     className="btn-editorial-primary !min-h-[42px] !px-3 text-xs sm:text-sm font-bold"
                   >
-                    {queue.length === 1 && outcome.ok ? 'Hoàn thành' : 'Tiếp tục (Enter →)'}
+                    <span>{queue.length === 1 && outcome.ok ? 'Hoàn thành' : 'Tiếp tục'}</span><span className="hidden sm:inline">&nbsp;(Enter →)</span>
                   </button>
                 </div>
               )}

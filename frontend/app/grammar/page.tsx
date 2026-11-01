@@ -6,6 +6,8 @@ import type { GrammarPoint } from '@/lib/types';
 import SpeakButton from '@/components/SpeakButton';
 import Skeleton from '@/components/Skeleton';
 import PageHeader from '@/components/PageHeader';
+import Anim from '@/components/motion/Anim';
+import { ArrowRight } from 'lucide-react';
 
 const LEVEL_HAN: Record<number, string> = { 1: '一级', 2: '二级', 3: '三级' };
 
@@ -31,8 +33,12 @@ export default function GrammarPage() {
         title="Cẩm nang ngữ pháp HSK 1–3"
         subtitle={loading ? 'Đang tải dữ liệu điểm ngữ pháp…' : `${items.length} cấu trúc ngữ pháp có giải thích chi tiết`}
         actions={
-          <Link href="/exercises" className="btn-editorial-primary text-xs">
-            Luyện tập bài tập →
+          <Link
+            href="/grammar/practice"
+            className="btn-editorial-primary !min-h-[38px] !px-4 text-xs font-semibold"
+          >
+            <span>Luyện tập bài tập</span>
+            <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         }
       />
@@ -86,7 +92,7 @@ export default function GrammarPage() {
                 </h2>
               </div>
 
-              <div className="space-y-3">
+              <Anim each={35} y={6} className="space-y-3">
                 {group.map((g, idx) => (
                   <details
                     key={g.id}
@@ -172,7 +178,7 @@ export default function GrammarPage() {
                     </div>
                   </details>
                 ))}
-              </div>
+              </Anim>
             </section>
           );
         })}

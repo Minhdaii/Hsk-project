@@ -8,6 +8,9 @@ import type { Card, LevelProgress, Word } from '@/lib/types';
 import SpeakButton from '@/components/SpeakButton';
 import PageHeader from '@/components/PageHeader';
 import Skeleton from '@/components/Skeleton';
+import Anim from '@/components/motion/Anim';
+import CountUp from '@/components/motion/CountUp';
+import { ArrowRight } from 'lucide-react';
 
 export default function ReviewCenterPage() {
   const { user, loading } = useUser();
@@ -74,17 +77,18 @@ export default function ReviewCenterPage() {
         subtitle="Quản lý và ôn lại các từ vựng đến hạn, từ khó ghi nhớ theo thuật toán SM-2"
         actions={
           <Link href="/study" className="btn-editorial-primary text-xs">
-            Bắt đầu ôn tập ngay ({dueCount} thẻ) →
+            <span>Bắt đầu ôn tập ngay ({dueCount} thẻ)</span>
+            <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         }
       />
 
       {/* 3 Thẻ chỉ số bộ nhớ */}
-      <div className="grid gap-4 sm:grid-cols-3">
+      <Anim each={60} y={8} className="grid gap-4 sm:grid-cols-3">
         <div className="editorial-card p-5">
           <span className="editorial-badge">ĐẾN HẠN HÔM NAY</span>
           <div className="mt-2 text-3xl font-extrabold text-brand-ink tabular-nums">
-            {dueCount} <span className="text-sm font-normal text-stone-600">từ</span>
+            <CountUp to={dueCount} /> <span className="text-sm font-normal text-stone-600">từ</span>
           </div>
           <p className="mt-1 text-xs text-stone-600">Đã đến chu kỳ lặp lại cần ôn ngay</p>
         </div>
@@ -92,7 +96,7 @@ export default function ReviewCenterPage() {
         <div className="editorial-card p-5">
           <span className="editorial-badge-stone">ĐANG CỦNG CỐ</span>
           <div className="mt-2 text-3xl font-extrabold text-ink tabular-nums">
-            {started - mastered} <span className="text-sm font-normal text-stone-600">từ</span>
+            <CountUp to={Math.max(0, started - mastered)} /> <span className="text-sm font-normal text-stone-600">từ</span>
           </div>
           <p className="mt-1 text-xs text-stone-600">Đang trong chu kỳ lặp lại SM-2</p>
         </div>
@@ -100,11 +104,11 @@ export default function ReviewCenterPage() {
         <div className="editorial-card p-5">
           <span className="editorial-badge-stone">ĐÃ THUỘC VỮNG</span>
           <div className="mt-2 text-3xl font-extrabold text-emerald-700 tabular-nums">
-            {mastered} <span className="text-sm font-normal text-stone-600">từ</span>
+            <CountUp to={mastered} /> <span className="text-sm font-normal text-stone-600">từ</span>
           </div>
           <p className="mt-1 text-xs text-stone-600">Đạt khoảng cách lặp lại xa</p>
         </div>
-      </div>
+      </Anim>
 
       {/* Bộ lọc cấp độ */}
       <div className="flex items-center justify-between border-b border-line pb-3">
@@ -128,8 +132,9 @@ export default function ReviewCenterPage() {
           </div>
         </div>
 
-        <Link href={`/study?level=${level}`} className="btn-editorial-soft !min-h-[44px] text-xs">
-          Ôn tập HSK {level} →
+        <Link href={`/study?level=${level}`} className="btn-editorial-primary !min-h-[44px] text-xs font-bold">
+          <span>Ôn tập HSK {level}</span>
+          <ArrowRight className="h-3.5 w-3.5" />
         </Link>
       </div>
 
@@ -149,7 +154,7 @@ export default function ReviewCenterPage() {
             Hiện tại không có từ nào ở HSK {level} bị quá hạn ôn tập. Tuyệt vời!
           </div>
         ) : (
-          <ul className="divide-y divide-line">
+          <Anim as="ul" key={level} each={25} y={6} className="divide-y divide-line">
             {dueCards.slice(0, 8).map((c) => (
               <li key={c.word.id} className="flex items-center justify-between gap-3 px-5 py-3.5 hover:bg-stone-50">
                 <div className="flex items-center gap-4 min-w-0">
@@ -172,7 +177,7 @@ export default function ReviewCenterPage() {
                 </div>
               </li>
             ))}
-          </ul>
+          </Anim>
         )}
       </section>
 
@@ -182,8 +187,9 @@ export default function ReviewCenterPage() {
           <h2 id="tu-kho-so-tay" className="text-xs font-bold uppercase tracking-wider text-ink">
             Từ khó được lưu riêng trong sổ tay ({favorites.length} từ)
           </h2>
-          <Link href="/favorites" className="inline-flex min-h-[44px] items-center text-sm font-semibold text-brand-ink hover:underline">
-            Xem toàn bộ sổ tay →
+          <Link href="/favorites" className="inline-flex min-h-[38px] items-center gap-1.5 text-xs font-semibold text-brand-ink hover:underline">
+            <span>Xem toàn bộ sổ tay</span>
+            <ArrowRight className="h-3 w-3" />
           </Link>
         </div>
 
@@ -192,7 +198,7 @@ export default function ReviewCenterPage() {
             Chưa có từ nào trong sổ tay. Khi học flashcard hoặc tra từ điển, bạn có thể bấm ☆ để lưu từ khó vào đây.
           </div>
         ) : (
-          <ul className="divide-y divide-line">
+          <Anim as="ul" key={level} each={25} y={6} className="divide-y divide-line">
             {favorites.slice(0, 6).map((w) => (
               <li key={w.id} className="flex items-center justify-between gap-3 px-5 py-3 hover:bg-stone-50">
                 <div className="flex items-center gap-4 min-w-0">
@@ -207,7 +213,7 @@ export default function ReviewCenterPage() {
                 <SpeakButton text={w.hanzi} audioUrl={w.audioUrl} />
               </li>
             ))}
-          </ul>
+          </Anim>
         )}
       </section>
     </div>

@@ -18,7 +18,7 @@ export default function Tip({ label, side = 'bottom', align = 'center', children
       {children}
       <span
         role="tooltip"
-        className={`pointer-events-none absolute z-50 whitespace-nowrap rounded-lg bg-ink px-2.5 py-1.5 text-xs font-medium text-white opacity-0 transition-opacity duration-200 group-has-[:focus-visible]/tip:opacity-100 [@media(hover:hover)]:group-hover/tip:opacity-100 ${SIDE[side]} ${side === 'right' ? '' : ALIGN[align]}`}
+        className={`pointer-events-none absolute z-50 whitespace-nowrap rounded-lg bg-ink px-2.5 py-1.5 text-xs font-medium text-white opacity-0 scale-95 transition-[opacity,transform] duration-150 ease-out group-has-[:focus-visible]/tip:opacity-100 group-has-[:focus-visible]/tip:scale-100 [@media(hover:hover)]:group-hover/tip:opacity-100 [@media(hover:hover)]:group-hover/tip:scale-100 ${SIDE[side]} ${side === 'right' ? '' : ALIGN[align]}`}
       >
         {label}
       </span>

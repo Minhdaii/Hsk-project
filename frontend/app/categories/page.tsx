@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { api } from '@/lib/api';
 import type { CategoryNode } from '@/lib/types';
 import Skeleton from '@/components/Skeleton';
+import Anim from '@/components/motion/Anim';
 
 /** Danh mục từ vựng theo chủ đề: nhóm > chủ đề > chủ đề con. Số từ lấy từ database, một từ có thể thuộc nhiều danh mục. */
 export default function CategoriesPage() {
@@ -47,7 +48,7 @@ export default function CategoriesPage() {
               <h2 id={`g-${g.id}`} className="text-lg font-bold">{g.name}</h2>
               <span className="text-sm tabular-nums text-stone-600">{g.wordCount} từ</span>
             </div>
-            <ul className="grid gap-4 lg:grid-cols-2">
+            <Anim as="ul" each={35} y={8} className="grid gap-4 lg:grid-cols-2">
               {topics.map((t) => (
                 <li key={t.id} className="lab-surface p-4 sm:p-5">
                   <div className="flex items-start justify-between gap-3">
@@ -70,7 +71,7 @@ export default function CategoriesPage() {
                   )}
                 </li>
               ))}
-            </ul>
+            </Anim>
           </section>
         );
       })}

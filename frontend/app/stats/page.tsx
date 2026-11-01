@@ -7,6 +7,9 @@ import { useStats } from '@/lib/useStats';
 import type { Activity, LevelProgress } from '@/lib/types';
 import PageHeader from '@/components/PageHeader';
 import Skeleton from '@/components/Skeleton';
+import Anim from '@/components/motion/Anim';
+import CountUp from '@/components/motion/CountUp';
+import { ArrowRight } from 'lucide-react';
 
 export default function LearningStatsPage() {
   const { user, loading } = useUser();
@@ -72,17 +75,18 @@ export default function LearningStatsPage() {
         subtitle="Dữ liệu tiến độ thực tế, độ liên tục và biểu đồ hoạt động học tập của bạn"
         actions={
           <Link href="/study" className="btn-editorial-primary text-xs">
-            Tiếp tục học ngay →
+            <span>Tiếp tục học ngay</span>
+            <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         }
       />
 
       {/* 4 Thống kê chính */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <Anim each={50} y={8} className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div className="editorial-card p-5">
           <span className="editorial-badge">TỪ ĐÃ HỌC</span>
           <div className="mt-2 text-3xl font-extrabold text-ink tabular-nums">
-            {startedWords} <span className="text-xs font-normal text-stone-600">/ {totalWords}</span>
+            <CountUp to={startedWords} /> <span className="text-xs font-normal text-stone-600">/ {totalWords}</span>
           </div>
           <p className="mt-1 text-xs text-stone-600">{Math.round((startedWords / totalWords) * 100)}% tổng số từ vựng</p>
         </div>
@@ -90,7 +94,7 @@ export default function LearningStatsPage() {
         <div className="editorial-card p-5">
           <span className="editorial-badge">ĐÃ THUỘC VỮNG</span>
           <div className="mt-2 text-3xl font-extrabold text-emerald-700 tabular-nums">
-            {masteredWords} <span className="text-xs font-normal text-stone-600">từ</span>
+            <CountUp to={masteredWords} /> <span className="text-xs font-normal text-stone-600">từ</span>
           </div>
           <p className="mt-1 text-xs text-stone-600">Nhớ sâu theo chuẩn SM-2</p>
         </div>
@@ -98,7 +102,7 @@ export default function LearningStatsPage() {
         <div className="editorial-card p-5">
           <span className="editorial-badge">CHUỖI NGÀY HỌC</span>
           <div className="mt-2 text-3xl font-extrabold text-brand-ink tabular-nums">
-            {streak} <span className="text-xs font-normal text-stone-600">ngày</span>
+            <CountUp to={streak} /> <span className="text-xs font-normal text-stone-600">ngày</span>
           </div>
           <p className="mt-1 text-xs text-stone-600">Độ liên tục học tập</p>
         </div>
@@ -106,11 +110,11 @@ export default function LearningStatsPage() {
         <div className="editorial-card p-5">
           <span className="editorial-badge">ĐIỂM KINH NGHIỆM</span>
           <div className="mt-2 text-3xl font-extrabold text-brand-ink tabular-nums">
-            {xp} <span className="text-xs font-normal text-stone-600">XP</span>
+            <CountUp to={xp} /> <span className="text-xs font-normal text-stone-600">XP</span>
           </div>
           <p className="mt-1 text-xs text-stone-600">{totalReviews} lượt ôn tập hoàn thành</p>
         </div>
-      </div>
+      </Anim>
 
       {/* Chi tiết phân bổ theo cấp độ HSK 1, 2, 3 */}
       <section className="editorial-card p-6" aria-labelledby="chi-tiet-cap-do">

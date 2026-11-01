@@ -16,7 +16,7 @@ export default function PageHeader({
   glyph?: string;
 }) {
   return (
-    <div className="flex flex-wrap items-end justify-between gap-4 pb-2">
+    <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-4 pb-2">
       <div className="min-w-0">
         <div className="flex items-center gap-2.5">
           {glyph && (
@@ -28,9 +28,9 @@ export default function PageHeader({
               {glyph}
             </span>
           )}
-          <h1 className="text-[1.75rem] font-medium leading-tight tracking-tight text-ink sm:text-4xl">{title}</h1>
+          <h1 className="text-xl font-bold leading-tight tracking-tight text-ink sm:text-3xl lg:text-4xl">{title}</h1>
         </div>
-        {subtitle && <div className="mt-1 text-xs text-stone-600 sm:text-sm">{subtitle}</div>}
+        {subtitle && <div className="mt-1 text-xs text-stone-600 sm:text-sm text-balance">{subtitle}</div>}
       </div>
       {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
     </div>

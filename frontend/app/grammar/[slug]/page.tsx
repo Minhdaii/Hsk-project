@@ -8,6 +8,8 @@ import type { GrammarDetail } from '@/lib/types';
 import SpeakButton from '@/components/SpeakButton';
 import Skeleton from '@/components/Skeleton';
 import ZhMix from '@/components/ZhMix';
+import Anim from '@/components/motion/Anim';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 const levelLabel = (l: number) => (l === 0 ? 'Ngữ pháp mở rộng' : `HSK ${l}`);
 
@@ -35,12 +37,12 @@ export default function GrammarDetailPage() {
     } catch (e) { setNote(e instanceof ApiError ? e.message : 'Không lưu được'); } finally { setBusy(false); }
   };
 
-  if (error) return <div className="space-y-4"><p role="alert" className="rounded-lg border border-red-300 bg-red-50 p-4 text-sm text-red-800">{error}</p><Link href="/grammar" className="btn-ghost">← Danh sách ngữ pháp</Link></div>;
+  if (error) return <div className="space-y-4"><p role="alert" className="rounded-lg border border-red-300 bg-red-50 p-4 text-sm text-red-800">{error}</p><Link href="/grammar" className="btn-back"><ArrowLeft className="h-3.5 w-3.5" /><span>Danh sách ngữ pháp</span></Link></div>;
   if (!g) return <div className="space-y-4"><Skeleton className="h-16 w-2/3" /><Skeleton className="h-40" /><Skeleton className="h-64" /></div>;
 
   return (
-    <article className="mx-auto max-w-3xl space-y-8">
-      <nav aria-label="Vị trí" className="text-sm text-stone-600"><Link href="/grammar" className="inline-flex min-h-[44px] items-center hover:text-ink hover:underline">← Ngữ pháp</Link></nav>
+    <Anim as="article" each={45} y={8} className="mx-auto max-w-3xl space-y-8">
+      <nav aria-label="Vị trí"><Link href="/grammar" className="btn-back"><ArrowLeft className="h-3.5 w-3.5" /><span>Danh mục ngữ pháp</span></Link></nav>
 
       <header className="space-y-3">
         <div className="flex flex-wrap items-center gap-2">
@@ -135,7 +137,7 @@ export default function GrammarDetailPage() {
           <h2 id="lien-quan" className="text-xl font-bold">Cấu trúc liên quan</h2>
           <ul className="divide-y divide-line overflow-hidden rounded-xl border border-line bg-white">
             {g.related.map((r) => (
-              <li key={r.id}><Link href={`/grammar/${r.slug}`} className="flex min-h-[56px] items-center justify-between gap-3 px-4 py-2 hover:bg-stone-50"><span><span className="font-semibold">{r.title}</span> <span className="text-sm text-stone-600">· {levelLabel(r.level)}</span></span><span aria-hidden>→</span></Link></li>
+              <li key={r.id}><Link href={`/grammar/${r.slug}`} className="flex min-h-[56px] items-center justify-between gap-3 px-4 py-2 hover:bg-stone-50"><span><span className="font-semibold">{r.title}</span> <span className="text-sm text-stone-600">· {levelLabel(r.level)}</span></span><ArrowRight className="h-4 w-4 text-stone-400" /></Link></li>
             ))}
           </ul>
         </section>
@@ -144,9 +146,9 @@ export default function GrammarDetailPage() {
       <p className="text-xs text-stone-500">{g.source === 'authored' ? 'Nội dung do hệ thống soạn' : 'Nội dung nhập từ dữ liệu của dự án'}, {g.verified ? 'đã được xác minh.' : 'chưa được giáo viên hoặc người bản ngữ xác minh.'}</p>
 
       <nav aria-label="Bài trước và sau" className="grid gap-3 border-t border-line pt-5 sm:grid-cols-2">
-        {g.prev ? <Link href={`/grammar/${g.prev.slug ?? g.prev.id}`} className="lab-surface block p-4 hover:border-stone-400"><span className="text-sm text-stone-600">← Trước</span><span className="mt-0.5 block font-semibold">{g.prev.title}</span></Link> : <span />}
-        {g.next && <Link href={`/grammar/${g.next.slug ?? g.next.id}`} className="lab-surface block p-4 text-right hover:border-stone-400"><span className="text-sm text-stone-600">Sau →</span><span className="mt-0.5 block font-semibold">{g.next.title}</span></Link>}
+        {g.prev ? <Link href={`/grammar/${g.prev.slug ?? g.prev.id}`} className="lab-surface block p-4 hover:border-stone-400"><span className="inline-flex items-center gap-1 text-sm text-stone-600"><ArrowLeft className="h-3 w-3" /> Trước</span><span className="mt-0.5 block font-semibold">{g.prev.title}</span></Link> : <span />}
+        {g.next && <Link href={`/grammar/${g.next.slug ?? g.next.id}`} className="lab-surface block p-4 text-right hover:border-stone-400"><span className="inline-flex items-center justify-end gap-1 text-sm text-stone-600">Sau <ArrowRight className="h-3 w-3" /></span><span className="mt-0.5 block font-semibold">{g.next.title}</span></Link>}
       </nav>
-    </article>
+    </Anim>
   );
 }

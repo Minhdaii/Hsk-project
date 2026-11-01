@@ -7,6 +7,7 @@ import { useUser } from '@/lib/useUser';
 import { useStats } from '@/lib/useStats';
 import PageHeader from '@/components/PageHeader';
 import Skeleton from '@/components/Skeleton';
+import Anim from '@/components/motion/Anim';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -70,7 +71,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6">
+    <Anim each={50} y={8} className="mx-auto max-w-3xl space-y-6">
       <PageHeader
         glyph="我"
         title="Hồ sơ & Mục tiêu học tập"
@@ -172,6 +173,6 @@ export default function ProfilePage() {
           Đăng xuất khỏi tài khoản
         </button>
       </div>
-    </div>
+    </Anim>
   );
 }

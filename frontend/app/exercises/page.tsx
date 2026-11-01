@@ -7,6 +7,8 @@ import type { ClozeQuestion, ExerciseMeta, OrderQuestion, Word } from '@/lib/typ
 import { speak } from '@/lib/speak';
 import SpeakButton from '@/components/SpeakButton';
 import CountPicker from '@/components/CountPicker';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
+import Anim from '@/components/motion/Anim';
 import { AnswerPanel, GameHeader, GameResult, useCombo } from '@/components/game/GameBits';
 
 type GameMode = 'match' | 'order' | 'cloze' | 'listen' | 'dialogue';
@@ -42,7 +44,7 @@ function Problem({ msg, onExit }: { msg: string; onExit: () => void }) {
   return (
     <div className="editorial-card space-y-4 p-8 text-center">
       <p className="text-xs text-stone-600">{msg}</p>
-      <button className="btn-editorial-ghost text-xs" onClick={onExit}>Quay lại danh mục trò chơi</button>
+      <button className="btn-back" onClick={onExit}><ArrowLeft className="h-3.5 w-3.5" /><span>Quay lại danh mục</span></button>
     </div>
   );
 }
@@ -52,7 +54,8 @@ const Loading = () => <div className="editorial-card flex h-48 items-center just
 function NextButton({ last, onClick }: { last: boolean; onClick: () => void }) {
   return (
     <button className="btn-editorial-primary w-full animate-fade-up !py-3.5 text-xs font-bold" onClick={onClick}>
-      {last ? 'Hoàn thành và xem kết quả' : 'Câu tiếp theo'} →
+      <span>{last ? 'Hoàn thành và xem kết quả' : 'Câu tiếp theo'}</span>
+      <ArrowRight className="h-3.5 w-3.5" />
     </button>
   );
 }
@@ -569,7 +572,7 @@ function ExercisesContent() {
     return (
       <div data-game={mode} className="lab-game mx-auto max-w-lg space-y-4">
         <div className="flex items-center gap-3 border-b border-line pb-3">
-          <button className="btn-ghost !px-3" onClick={() => setMode(null)}>← Danh mục</button>
+          <button className="btn-back" onClick={() => setMode(null)}><ArrowLeft className="h-3.5 w-3.5" /><span>Danh mục</span></button>
           <span lang="zh-Hans" aria-hidden className="hanzi g-solid flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-lg">{selectedGame.glyph}</span>
           <h1 className="min-w-0 flex-1 truncate font-bold">
             {selectedGame.title.replace(/^\d+\.\s*/, '')} <span className="text-sm font-normal text-stone-600">· HSK {level}</span>
@@ -599,7 +602,7 @@ function ExercisesContent() {
         <span aria-hidden className="relative my-4 block">{preview}</span>
         <span className="relative flex items-center justify-between text-sm font-semibold">
           <span className="text-white/90">{g.duration}</span>
-          <span className="inline-flex items-center gap-1.5">Chơi <span className="lab-nudge inline-block">→</span></span>
+          <span className="inline-flex items-center gap-1.5"><span>Chơi</span> <ArrowRight className="h-3.5 w-3.5 lab-nudge inline-block" /></span>
         </span>
       </button>
     );
@@ -609,8 +612,8 @@ function ExercisesContent() {
   return (
     <div className="space-y-7">
       <header>
-        <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">Phòng luyện tập</h1>
-        <p className="mt-1 max-w-xl text-stone-600">Năm trò chơi, mỗi trò rèn một kỹ năng khác nhau. Chọn cấp độ và số câu rồi bắt đầu.</p>
+        <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight">Phòng luyện tập</h1>
+        <p className="mt-1 max-w-xl text-xs sm:text-sm text-stone-600">Năm trò chơi, mỗi trò rèn một kỹ năng khác nhau. Chọn cấp độ và số câu rồi bắt đầu.</p>
       </header>
 
       <div className="lab-surface flex flex-col gap-4 p-4 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-8 sm:gap-y-3 sm:px-5">
@@ -632,7 +635,7 @@ function ExercisesContent() {
         </div>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-12">
+      <Anim each={50} y={8} className="grid gap-4 lg:grid-cols-12">
         {tile('match', 'lg:col-span-7', (
           <span className="grid max-w-sm grid-cols-2 gap-x-3 gap-y-1.5 text-sm font-semibold">
             {[['你好', 'Xin chào'], ['谢谢', 'Cảm ơn'], ['再见', 'Tạm biệt']].map(([h, v], k) => (
@@ -675,7 +678,9 @@ function ExercisesContent() {
             <span lang="zh-Hans" className={`hanzi ${chipW} self-end text-base`}>我也很高兴认识你。</span>
           </span>
         ))}
-      </div>
+      </Anim>
+
+
     </div>
   );
 }

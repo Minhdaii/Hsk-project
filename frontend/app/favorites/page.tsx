@@ -8,6 +8,7 @@ import SpeakButton from '@/components/SpeakButton';
 import FavoriteButton from '@/components/FavoriteButton';
 import PageHeader from '@/components/PageHeader';
 import Skeleton from '@/components/Skeleton';
+import Anim from '@/components/motion/Anim';
 
 export default function FavoritesPage() {
   const { user, loading } = useUser();
@@ -88,7 +89,7 @@ export default function FavoritesPage() {
 
       {words && words.length > 0 && (
         <div className="editorial-card overflow-hidden">
-          <ul className="divide-y divide-line">
+          <Anim as="ul" each={24} y={6} className="divide-y divide-line">
             {words.map((w) => (
               <li
                 key={w.id}
@@ -118,7 +119,7 @@ export default function FavoritesPage() {
                 </div>
               </li>
             ))}
-          </ul>
+          </Anim>
         </div>
       )}
     </div>

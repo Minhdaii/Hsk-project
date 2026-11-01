@@ -4,6 +4,7 @@ import { api } from '@/lib/api';
 import type { LeaderRow } from '@/lib/types';
 import PageHeader from '@/components/PageHeader';
 import Skeleton from '@/components/Skeleton';
+import Anim from '@/components/motion/Anim';
 
 export default function LeaderboardPage() {
   const [rows, setRows] = useState<LeaderRow[] | null>(null);
@@ -54,7 +55,7 @@ export default function LeaderboardPage() {
               <span>Điểm XP</span>
             </div>
           </div>
-          <ol className="divide-y divide-line">
+          <Anim as="ol" each={30} y={6} className="divide-y divide-line">
             {rows.map((r) => (
               <li
                 key={r.rank}
@@ -96,7 +97,7 @@ export default function LeaderboardPage() {
                 </div>
               </li>
             ))}
-          </ol>
+          </Anim>
         </div>
       )}
     </div>

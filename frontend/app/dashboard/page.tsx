@@ -22,14 +22,14 @@ const CARD = 'rounded-[22px] bg-white shadow-card';
 /** Thẻ màu pastel dẫn tới một nhóm chức năng. Chữ Hán mờ ở góc là họa tiết, không phải nội dung. */
 function ToneCard({ href, tone, glyph, title, text, chip }: { href: string; tone: string; glyph: string; title: string; text: string; chip: string }) {
   return (
-    <Link href={href} className={`group relative flex min-h-[170px] flex-col justify-between overflow-hidden rounded-[22px] p-6 outline-none transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-pop focus-visible:ring-2 focus-visible:ring-brand-ink focus-visible:ring-offset-2 focus-visible:ring-offset-paper motion-reduce:transition-none ${tone}`}>
-      <span aria-hidden lang="zh-Hans" className="hanzi pointer-events-none absolute -right-2 -top-6 select-none text-[9rem] font-black leading-none text-white/45">{glyph}</span>
+    <Link href={href} className={`group relative flex min-h-[150px] sm:min-h-[170px] flex-col justify-between overflow-hidden rounded-[22px] p-5 sm:p-6 outline-none transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-pop focus-visible:ring-2 focus-visible:ring-brand-ink focus-visible:ring-offset-2 focus-visible:ring-offset-paper motion-reduce:transition-none ${tone}`}>
+      <span aria-hidden lang="zh-Hans" className="hanzi pointer-events-none absolute -right-2 -top-6 select-none text-[6.5rem] sm:text-[9rem] font-black leading-none text-white/45">{glyph}</span>
       <div className="relative max-w-[85%]">
-        <h2 className="text-[1.35rem] font-semibold leading-tight tracking-tight">{title}</h2>
-        <p className="mt-2 text-sm leading-relaxed text-ink/70">{text}</p>
+        <h2 className="text-lg sm:text-[1.35rem] font-semibold leading-tight tracking-tight">{title}</h2>
+        <p className="mt-1.5 sm:mt-2 text-xs sm:text-sm leading-relaxed text-ink/75">{text}</p>
       </div>
       <div className="relative mt-5 flex items-center justify-between gap-3">
-        <span className="inline-flex min-h-[36px] items-center rounded-full bg-white/70 px-3.5 text-sm font-medium">{chip}</span>
+        <span className="inline-flex min-h-[32px] sm:min-h-[36px] items-center rounded-full bg-white/75 px-3 py-1 text-xs sm:text-sm font-semibold">{chip}</span>
         <span aria-hidden className="flex h-9 w-9 items-center justify-center rounded-full bg-white/80 transition-transform duration-200 group-hover:scale-105"><ArrowUpRight className="h-[18px] w-[18px]" strokeWidth={1.8} /></span>
       </div>
     </Link>
@@ -106,14 +106,14 @@ export default function Dashboard() {
   return (
     <div className="space-y-6 pb-2">
       <header>
-        <h1 className="text-[2rem] font-medium leading-tight tracking-tight sm:text-[2.5rem]">Dashboard</h1>
+        <h1 className="text-2xl font-bold leading-tight tracking-tight sm:text-[2.5rem]">Dashboard</h1>
         {now && <p className="mt-0.5 text-sm text-stone-600">{now.greeting}, {user.username} · {now.date}</p>}
       </header>
 
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
         {/* Cột trái: khóa học và ba thẻ chức năng */}
         <Anim each={80} y={14} className="space-y-5">
-          <section aria-labelledby="khoa-hoc" className={`${CARD} p-6`}>
+          <section aria-labelledby="khoa-hoc" className={`${CARD} p-5 sm:p-6`}>
             <div className="flex items-start justify-between gap-3">
               <div>
                 <h2 id="khoa-hoc" className="text-lg font-semibold tracking-tight">Khóa học của tôi</h2>
@@ -149,10 +149,10 @@ export default function Dashboard() {
 
         {/* Cột phải: hiệu suất tuần, nhiệm vụ, xếp hạng */}
         <Anim each={100} y={16} className="space-y-6">
-          <section aria-labelledby="hieu-suat" className={`${CARD} p-6 sm:p-8`}>
+          <section aria-labelledby="hieu-suat" className={`${CARD} p-5 sm:p-8`}>
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
-                <h2 id="hieu-suat" className="text-2xl font-semibold tracking-tight">Hiệu suất học tập</h2>
+                <h2 id="hieu-suat" className="text-xl font-bold tracking-tight sm:text-2xl">Hiệu suất học tập</h2>
                 <p className="mt-0.5 flex items-center gap-1.5 text-sm text-stone-500">
                   {streak > 0 ? <>Bạn đang giữ chuỗi {streak} ngày, cứ thế tiếp tục<Flame className="h-4 w-4 text-vermilion" strokeWidth={1.8} aria-hidden /></> : 'Học một lượt hôm nay để bắt đầu chuỗi ngày'}
                 </p>
@@ -167,8 +167,8 @@ export default function Dashboard() {
           </section>
 
           <div className="grid gap-6 md:grid-cols-2">
-            <section aria-labelledby="nhiem-vu" className={`${CARD} p-6`}>
-              <h2 id="nhiem-vu" className="text-xl font-semibold tracking-tight">Nhiệm vụ hôm nay</h2>
+            <section aria-labelledby="nhiem-vu" className={`${CARD} p-5 sm:p-6`}>
+              <h2 id="nhiem-vu" className="text-lg font-bold tracking-tight sm:text-xl">Nhiệm vụ hôm nay</h2>
               <p className="text-sm text-stone-500">{remaining > 0 ? `Còn ${remaining} nhiệm vụ · Hết hạn tối nay` : 'Bạn đã hoàn thành tất cả'}</p>
               <ul className="mt-5 space-y-4">
                 {tasks.map((t) => (
@@ -188,10 +188,10 @@ export default function Dashboard() {
               </ul>
             </section>
 
-            <section aria-labelledby="xep-hang" className={`${CARD} p-6`}>
+            <section aria-labelledby="xep-hang" className={`${CARD} p-5 sm:p-6`}>
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <h2 id="xep-hang" className="text-xl font-semibold tracking-tight">Bảng xếp hạng</h2>
+                  <h2 id="xep-hang" className="text-lg font-bold tracking-tight sm:text-xl">Bảng xếp hạng</h2>
                   <p className="text-sm text-stone-500">{gap > 0 ? `Bạn có ${mine.toLocaleString('vi-VN')} XP, còn ${gap.toLocaleString('vi-VN')} XP để vào top 3` : `Bạn có ${mine.toLocaleString('vi-VN')} XP`}</p>
                 </div>
                 <Link href="/leaderboard" className="shrink-0 whitespace-nowrap rounded-full border border-line px-3.5 py-1.5 text-sm text-stone-600 transition-colors hover:border-stone-400 hover:text-ink">Tất cả</Link>

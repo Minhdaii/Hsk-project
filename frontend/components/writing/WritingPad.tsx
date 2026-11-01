@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { api } from '@/lib/api';
 import type { Word } from '@/lib/types';
@@ -256,7 +257,10 @@ export default function WritingPad() {
                   <>
                     <div className="flex items-baseline gap-2"><span lang="zh-Hans" className="hanzi text-3xl">{word.hanzi}</span><span className="pinyin text-lg font-medium text-brand-ink">{word.pinyin}</span>{word.hskLevel && <span className="pill">HSK {word.hskLevel}</span>}</div>
                     <p className="text-stone-700">{word.meaningVi || word.meaningEn}</p>
-                    <Link href={`/word/${word.id}`} className="inline-flex min-h-[44px] items-center text-sm font-semibold text-brand-ink hover:underline">Xem chi tiết và ví dụ →</Link>
+                    <Link href={`/word/${word.id}`} className="inline-flex min-h-[38px] items-center gap-1.5 text-xs font-semibold text-brand-ink hover:underline">
+                      <span>Xem chi tiết và ví dụ</span>
+                      <ArrowRight className="h-3 w-3" />
+                    </Link>
                   </>
                 ) : (
                   <p className="text-sm text-stone-600"><span lang="zh-Hans" className="hanzi text-lg text-ink">{q}</span>: chưa có trong kho từ HSK của hệ thống. Kết quả nhận diện vẫn được giữ nguyên.</p>

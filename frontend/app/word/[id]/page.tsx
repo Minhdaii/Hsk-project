@@ -6,9 +6,11 @@ import { api } from '@/lib/api';
 import type { WordDetail } from '@/lib/types';
 import { posLabels, splitMeaning } from '@/lib/pos';
 import SpeakButton from '@/components/SpeakButton';
+import { ArrowLeft } from 'lucide-react';
 import FavoriteButton from '@/components/FavoriteButton';
 import Skeleton from '@/components/Skeleton';
 import HanziWriterBox from '@/components/HanziWriterBox';
+import Anim from '@/components/motion/Anim';
 
 export default function WordDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -24,8 +26,9 @@ export default function WordDetailPage() {
       <div className="editorial-card mx-auto max-w-lg p-8 text-center">
         <p className="text-xs text-stone-600">Không tìm thấy thông tin từ vựng này.</p>
         <div className="mt-4">
-          <Link href="/words" className="btn-editorial-ghost text-xs">
-            ← Quay lại kho từ vựng
+          <Link href="/words" className="btn-back">
+            <ArrowLeft className="h-3.5 w-3.5" />
+            <span>Quay lại kho từ vựng</span>
           </Link>
         </div>
       </div>
@@ -46,13 +49,14 @@ export default function WordDetailPage() {
   const en = splitMeaning(word.meaningEn);
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6">
+    <Anim each={60} y={8} className="mx-auto max-w-2xl space-y-6">
       <div>
         <Link
           href="/words"
-          className="inline-flex min-h-[44px] items-center text-xs font-semibold text-stone-600 transition-colors hover:text-ink"
+          className="btn-back"
         >
-          ← Quay lại kho từ vựng
+          <ArrowLeft className="h-3.5 w-3.5" />
+          <span>Quay lại kho từ vựng</span>
         </Link>
       </div>
 
@@ -170,6 +174,6 @@ export default function WordDetailPage() {
           </ul>
         </div>
       )}
-    </div>
+    </Anim>
   );
 }

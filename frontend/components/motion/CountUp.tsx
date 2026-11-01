@@ -1,21 +1,64 @@
 'use client';
 import { useEffect, useRef } from 'react';
-import { animate, reduced, whenVisible } from '@/lib/motion';
+import { animateNumber, reduced, whenVisible } from '@/lib/motion';
 
-/** Số đếm lên tới giá trị cuối khi cuộn tới. HTML gốc đã chứa giá trị cuối nên không JS vẫn đúng. */
-export default function CountUp({ to, suffix = '', locale = 'vi-VN', className }: { to: number; suffix?: string; locale?: string; className?: string }) {
+/**
+ * Số đếm lên tới giá trị đích khi cuộn tới (Anime.js).
+ * Giữ nguyên giá trị tĩnh trong SSR và fallback khi người dùng bật reduced motion.
+ */
+export default function CountUp({
+  to,
+  from = 0,
+  suffix = '',
+  locale = 'vi-VN',
+  className,
+  duration = 850,
+}: {
+  to: number;
+  from?: number;
+  suffix?: string;
+  locale?: string;
+  className?: string;
+  duration?: number;
+}) {
   const ref = useRef<HTMLSpanElement>(null);
   const fmt = (n: number) => `${n.toLocaleString(locale)}${suffix}`;
+
   useEffect(() => {
     const el = ref.current;
-    if (!el || reduced()) return;
-    let anim: ReturnType<typeof animate> | undefined;
+    if (!el) return;
+
+    if (reduced()) {
+      el.textContent = fmt(to);
+      return;
+    }
+
+    let anim: ReturnType<typeof animateNumber> = null;
+
     const stop = whenVisible(el, () => {
-      const s = { n: 0 };
-      anim = animate(s, { n: to, duration: 1100, ease: 'outExpo', onUpdate: () => { el.textContent = fmt(Math.round(s.n)); } });
+      anim = animateNumber(el, to, {
+        from,
+        duration,
+        format: fmt,
+      });
     });
-    return () => { stop(); anim?.revert(); };
+
+    return () => {
+      stop();
+      if (anim) {
+        try {
+          anim.revert();
+        } catch {
+          // safe fallback
+        }
+      }
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [to, suffix]);
-  return <span ref={ref} className={className}>{fmt(to)}</span>;
+  }, [to, from, suffix, duration]);
+
+  return (
+    <span ref={ref} className={className}>
+      {fmt(to)}
+    </span>
+  );
 }

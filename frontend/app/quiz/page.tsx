@@ -6,7 +6,9 @@ import type { Word } from '@/lib/types';
 import { speak } from '@/lib/speak';
 import CountPicker from '@/components/CountPicker';
 import PageHeader from '@/components/PageHeader';
+import Anim from '@/components/motion/Anim';
 import { AnswerPanel, GameHeader, GameResult, useCombo } from '@/components/game/GameBits';
+import { ArrowRight } from 'lucide-react';
 
 type Mode = 'meaning' | 'listen';
 type Question = { word: Word; options: Word[] };
@@ -202,7 +204,7 @@ function QuizInner() {
     <div className="mx-auto max-w-md space-y-4">
       <GameHeader i={i} total={qs.length} score={score} combo={combo} />
 
-      <div className="editorial-card flex min-h-[11rem] flex-col items-center justify-center p-6 text-center sm:p-8">
+      <div key={`card-${i}`} className="editorial-card animate-slide-in flex min-h-[11rem] flex-col items-center justify-center p-6 text-center sm:p-8">
         <span className="editorial-badge mb-2">
           {mode === 'meaning' ? 'NHÌN CHỮ CHỌN NGHĨA' : 'NGHE PHÁT ÂM CHỌN CHỮ'}
         </span>
@@ -227,27 +229,27 @@ function QuizInner() {
         )}
       </div>
 
-      <div className="grid gap-2">
+      <Anim key={`opts-${i}`} each={40} y={6} className="grid gap-2">
         {q.options.map((o, k) => {
           const correct = o.id === q.word.id;
           const state = !answered
-            ? 'border-line bg-white hover:border-brand hover:bg-brand-soft/30 text-ink active:translate-y-px shadow-sm'
+            ? 'border-line bg-white hover:border-brand hover:bg-brand-soft/30 text-ink active:scale-[0.98] shadow-sm'
             : correct
-            ? 'border-emerald-500 bg-emerald-50 text-emerald-950 font-semibold shadow-sm'
+            ? 'animate-pop border-emerald-500 bg-emerald-50 text-emerald-950 font-semibold shadow-sm'
             : o.id === picked
-            ? 'border-rose-400 bg-rose-50 text-rose-800 font-semibold'
+            ? 'animate-shake border-rose-400 bg-rose-50 text-rose-800 font-semibold'
             : 'border-line bg-white opacity-40 text-stone-600';
           return (
             <button
               key={o.id}
               disabled={answered}
               onClick={() => choose(o)}
-              className={`flex items-center gap-3 rounded-xl border px-4 py-3 text-left transition-all ${state}`}
+              className={`flex items-center gap-3 rounded-xl border px-4 py-3 text-left transition-[transform,background-color,border-color,box-shadow] duration-150 ${state}`}
             >
               <span
-                className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-lg text-xs font-bold ${
+                className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-lg text-xs font-bold transition-transform duration-150 ${
                   answered && correct
-                    ? 'bg-emerald-600 text-white'
+                    ? 'bg-emerald-600 text-white scale-105'
                     : answered && o.id === picked
                     ? 'bg-rose-500 text-white'
                     : 'bg-brand-soft text-brand-ink'
@@ -266,7 +268,7 @@ function QuizInner() {
             </button>
           );
         })}
-      </div>
+      </Anim>
 
       {answered && (
         <AnswerPanel
@@ -283,7 +285,8 @@ function QuizInner() {
           className="btn-editorial-primary w-full animate-fade-up !py-3.5 text-xs font-bold"
           onClick={next}
         >
-          {i + 1 >= qs.length ? 'Hoàn thành và xem kết quả' : 'Câu tiếp theo'} →
+          <span>{i + 1 >= qs.length ? 'Hoàn thành và xem kết quả' : 'Câu tiếp theo'}</span>
+          <ArrowRight className="h-3.5 w-3.5" />
         </button>
       )}
     </div>
