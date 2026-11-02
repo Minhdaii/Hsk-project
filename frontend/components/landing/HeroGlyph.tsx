@@ -28,7 +28,7 @@ export default function HeroGlyph({ char }: { char: string }) {
         const writer = HanziWriter.create(host, char, {
           width: size, height: size, padding: Math.round(size * 0.1),
           showCharacter: false, showOutline: false,
-          strokeColor: '#292833', strokeAnimationSpeed: 1.1, delayBetweenStrokes: 160,
+          strokeColor: '#111111', strokeAnimationSpeed: 1.1, delayBetweenStrokes: 160,
           onLoadCharDataSuccess: () => { if (!cancelled) setLive(true); },
           onLoadCharDataError: () => { /* giữ chữ tĩnh */ },
         });
@@ -41,7 +41,7 @@ export default function HeroGlyph({ char }: { char: string }) {
   return (
     <div className="relative aspect-square w-full [container-type:inline-size]">
       <span lang="zh-Hans" aria-hidden={live} style={{ fontSize: `${SIZE_CQW[len]}cqw` }}
-        className={`hanzi absolute inset-0 flex select-none items-center justify-center whitespace-nowrap font-black leading-none text-ink transition-opacity duration-200 ${live ? 'opacity-0' : 'opacity-100'}`}>{char}</span>
+        className={`hanzi absolute inset-0 flex select-none items-center justify-center whitespace-nowrap font-black leading-none text-[#111] transition-opacity duration-200 ${live ? 'opacity-0' : 'opacity-100'}`}>{char}</span>
       <div ref={ref} aria-hidden className="absolute inset-0" />
     </div>
   );

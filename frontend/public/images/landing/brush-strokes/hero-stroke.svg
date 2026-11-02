@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" fill="none">
+  <!-- A sweeping horizontal brush stroke for section dividers -->
+  <path d="M0 60 Q50 20, 150 55 T350 48 Q450 38, 550 52 T750 45 Q850 35, 950 50 T1200 42" 
+        stroke="#111" stroke-width="3" stroke-linecap="round" opacity="0.7"
+        style="stroke-dasharray: 1800; stroke-dashoffset: 1800"/>
+  <path d="M20 65 Q80 85, 200 62 T450 58 Q580 68, 700 55 T950 60 Q1050 70, 1180 50" 
+        stroke="#111" stroke-width="1.5" stroke-linecap="round" opacity="0.3"
+        style="stroke-dasharray: 1600; stroke-dashoffset: 1600"/>
+</svg>

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 80" fill="none">
+  <!-- Short energetic brush accent -->
+  <path d="M10 40 Q40 15, 80 35 T160 30 Q200 22, 250 38 T290 32" 
+        stroke="#111" stroke-width="5" stroke-linecap="round" opacity="0.8"/>
+  <path d="M15 45 Q50 60, 100 42 T200 48 Q240 55, 280 40" 
+        stroke="#111" stroke-width="2" stroke-linecap="round" opacity="0.25"/>
+</svg>

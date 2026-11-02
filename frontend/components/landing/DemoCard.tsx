@@ -1,67 +1,167 @@
 'use client';
+
 import { useEffect, useRef, useState } from 'react';
 import { animate, reduced } from '@/lib/motion';
-import Flame from '../Flame';
 
 const face = { gridArea: '1 / 1', backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' } as const;
 
-/** Thẻ flashcard minh họa trên trang giới thiệu: tự lật qua lại, kèm các bong bóng nổi */
+const INK_GRID = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M50 0V100M0 50H100M0 0L100 100M100 0L0 100' fill='none' stroke='%23111111' stroke-opacity='.18' stroke-width='1' stroke-dasharray='5 5' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E";
+
+/**
+ * Thẻ flashcard tương tác trên Landing Page — Modern Ink Editorial.
+ * Màu sắc: Black (#111111) / White (#FFFFFF) / Vermilion (#C62828).
+ * Tự động lật và cho phép người dùng click để tương tác.
+ */
 export default function DemoCard() {
   const [flipped, setFlipped] = useState(false);
   const streak = useRef<HTMLDivElement>(null);
   const badge = useRef<HTMLDivElement>(null);
-  // Hai bong bóng nổi nhẹ lên xuống (vòng lặp chậm, tắt khi người dùng bật "giảm chuyển động")
+
+  // Hiệu ứng floating nhẹ nhàng cho 2 nhãn phụ
   useEffect(() => {
     if (reduced() || !streak.current || !badge.current) return;
-    const a = animate(streak.current, { translateY: [0, -10], rotate: [0, 2], duration: 3500, loop: true, alternate: true, ease: 'inOutSine' });
-    const b = animate(badge.current, { translateY: [0, -8], rotate: [0, -1.5], duration: 3000, delay: 700, loop: true, alternate: true, ease: 'inOutSine' });
-    return () => { a.revert(); b.revert(); };
+    const a = animate(streak.current, {
+      translateY: [0, -8],
+      rotate: [0, 1.5],
+      duration: 3500,
+      loop: true,
+      alternate: true,
+      ease: 'inOutSine',
+    });
+    const b = animate(badge.current, {
+      translateY: [0, -6],
+      rotate: [0, -1.2],
+      duration: 3000,
+      delay: 600,
+      loop: true,
+      alternate: true,
+      ease: 'inOutSine',
+    });
+    return () => {
+      a.revert();
+      b.revert();
+    };
   }, []);
+
+  // Tự lật định kỳ để giới thiệu tính năng
   useEffect(() => {
-    const t = setInterval(() => setFlipped((f) => !f), 3800);
+    const t = setInterval(() => setFlipped((f) => !f), 4200);
     return () => clearInterval(t);
   }, []);
 
   return (
-    <div className="relative mx-auto w-full max-w-sm">
-      <div ref={streak} className="absolute -left-3 -top-5 z-10 flex items-center gap-1 rounded-2xl border border-orange-200 bg-white px-3 py-1.5 shadow-soft sm:-left-8">
-        <Flame size={28} state="lit" />
-        <span className="text-xl font-extrabold text-orange-500">12</span>
-        <span className="text-xs font-medium text-stone-500">ngày liên tiếp</span>
-      </div>
-      <div ref={badge} className="absolute -bottom-4 -right-2 z-10 rounded-2xl bg-emerald-500 px-3.5 py-2 text-sm font-bold text-white shadow-soft sm:-right-6">
-        ✓ Chính xác! +10 XP
+    <div className="relative mx-auto w-full max-w-sm select-none">
+      {/* Floating streak indicator — Ink Editorial */}
+      <div
+        ref={streak}
+        className="absolute -left-3 -top-5 z-10 flex items-center gap-2 border-2 border-[#111] bg-white px-3.5 py-1.5 shadow-[4px_4px_0px_#111] sm:-left-6"
+      >
+        <span
+          lang="zh-Hans"
+          className="inline-flex h-6 w-6 items-center justify-center bg-[#C62828] font-hanzi text-xs font-bold text-white"
+          style={{ borderRadius: '2px' }}
+        >
+          連
+        </span>
+        <span className="text-lg font-black text-[#111]">12</span>
+        <span className="text-xs font-semibold text-[#777]">ngày liên tiếp</span>
       </div>
 
+      {/* Floating reward badge — Vermilion Red Seal style */}
+      <div
+        ref={badge}
+        className="absolute -bottom-4 -right-2 z-10 flex items-center gap-1.5 bg-[#C62828] px-4 py-2 text-xs font-bold text-white shadow-[4px_4px_0px_#111] sm:-right-6"
+        style={{ borderRadius: '2px' }}
+      >
+        <span>✓ Chính xác!</span>
+        <span className="opacity-90">+10 XP</span>
+      </div>
+
+      {/* 3D Perspective Flip Container */}
       <div className="[perspective:1400px]" onClick={() => setFlipped((f) => !f)}>
-        <div className="grid cursor-pointer transition-transform duration-[900ms] ease-[cubic-bezier(.35,.1,.2,1)] [transform-style:preserve-3d]" style={{ transform: flipped ? 'rotateY(180deg)' : 'rotateY(0deg)' }}>
-          <div style={face} className="relative flex min-h-[25rem] flex-col items-center justify-center overflow-hidden rounded-3xl border border-stone-200 bg-white p-6 text-center shadow-[0_30px_60px_-25px_rgba(120,53,15,0.45)]">
-            <div aria-hidden className="absolute inset-0 bg-[radial-gradient(circle_at_50%_38%,rgba(253,241,239,0.95),rgba(255,255,255,0)_62%)]" />
-            <div className="absolute inset-x-4 top-4 flex items-center justify-between">
-              <span className="pill bg-sky-50 text-sky-700">Từ mới</span>
-              <span className="pill bg-emerald-50 text-emerald-700">HSK 1</span>
+        <div
+          className="grid cursor-pointer transition-transform duration-[850ms] ease-[cubic-bezier(.35,.1,.2,1)] [transform-style:preserve-3d]"
+          style={{ transform: flipped ? 'rotateY(180deg)' : 'rotateY(0deg)' }}
+        >
+          {/* MẶT TRƯỚC: Chữ Hán lớn trong khung 米字格 */}
+          <div
+            style={face}
+            className="relative flex min-h-[26rem] flex-col items-center justify-center overflow-hidden border-2 border-[#111] bg-white p-6 text-center shadow-[8px_8px_0px_#111]"
+          >
+            {/* Header tags */}
+            <div className="absolute inset-x-5 top-5 flex items-center justify-between">
+              <span className="border border-[#111] px-2.5 py-0.5 text-[11px] font-bold text-[#111]">
+                TỪ MỚI
+              </span>
+              <span className="bg-[#C62828] px-2.5 py-0.5 text-[11px] font-bold text-white">
+                HSK 1
+              </span>
             </div>
-            <div className="relative flex items-center justify-center rounded-2xl border border-brand/25 px-8 py-8">
-              <span className="hanzi text-[5.5rem] leading-none">你好</span>
+
+            {/* Khung chữ Hán 米字格 */}
+            <div
+              className="relative my-4 flex h-40 w-40 items-center justify-center border border-[#111]/30 bg-white"
+              style={{ backgroundImage: `url("${INK_GRID}")`, backgroundSize: '100% 100%' }}
+            >
+              <span lang="zh-Hans" className="hanzi text-[5.5rem] font-black leading-none text-[#111]">
+                你好
+              </span>
             </div>
-            <div className="relative mt-5 flex items-center gap-2 rounded-full border border-stone-200 bg-white px-4 py-2 text-sm font-medium shadow-sm">🔊 Nghe</div>
-            <p className="relative mt-5 text-sm text-stone-400">Chọn nghĩa tiếng Việt đúng bên dưới</p>
+
+            {/* Nút nghe phát âm mô phỏng */}
+            <div className="relative mt-2 inline-flex items-center gap-2 border border-[#111] bg-white px-4 py-1.5 text-xs font-bold text-[#111] transition-all hover:bg-[#111] hover:text-white">
+              <span>🔊</span>
+              <span>Nghe phát âm</span>
+            </div>
+
+            <p className="mt-4 text-xs text-[#777]">
+              Chạm để lật thẻ xem pinyin và giải nghĩa
+            </p>
           </div>
-          <div style={{ ...face, transform: 'rotateY(180deg)' }} className="relative flex min-h-[25rem] flex-col gap-4 overflow-hidden rounded-3xl border border-brand/15 bg-gradient-to-br from-brand-soft via-white to-white p-6 shadow-[0_30px_60px_-25px_rgba(120,53,15,0.45)]">
-            <div>
-              <div className="hanzi text-4xl">你好</div>
-              <div className="mt-1 text-2xl font-medium text-brand">nǐ hǎo</div>
+
+          {/* MẶT SAU: Pinyin, Giải nghĩa & Ví dụ thực tế */}
+          <div
+            style={{ ...face, transform: 'rotateY(180deg)' }}
+            className="relative flex min-h-[26rem] flex-col gap-4 overflow-hidden border-2 border-[#111] bg-white p-6 shadow-[8px_8px_0px_#111]"
+          >
+            <div className="border-b border-[#111]/15 pb-3">
+              <div className="flex items-baseline justify-between">
+                <span lang="zh-Hans" className="hanzi text-3xl font-black text-[#111]">
+                  你好
+                </span>
+                <span className="text-xs font-bold uppercase tracking-wider text-[#C62828]">
+                  Hán Việt: nhĩ hảo
+                </span>
+              </div>
+              <div className="pinyin mt-1 text-2xl font-bold text-[#C62828]">
+                nǐ hǎo
+              </div>
             </div>
-            <ul className="space-y-1.5">
-              <li className="flex gap-2 text-lg font-semibold"><span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand" />xin chào</li>
-              <li className="flex gap-2 text-stone-700"><span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand" />chào bạn</li>
+
+            <ul className="space-y-2">
+              <li className="flex items-center gap-2.5 text-base font-bold text-[#111]">
+                <span className="h-1.5 w-1.5 bg-[#C62828]" />
+                <span>xin chào</span>
+              </li>
+              <li className="flex items-center gap-2.5 text-sm text-[#555]">
+                <span className="h-1.5 w-1.5 bg-[#777]" />
+                <span>chào bạn (lời chào thân mật phổ biến)</span>
+              </li>
             </ul>
-            <div className="flex flex-wrap gap-1.5"><span className="pill bg-amber-100 text-amber-800">Hán Việt: nhĩ hảo</span><span className="pill">cụm từ</span></div>
-            <div className="mt-auto rounded-2xl border border-stone-200 bg-white/80 p-3.5">
-              <div className="text-[11px] font-semibold uppercase tracking-wide text-stone-400">Ví dụ</div>
-              <div className="hanzi mt-1 text-lg leading-snug"><b className="rounded bg-brand/10 px-0.5 text-brand">你好</b>！很高兴认识你。</div>
-              <div className="text-sm text-brand">nǐ hǎo! hěn gāoxìng rènshi nǐ.</div>
-              <div className="text-sm text-stone-600">Xin chào! Rất vui được biết bạn.</div>
+
+            <div className="mt-auto border-t border-[#111]/15 pt-3">
+              <div className="text-[10px] font-bold uppercase tracking-wider text-[#777]">
+                Câu ví dụ
+              </div>
+              <div lang="zh-Hans" className="hanzi mt-1 text-base font-bold text-[#111]">
+                <b className="border-b-2 border-[#C62828] text-[#C62828]">你好</b>！很高兴认识你。
+              </div>
+              <div className="pinyin text-xs text-[#777]">
+                nǐ hǎo! hěn gāoxìng rènshi nǐ.
+              </div>
+              <div className="mt-0.5 text-xs text-[#555]">
+                Xin chào! Rất vui được biết bạn.
+              </div>
             </div>
           </div>
         </div>
