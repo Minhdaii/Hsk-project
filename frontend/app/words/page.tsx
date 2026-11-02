@@ -107,7 +107,7 @@ function WordsInner() {
 
       {(words.length > 0 || (!loading && !error)) && (
         <div className="editorial-card overflow-hidden">
-          <Anim as="ul" key={`${level}-${page}-${q}`} each={22} y={6} className={`divide-y divide-line transition-opacity duration-200 ${loading && words.length > 0 ? 'opacity-50' : ''}`}>
+          <ul className={`divide-y divide-line transition-opacity duration-200 ${loading && words.length > 0 ? 'opacity-50' : ''}`}>
             {words.map((w) => (
               <li
                 key={w.id}
@@ -154,7 +154,7 @@ function WordsInner() {
                 Không tìm thấy từ vựng phù hợp với từ khóa của bạn.
               </li>
             )}
-          </Anim>
+          </ul>
         </div>
       )}
 

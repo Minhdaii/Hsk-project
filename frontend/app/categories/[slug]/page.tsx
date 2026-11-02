@@ -88,7 +88,7 @@ export default function CategoryPage() {
       {loading && !words && <Skeleton className="h-64" />}
       {words && (
         <>
-          <Anim as="ul" key={`${page}-${level}-${dq}`} each={22} y={6} className={`divide-y divide-line overflow-hidden rounded-xl border border-line bg-white transition-opacity ${loading ? 'opacity-60' : ''}`}>
+          <ul className={`divide-y divide-line overflow-hidden rounded-xl border border-line bg-white transition-opacity ${loading ? 'opacity-60' : ''}`}>
             {words.items.map((w) => (
               <li key={w.id} className="flex items-center gap-2 px-3 py-2.5 hover:bg-stone-50 sm:gap-3 sm:px-4">
                 <Link href={`/word/${w.id}`} className="flex min-w-0 flex-1 items-center gap-3 sm:gap-4">
@@ -104,7 +104,7 @@ export default function CategoryPage() {
               </li>
             ))}
             {words.items.length === 0 && <li className="p-6 text-center text-stone-600">{words.total === 0 && !dq && !level ? 'Chủ đề này chưa có từ nào trong kho từ vựng.' : 'Không tìm thấy từ phù hợp.'}</li>}
-          </Anim>
+          </ul>
           {words.pages > 1 && (
             <nav aria-label="Phân trang" className="flex items-center justify-center gap-3">
               <button className="btn-editorial-ghost !min-h-[38px] !px-3 text-xs font-semibold" disabled={page <= 1} onClick={() => setPage(page - 1)}><ArrowLeft className="h-3.5 w-3.5" /><span>Trước</span></button>
