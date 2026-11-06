@@ -10,6 +10,8 @@ const LANDING = ['/', '/credits', '/privacy'];
 export default function ChromeSwitch({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() || '/';
   if (pathname === '/login') return <>{children}</>;
+  // Trang chủ tự sở hữu chrome của mình để Navbar/Footer chỉ render một lần.
+  if (pathname === '/') return <>{children}</>;
   if (LANDING.includes(pathname)) {
     return (
       <div className="flex min-h-screen flex-col bg-white text-[#111]">

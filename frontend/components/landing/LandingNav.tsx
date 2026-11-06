@@ -1,71 +1,42 @@
 'use client';
+
 import Link from 'next/link';
+import { useState } from 'react';
 import { useUser } from '@/lib/useUser';
+import styles from './LandingNav.module.css';
 
 const LINKS = [
-  { href: '#tinh-nang', label: 'Tính năng' },
-  { href: '#cach-hoc', label: 'Cách học' },
-  { href: '#cap-do', label: 'Cấp độ' },
+  { href: '#tone-experience', label: 'Thanh điệu' },
+  { href: '#stroke-experience', label: 'Nét chữ' },
+  { href: '#learning-tools', label: 'Công cụ học' },
 ];
 
-/**
- * Landing Nav — Modern Ink Editorial style.
- * Black/White/Vermilion only. Logo là dấu triện đỏ + tên sản phẩm.
- */
 export default function LandingNav() {
   const { user } = useUser();
+  const [open, setOpen] = useState(false);
   return (
-    <header className="sticky top-0 z-30 border-b border-[#111]/10 bg-white/95 backdrop-blur-sm">
-      <nav className="mx-auto flex max-w-7xl items-center gap-4 px-5 sm:px-8" aria-label="Điều hướng chính">
-        {/* Logo — seal + text */}
-        <Link href="/" className="inline-flex min-h-[44px] items-center gap-2.5 font-bold" aria-label="学汉语, trang chủ">
-          <span aria-hidden className="inline-flex h-9 w-9 items-center justify-center bg-[#C62828] font-hanzi text-xl font-black text-white" style={{ borderRadius: '3px' }}>
-            汉
-          </span>
-          <span className="leading-tight">
-            <span className="hanzi block text-lg font-bold text-[#111]" lang="zh-Hans">学汉语</span>
-            <span className="block text-[11px] font-medium text-[#777]">Học tiếng Trung HSK 1–3</span>
-          </span>
+    <header className={styles.header}>
+      <nav className={styles.nav} aria-label="Điều hướng chính">
+        <Link href="/" className={styles.brand} aria-label="Học Hán ngữ, trang chủ" onClick={() => setOpen(false)}>
+          <span className={styles.logo} lang="zh-Hans">汉</span>
+          <span className={styles.brandText}>学汉语<small>HSK · LEARNING LAB</small></span>
         </Link>
-
-        <div className="ml-6 hidden items-center gap-1 md:flex">
-          {LINKS.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
-              className="inline-flex min-h-[44px] items-center px-3 text-sm font-semibold text-[#555] transition-colors hover:text-[#111]"
-            >
-              {l.label}
-            </a>
-          ))}
+        <div className={styles.links}>
+          {LINKS.map(link => <a key={link.href} href={link.href}>{link.label}</a>)}
         </div>
-
-        <div className="ml-auto flex items-center gap-2">
-          {user ? (
-            <Link
-              href="/dashboard"
-              className="inline-flex min-h-[40px] items-center justify-center bg-[#111] px-5 py-2 text-sm font-bold text-white transition-all hover:bg-[#333]"
-            >
-              Vào học
-            </Link>
-          ) : (
-            <>
-              <Link
-                href="/login"
-                className="hidden min-h-[40px] items-center justify-center border-2 border-[#111] px-4 py-2 text-sm font-bold text-[#111] transition-all hover:bg-[#111] hover:text-white sm:inline-flex"
-              >
-                Đăng nhập
-              </Link>
-              <Link
-                href="/dashboard"
-                className="inline-flex min-h-[40px] items-center justify-center bg-[#111] px-5 py-2 text-sm font-bold text-white transition-all hover:bg-[#333]"
-              >
-                Học ngay
-              </Link>
-            </>
-          )}
+        <div className={styles.actions}>
+          {!user && <Link className={styles.login} href="/login">Đăng nhập</Link>}
+          <Link className={styles.cta} href="/dashboard">{user ? 'Vào học' : 'Bắt đầu học'} <span aria-hidden="true">↗</span></Link>
         </div>
+        <button className={styles.menuButton} type="button" aria-label={open ? 'Đóng menu' : 'Mở menu'} aria-expanded={open} aria-controls="landing-mobile-menu" onClick={() => setOpen(value => !value)}>
+          <span/><span/>
+        </button>
       </nav>
+      <div id="landing-mobile-menu" className={`${styles.mobileMenu} ${open ? styles.mobileMenuOpen : ''}`} inert={!open}>
+        {LINKS.map(link => <a key={link.href} href={link.href} onClick={() => setOpen(false)}>{link.label}<span aria-hidden="true">↘</span></a>)}
+        {!user && <Link href="/login" onClick={() => setOpen(false)}>Đăng nhập</Link>}
+        <Link className={styles.mobileCta} href="/dashboard" onClick={() => setOpen(false)}>Vào học <span aria-hidden="true">↗</span></Link>
+      </div>
     </header>
   );
 }
