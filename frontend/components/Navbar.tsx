@@ -7,6 +7,7 @@ import { useUser } from '@/lib/useUser';
 import { useStats } from '@/lib/useStats';
 import StreakBadge from './StreakBadge';
 import Icon, { type IconName } from './Icon';
+import BrandLogo from './BrandLogo';
 
 type Item = { href: string; label: string; icon: IconName; match: (p: string) => boolean };
 const ITEMS: Item[] = [
@@ -33,10 +34,7 @@ export default function Navbar() {
     <>
       <header className="sticky top-0 z-20 border-b border-stone-200/80 bg-white/85 backdrop-blur">
         <nav className="mx-auto flex max-w-5xl items-center gap-1 px-4 py-2.5 text-sm">
-          <Link href="/" className="mr-3 flex shrink-0 items-center gap-2 font-bold">
-            <span className="hanzi flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-brand to-[#7a1f16] text-xl text-white shadow-sm">汉</span>
-            <span className="hidden leading-tight md:block">学汉语<span className="block text-[10px] font-medium uppercase tracking-wider text-stone-500">HSK 1-3</span></span>
-          </Link>
+          <BrandLogo href="/" size="sm" className="mr-3 shrink-0" />
           <div className="hidden min-w-0 flex-1 items-center gap-1 overflow-x-auto [scrollbar-width:none] sm:flex [&::-webkit-scrollbar]:hidden">
             {ITEMS.map((l) => (
               <Link key={l.href} href={l.href}

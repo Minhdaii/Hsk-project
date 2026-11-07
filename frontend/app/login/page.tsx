@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { api, setToken } from '@/lib/api';
 import { useUser } from '@/lib/useUser';
 import Icon from '@/components/Icon';
+import BrandLogo from '@/components/BrandLogo';
 
 const PERKS = ['Lộ trình ôn tập thông minh theo SM-2', 'Chuỗi ngày học và bảng xếp hạng XP', 'Ngữ pháp, bài tập và sổ tay từ vựng'];
 
@@ -74,10 +75,7 @@ function LoginInner() {
       <div className="relative hidden overflow-hidden bg-gradient-to-br from-brand via-[#a8301f] to-[#6d1b13] p-12 text-white lg:flex lg:flex-col lg:justify-between">
         <div aria-hidden className="pointer-events-none absolute inset-0 opacity-[0.12] [background-image:radial-gradient(#fff_1px,transparent_1px)] [background-size:18px_18px]" />
         <span aria-hidden className="hanzi pointer-events-none absolute -bottom-16 -right-6 animate-float select-none text-[22rem] leading-none text-white/10">学</span>
-        <Link href="/" className="relative flex items-center gap-3 font-bold">
-          <span className="hanzi flex h-11 w-11 items-center justify-center rounded-xl bg-white/15 text-2xl backdrop-blur">汉</span>
-          <span className="text-lg">学汉语 · HSK 1-3</span>
-        </Link>
+        <BrandLogo href="/" size="md" light className="relative" />
         <div className="relative max-w-md">
           <h2 className="text-balance text-4xl font-extrabold leading-tight">Mỗi ngày một chút, tiếng Trung sẽ tiến bộ thấy rõ</h2>
           <ul className="mt-8 space-y-3">

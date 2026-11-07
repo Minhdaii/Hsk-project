@@ -72,8 +72,9 @@ const optionDim = 'border-line bg-white opacity-40 text-stone-400';
 type MatchItem = { id: number; text: string; wordId: number; type: 'hanzi' | 'meaning'; matched: boolean };
 
 function MatchGame({ level, count, onAgain, onExit }: GameProps) {
-  const { data, error } = useFetch<{ items: Word[] }>(`/words?level=${level}&limit=${Math.min(count, 8)}`);
+  const { data, error } = useFetch<{ items: Word[] }>(`/words?level=${level}&limit=${count}`);
   const [items, setItems] = useState<MatchItem[]>([]);
+  const [prepared, setPrepared] = useState(false);
   const [selected, setSelected] = useState<MatchItem | null>(null);
   const [wrongIds, setWrongIds] = useState<number[]>([]);
   const [score, setScore] = useState(0);
@@ -81,9 +82,9 @@ function MatchGame({ level, count, onAgain, onExit }: GameProps) {
   const { combo, best, record } = useCombo();
 
   useEffect(() => {
-    if (!data?.items?.length) return;
+    if (!data) return;
     const cards: MatchItem[] = [];
-    data.items.slice(0, 6).forEach((w, idx) => {
+    (data.items || []).filter((w) => shortMeaning(w.meaningVi || w.meaningEn)).slice(0, count).forEach((w, idx) => {
       cards.push({ id: idx * 2 + 1, text: w.hanzi, wordId: w.id, type: 'hanzi', matched: false });
       cards.push({ id: idx * 2 + 2, text: shortMeaning(w.meaningVi || w.meaningEn), wordId: w.id, type: 'meaning', matched: false });
     });
@@ -92,10 +93,12 @@ function MatchGame({ level, count, onAgain, onExit }: GameProps) {
     setWrongIds([]);
     setScore(0);
     setDone(false);
-  }, [data]);
+    setPrepared(true);
+  }, [data, count]);
 
   if (error) return <Problem msg={error} onExit={onExit} />;
-  if (!data) return <Loading />;
+  if (!data || !prepared) return <Loading />;
+  if (!items.length) return <Problem msg={`HSK ${level} chưa có đủ dữ liệu nghĩa tiếng Việt cho trò ghép từ. Hãy thử cấp độ khác.`} onExit={onExit} />;
   if (done) return <GameResult score={score} total={items.length / 2} best={best} onAgain={onAgain} onExit={onExit} />;
 
   const handleSelect = (item: MatchItem) => {
@@ -139,11 +142,12 @@ function MatchGame({ level, count, onAgain, onExit }: GameProps) {
     <div className="space-y-4">
       <GameHeader i={matchedCount} total={totalPairs} score={score} combo={combo} />
       <p className="text-sm text-stone-600">Chạm một chữ Hán ở cột trái, rồi chạm nghĩa tiếng Việt tương ứng ở cột phải.</p>
+      {totalPairs > 0 && totalPairs < count && <p role="status" className="rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-2.5 text-xs text-amber-900">HSK {level} hiện có {totalPairs} cặp từ phù hợp, nên lượt này hiển thị {totalPairs} câu.</p>}
 
-      <div className="grid grid-cols-2 gap-x-3 sm:gap-x-5">
+      <div className="grid grid-cols-2 gap-3 sm:gap-5">
         {(['hanzi', 'meaning'] as const).map((col) => (
-          <div key={col} className="space-y-2.5">
-            <h2 className="px-1 text-xs font-semibold text-stone-600">{col === 'hanzi' ? 'Chữ Hán' : 'Nghĩa tiếng Việt'}</h2>
+          <div key={col} className="space-y-2.5 sm:space-y-3">
+            <h2 className="flex items-center justify-between px-1 text-[11px] font-bold uppercase tracking-[.12em] text-stone-600"><span>{col === 'hanzi' ? 'Chữ Hán' : 'Nghĩa tiếng Việt'}</span><span className="font-medium tabular-nums text-stone-500">{totalPairs} thẻ</span></h2>
             {items.filter((x) => x.type === col).map((item) => {
               const isSelected = selected?.id === item.id;
               const isWrong = wrongIds.includes(item.id);
@@ -152,13 +156,14 @@ function MatchGame({ level, count, onAgain, onExit }: GameProps) {
                 : isWrong
                 ? 'animate-shake border-red-400 bg-red-50 text-red-900'
                 : isSelected
-                ? 'g-line g-soft -translate-y-0.5 !border-[rgb(var(--g))]'
+                ? 'g-line g-soft -translate-y-0.5 !border-[rgb(var(--g))] ring-2 ring-[rgb(var(--g)/.18)] shadow-md'
                 : '';
               return (
                 <button key={item.id} disabled={item.matched} onClick={() => handleSelect(item)} aria-pressed={isSelected}
-                  className={`lab-key flex min-h-[64px] w-full items-center justify-center gap-2 px-3 py-2 text-center ${state}`}>
-                  {item.matched && <span aria-hidden className="text-sm">✓</span>}
-                  <span lang={col === 'hanzi' ? 'zh-Hans' : undefined} className={col === 'hanzi' ? 'hanzi text-3xl leading-tight' : 'text-sm font-semibold leading-snug'}>{item.text}</span>
+                  className={`group relative flex min-h-[68px] w-full items-center justify-center gap-2 rounded-2xl border bg-white px-3 py-2.5 text-center shadow-[0_2px_0_rgba(41,40,51,.07)] transition-[transform,border-color,background-color,box-shadow,opacity] duration-200 active:scale-[.98] hover:-translate-y-0.5 hover:shadow-md disabled:cursor-default disabled:hover:translate-y-0 sm:min-h-[76px] ${state}`}>
+                  <span aria-hidden className={`absolute left-2.5 top-2 text-[9px] font-bold tabular-nums ${isSelected ? 'text-brand-ink' : 'text-stone-400'}`}>{String(Math.floor((item.id - 1) / 2) + 1).padStart(2, '0')}</span>
+                  {item.matched && <span aria-hidden className="absolute right-2.5 top-2 grid h-5 w-5 place-items-center rounded-full bg-emerald-100 text-[11px] font-bold text-emerald-700">✓</span>}
+                  <span lang={col === 'hanzi' ? 'zh-Hans' : undefined} className={col === 'hanzi' ? 'hanzi text-3xl leading-tight sm:text-4xl' : 'px-1 text-xs font-semibold leading-snug sm:text-sm'}>{item.text}</span>
                 </button>
               );
             })}
@@ -570,7 +575,7 @@ function ExercisesContent() {
   if (mode) {
     const selectedGame = GAMES.find((x) => x.id === mode)!;
     return (
-      <div data-game={mode} className="lab-game mx-auto max-w-lg space-y-4">
+      <div data-game={mode} className={`lab-game mx-auto space-y-4 ${mode === 'match' ? 'max-w-3xl' : 'max-w-lg'}`}>
         <div className="flex items-center gap-3 border-b border-line pb-3">
           <button className="btn-back" onClick={() => setMode(null)}><ArrowLeft className="h-3.5 w-3.5" /><span>Danh mục</span></button>
           <span lang="zh-Hans" aria-hidden className="hanzi g-solid flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-lg">{selectedGame.glyph}</span>

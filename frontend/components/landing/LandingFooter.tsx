@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import BrandLogo from '@/components/BrandLogo';
 
 /**
  * LandingFooter — Modern Ink Editorial
@@ -8,21 +9,7 @@ export default function LandingFooter() {
   return (
     <footer className="border-t border-[#111]/15 bg-white text-[#111]">
       <div className="mx-auto flex max-w-7xl flex-col gap-6 px-5 py-10 text-sm text-[#777] sm:flex-row sm:items-center sm:justify-between sm:px-8">
-        <Link href="/" className="inline-flex items-center gap-2.5 font-bold" aria-label="学汉语, trang chủ">
-          <span
-            aria-hidden
-            className="inline-flex h-8 w-8 items-center justify-center bg-[#C62828] font-hanzi text-lg font-black text-white"
-            style={{ borderRadius: '3px' }}
-          >
-            汉
-          </span>
-          <span className="leading-tight">
-            <span className="hanzi block text-base font-bold text-[#111]" lang="zh-Hans">
-              学汉语
-            </span>
-            <span className="block text-[11px] font-medium text-[#777]">Học tiếng Trung HSK 1–3</span>
-          </span>
-        </Link>
+        <BrandLogo href="/" size="sm" />
 
         <nav aria-label="Liên kết cuối trang" className="flex flex-wrap gap-x-6 gap-y-2 text-xs font-semibold text-[#555]">
           {[

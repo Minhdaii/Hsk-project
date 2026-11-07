@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { useUser } from '@/lib/useUser';
 import styles from './LandingNav.module.css';
+import BrandLogo from '@/components/BrandLogo';
 
 const LINKS = [
   { href: '#tone-experience', label: 'Thanh điệu' },
@@ -17,10 +18,7 @@ export default function LandingNav() {
   return (
     <header className={styles.header}>
       <nav className={styles.nav} aria-label="Điều hướng chính">
-        <Link href="/" className={styles.brand} aria-label="Học Hán ngữ, trang chủ" onClick={() => setOpen(false)}>
-          <span className={styles.logo} lang="zh-Hans">汉</span>
-          <span className={styles.brandText}>学汉语<small>HSK · LEARNING LAB</small></span>
-        </Link>
+        <BrandLogo href="/" size="md" className={styles.brand} />
         <div className={styles.links}>
           {LINKS.map(link => <a key={link.href} href={link.href}>{link.label}</a>)}
         </div>

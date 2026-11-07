@@ -4,7 +4,7 @@ import { enter, reduced } from '@/lib/motion';
 
 /**
  * Hiệu ứng chuyển trang mượt mà kết hợp Anime.js:
- * - Fade in từ 0 -> 1 kèm dịch chuyển nhẹ (y: 6px).
+ * - Fade in từ 0 -> 1 kèm dịch chuyển rất nhẹ (y: 4px).
  * - Không gây giật layout (zero Layout Shift), không nháy trắng.
  * - Cleanup hoàn chỉnh khi unmount, gỡ sạch transform inline khi xong.
  */
@@ -31,9 +31,9 @@ export default function PageEnter({
         el.style.opacity = '1';
         el.style.transform = '';
       }
-    }, 2000);
+    }, 1200);
 
-    const anim = enter(el, { y: 6, duration: 260, ease: 'outCubic' });
+    const anim = enter(el, { y: 4, duration: 220, ease: 'outCubic' });
 
     return () => {
       clearTimeout(safety);
