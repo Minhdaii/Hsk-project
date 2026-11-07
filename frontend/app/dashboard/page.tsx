@@ -8,6 +8,7 @@ import { useUser } from '@/lib/useUser';
 import { useStats } from '@/lib/useStats';
 import type { Activity, LeaderRow, LevelProgress } from '@/lib/types';
 import Skeleton from '@/components/Skeleton';
+import ChineseCatLoading from '@/components/ChineseCatLoading';
 import WeeklyChart from '@/components/dashboard/WeeklyChart';
 import Anim from '@/components/motion/Anim';
 
@@ -76,12 +77,7 @@ export default function Dashboard() {
   }, [user, load]);
 
   if (loading) {
-    return (
-      <div className="space-y-6">
-        <Skeleton className="h-12 w-56" />
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]"><Skeleton className="h-[480px] !rounded-[22px]" /><Skeleton className="h-[480px] !rounded-[22px]" /></div>
-      </div>
-    );
+    return <main className="cat-loading-page"><ChineseCatLoading state="auth" /></main>;
   }
   if (!user) return <GuestHome />;
 
@@ -121,9 +117,9 @@ export default function Dashboard() {
               </div>
               <Link href="/path" aria-label="Mở lộ trình HSK" className="flex h-9 w-9 items-center justify-center rounded-full text-stone-500 transition-colors hover:bg-brand-soft hover:text-ink"><ArrowUpRight className="h-[18px] w-[18px]" strokeWidth={1.8} /></Link>
             </div>
-            <form role="search" onSubmit={(e) => { e.preventDefault(); const t = q.trim(); if (t) router.push(`/words?q=${encodeURIComponent(t)}`); }} className="mt-4 flex items-center gap-2 rounded-full bg-paper py-1.5 pl-5 pr-1.5">
+            <form role="search" onSubmit={(e) => { e.preventDefault(); const t = q.trim(); if (t) router.push(`/words?q=${encodeURIComponent(t)}`); }} className="mt-4 flex items-center gap-2 rounded-full bg-paper py-1.5 pl-5 pr-1.5 transition-[background-color,box-shadow] focus-within:bg-white focus-within:ring-2 focus-within:ring-brand/40">
               <label htmlFor="dash-search" className="sr-only">Tìm từ vựng</label>
-              <input id="dash-search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Tìm từ vựng, chữ Hán, pinyin…" autoComplete="off" className="min-h-[40px] min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-stone-500" />
+              <input id="dash-search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Tìm từ vựng, chữ Hán, pinyin…" autoComplete="off" className="min-h-[40px] min-w-0 flex-1 bg-transparent text-sm outline-none focus-visible:outline-none placeholder:text-stone-500" />
               <button type="submit" aria-label="Tìm" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-ink text-white transition-transform duration-200 hover:scale-105"><Search className="h-[18px] w-[18px]" strokeWidth={1.8} /></button>
             </form>
             <ul className="mt-4 space-y-1">

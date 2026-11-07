@@ -38,7 +38,7 @@ export default function StreakBadge({ stats }: { stats: Stats | null }) {
       href="/study"
       title={tip}
       aria-label={`${tip}. Bấm để vào ôn tập`}
-      className={`relative inline-flex min-h-[38px] items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-bold transition-all duration-200 active:scale-95 ${
+      className={`relative inline-flex min-h-[38px] items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-bold transition-all duration-200 active:scale-95 ${
         streak > 0
           ? on
             ? 'border-orange-300 bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50 text-orange-950 shadow-sm hover:border-orange-400 hover:shadow'
@@ -46,10 +46,7 @@ export default function StreakBadge({ stats }: { stats: Stats | null }) {
           : 'border-line bg-white text-stone-600 hover:border-stone-400'
       }`}
     >
-      <Flame size={20} state={flameState} />
-      <span key={streak} className="animate-pop tabular-nums font-extrabold text-sm text-ink">
-        {streak} <span className="text-xs font-semibold text-stone-500">ngày</span>
-      </span>
+      <Flame size={24} state={flameState}><span key={streak} className="animate-pop">{streak}</span></Flame>
       {on && (
         <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-emerald-500" title="Hôm nay đã giữ lửa" />
       )}
