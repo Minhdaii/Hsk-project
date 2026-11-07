@@ -17,7 +17,7 @@ export type Stats = {
 };
 export type StreakStatus = 'same' | 'started' | 'continued' | 'relit';
 export type ReviewResult = { streak: number; xp: number; streakStatus: StreakStatus; previousStreak: number; progress: ProgressRow };
-export type AuthUser = { id: number; email: string; username: string; streak: number; xp: number };
+export type AuthUser = { id: number; email: string; username: string; fullName?: string | null; chineseName?: string | null; age?: number | null; targetHskLevel?: number | null; learningExperience?: string | null; studyPurpose?: string | null; dailyStudyMinutes?: number | null; streak: number; xp: number; role?: string; createdAt?: string };
 
 export type GrammarExample = { id: number; hanzi: string; pinyin: string | null; meaningVi: string | null };
 export type GrammarPoint = {

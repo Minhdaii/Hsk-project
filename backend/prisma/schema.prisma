@@ -12,6 +12,13 @@ model User {
   id           Int        @id @default(autoincrement())
   email        String     @unique @db.VarChar(191)
   username     String     @db.VarChar(191)
+  fullName     String?    @map("full_name") @db.VarChar(191)
+  chineseName  String?    @map("chinese_name") @db.VarChar(191)
+  age          Int?       @db.UnsignedTinyInt
+  targetHskLevel Int?      @map("target_hsk_level") @db.UnsignedTinyInt
+  learningExperience String? @map("learning_experience") @db.VarChar(24)
+  studyPurpose String? @map("study_purpose") @db.VarChar(24)
+  dailyStudyMinutes Int? @map("daily_study_minutes") @db.UnsignedSmallInt
   passwordHash String     @map("password_hash") @db.VarChar(255)
   streak       Int        @default(0)
   xp           Int        @default(0)

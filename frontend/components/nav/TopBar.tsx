@@ -89,7 +89,8 @@ function Account({ user, onLogout }: { user: AuthUser | null; onLogout: () => vo
       {open && (
         <div role="menu" aria-label="Tài khoản" className={PANEL}>
           <p className="truncate px-3 py-2 text-sm font-semibold">{user.username}<span className="block truncate text-xs font-normal text-stone-500">{user.email}</span></p>
-          <Link role="menuitem" href="/profile" onClick={() => setOpen(false)} className="flex min-h-[44px] items-center gap-2.5 rounded-xl px-3 text-sm font-medium hover:bg-stone-100"><UserIcon className="h-[18px] w-[18px]" aria-hidden />Hồ sơ và mục tiêu</Link>
+            <Link role="menuitem" href="/account" onClick={() => setOpen(false)} className="flex min-h-[44px] items-center gap-2.5 rounded-xl px-3 text-sm font-medium hover:bg-stone-100"><UserIcon className="h-[18px] w-[18px]" aria-hidden />HSK ID · Tài khoản</Link>
+            <Link role="menuitem" href="/stats" onClick={() => setOpen(false)} className="flex min-h-[44px] items-center gap-2.5 rounded-xl px-3 text-sm font-medium hover:bg-stone-100">Tiến độ học</Link>
           <button role="menuitem" onClick={() => { setOpen(false); onLogout(); }} className="flex min-h-[44px] w-full items-center gap-2.5 rounded-xl px-3 text-left text-sm font-medium hover:bg-stone-100"><LogOut className="h-[18px] w-[18px]" aria-hidden />Đăng xuất</button>
         </div>
       )}

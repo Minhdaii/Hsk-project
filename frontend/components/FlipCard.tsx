@@ -1,10 +1,13 @@
 'use client';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import SpeakButton from './SpeakButton';
 import FavoriteButton from './FavoriteButton';
 import { posLabels, splitMeaning } from '@/lib/pos';
 import type { Card } from '@/lib/types';
+import HanziWriterBox from './HanziWriterBox';
 
 /** Làm nổi bật từ cần học trong câu ví dụ với phong cách Lavender thanh nhã */
 function Highlight({ text, word }: { text: string; word: string }) {
@@ -47,6 +50,16 @@ export default function FlipCard({
   const isNew = !card.progress;
   const single = Array.from(w.hanzi).length === 1;
   const meanings = splitMeaning(w.meaningVi || w.meaningEn).slice(0, 4);
+  const [showStrokeModal, setShowStrokeModal] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    if (!showStrokeModal) return;
+    const closeOnEscape = (event: KeyboardEvent) => { if (event.key === 'Escape') setShowStrokeModal(false); };
+    window.addEventListener('keydown', closeOnEscape);
+    return () => window.removeEventListener('keydown', closeOnEscape);
+  }, [showStrokeModal]);
+  const hanziChars = Array.from(w.hanzi).filter((c) => /[\u3400-\u9fff]/.test(c));
 
   return (
     <div
@@ -176,18 +189,25 @@ export default function FlipCard({
           )}
 
           {/* Footer Link */}
-          <div className="border-t border-line pt-2">
-            <Link
-              href={`/word/${w.id}`}
-              onClick={(e) => e.stopPropagation()}
-              className="inline-flex min-h-[38px] items-center gap-1 text-xs font-semibold text-brand-ink underline-offset-4 hover:underline"
-            >
-              <span>Xem nét bút thuận & chi tiết từ điển</span>
-              <ArrowRight className="h-3 w-3" />
-            </Link>
+          <div className="flex flex-wrap items-center justify-between gap-2 border-t border-line pt-2">
+            <button type="button" onClick={(e) => { e.stopPropagation(); setShowStrokeModal(true); }} className="inline-flex min-h-[38px] items-center gap-1 text-xs font-semibold text-brand-ink underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand">
+              <span>Xem nét bút</span><ArrowRight className="h-3 w-3" />
+            </button>
+            <Link href={`/word/${w.id}`} onClick={(e) => e.stopPropagation()} className="text-xs font-medium text-stone-500 underline-offset-4 hover:text-ink hover:underline">Chi tiết từ điển</Link>
           </div>
         </div>
       </div>
+      {mounted && showStrokeModal && createPortal(
+        <div className="fixed inset-0 z-[120] flex items-center justify-center overflow-y-auto bg-ink/60 p-4 backdrop-blur-sm" onClick={(e) => e.stopPropagation()} onMouseDown={(e) => { if (e.target === e.currentTarget) setShowStrokeModal(false); }}>
+          <section role="dialog" aria-modal="true" aria-labelledby="stroke-modal-title" className="my-auto w-full max-w-3xl rounded-3xl border border-line bg-white p-5 shadow-2xl sm:p-7">
+            <header className="mb-5 flex items-start justify-between gap-4 border-b border-line pb-4">
+              <div><p className="text-[10px] font-bold uppercase tracking-[.18em] text-brand-ink">THỨ TỰ NÉT CHUẨN</p><h2 id="stroke-modal-title" className="hanzi mt-1 text-3xl font-bold">{w.hanzi}<span className="pinyin ml-3 align-middle text-base font-semibold text-brand-ink">{w.pinyin}</span></h2><p className="mt-1 text-sm text-stone-600">{w.meaningVi}</p></div>
+              <button type="button" className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-line text-stone-600 hover:bg-paper focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand" onClick={() => setShowStrokeModal(false)} aria-label="Đóng cửa sổ nét bút"><X className="h-4 w-4" /></button>
+            </header>
+            {hanziChars.length ? <div className="flex max-h-[65vh] flex-wrap justify-center gap-4 overflow-y-auto py-2">{hanziChars.map((char, index) => <HanziWriterBox key={`${char}-${index}`} char={char} />)}</div> : <p className="rounded-xl bg-paper p-4 text-sm text-stone-600">Từ này chưa có ký tự Hán để mô phỏng nét viết.</p>}
+          </section>
+        </div>, document.body
+      )}
     </div>
   );
 }
