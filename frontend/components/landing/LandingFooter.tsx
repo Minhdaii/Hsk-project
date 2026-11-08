@@ -16,6 +16,7 @@ export default function LandingFooter() {
             ['/words', 'Kho từ vựng'],
             ['/grammar', 'Cẩm nang ngữ pháp'],
             ['/path', 'Lộ trình học'],
+            ['/feedback', 'Bảng ghim góp ý 📌'],
             ['/credits', 'Nguồn dữ liệu'],
             ['/privacy', 'Quyền riêng tư'],
           ].map(([h, l]) => (

@@ -1,6 +1,6 @@
 import {
   BookOpen, Bookmark, CalendarDays, ChartLine, ChartNoAxesCombined, CircleHelp, ClipboardCheck, Gamepad2,
-  House, Languages, Layers, LayoutDashboard, LayoutGrid, PenTool, Route, Settings, Trophy, type LucideIcon,
+  House, Languages, Layers, LayoutDashboard, LayoutGrid, PenTool, Pin, Route, Settings, Trophy, type LucideIcon,
 } from 'lucide-react';
 
 /**
@@ -59,7 +59,7 @@ export const SECTIONS: Section[] = [
     label: 'Dashboard',
     href: '/dashboard',
     icon: House,
-    owns: under('/dashboard', '/profile'),
+    owns: under('/dashboard', '/profile', '/feedback'),
     items: [
       item('/dashboard', 'Tổng quan', LayoutDashboard),
       item('/categories', 'Học theo chủ đề', LayoutGrid, ['/categories']),

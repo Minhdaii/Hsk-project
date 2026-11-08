@@ -76,7 +76,7 @@ export default function Flame({
         <path d={INNER} fill={`url(#i${uid})`} />
         {!isOff && <path d={CORE} fill={`url(#c${uid})`} />}
       </svg>
-      {children && <span className="absolute left-1/2 top-[47%] -translate-x-1/2 -translate-y-1/2 text-[9px] font-black leading-none tabular-nums text-[#34251f]">{children}</span>}
+      {children}
     </span>
   );
 }

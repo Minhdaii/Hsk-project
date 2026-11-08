@@ -421,3 +421,153 @@ h1, h2, h3 { letter-spacing: -0.02em; }
 .milestone-writing__details>div { justify-content:flex-start; }.milestone-writing__details button { min-width:118px; }
 /* Chaina mascot loading screen — one continuous illustration, with reduced motion support */
 .cat-loading-page{display:grid;min-height:55svh;place-items:center;padding:24px 16px;background:rgb(var(--bg))}.cat-loading{display:grid;place-items:center;width:min(100%,320px);padding:12px}.cat-loading__illustration{display:block;width:min(100%,270px);max-height:48svh;overflow:visible;filter:drop-shadow(0 12px 18px rgba(41,40,51,.1));animation:cat-loading-float 3.2s ease-in-out infinite}@keyframes cat-loading-float{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-7px) rotate(1deg)}}@media(max-width:600px){.cat-loading-page{min-height:48svh}.cat-loading__illustration{width:min(76vw,245px)}}@media(prefers-reduced-motion:reduce){.cat-loading__illustration{animation:none!important;transform:none!important}}
+
+
+/* Hiệu ứng vật lý bóc và dán tờ giấy nhớ vào khung (Realistic Paper Peel & Stick Animation) */
+@keyframes paperPeelAndStick {
+  0% {
+    transform: perspective(1000px) scale(0.92) translateY(50px) rotateX(16deg) rotateY(-8deg);
+    opacity: 0;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.06));
+  }
+  30% {
+    transform: perspective(1000px) scale(1.08) translateY(-26px) rotateX(-10deg) rotateY(4deg);
+    opacity: 1;
+    filter: drop-shadow(0 26px 36px rgba(0, 0, 0, 0.18));
+  }
+  65% {
+    transform: perspective(1000px) scale(0.98) translateY(5px) rotateX(3deg) rotateY(-2deg);
+    opacity: 1;
+    filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.1));
+  }
+  85% {
+    transform: perspective(1000px) scale(1.01) translateY(-1px) rotateX(-1deg) rotateY(1deg);
+    opacity: 1;
+  }
+  100% {
+    transform: perspective(1000px) scale(1) translateY(0) rotateX(0deg) rotateY(0deg);
+    opacity: 1;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.08));
+  }
+}
+
+@keyframes paperLanding {
+  0% {
+    transform: scale(1.12) translateY(-10px);
+    opacity: 0.6;
+    box-shadow: 0 20px 30px rgba(0, 0, 0, 0.15);
+  }
+  60% {
+    transform: scale(0.97) translateY(2px);
+    opacity: 1;
+  }
+  85% {
+    transform: scale(1.02) translateY(-1px);
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+}
+
+/* Hiệu ứng gió thoảng theo hướng chuột: Thổi dạt về một hướng duy nhất rồi hạ êm, KHÔNG lắc qua lại 2 chiều */
+@keyframes paperWindToRight {
+  0% {
+    transform: perspective(900px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skewX(0deg) skewY(0deg);
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  }
+  24% {
+    /* Chuột lướt sang phải: đuôi giấy bay vểnh lên và dạt hẳn sang phải */
+    transform: perspective(900px) rotateX(24deg) rotateY(-9deg) rotateZ(5.5deg) skewX(-3.5deg) skewY(1.5deg) translateY(-2px);
+    border-bottom-right-radius: 26px;
+    border-bottom-left-radius: 5px;
+    box-shadow: 10px 22px 28px -4px rgba(0, 0, 0, 0.16), 4px 8px 12px rgba(0, 0, 0, 0.08);
+  }
+  50% {
+    /* Từ từ hạ êm xuống theo cùng hướng mà KHÔNG bị lắc giật ngược lại sang trái */
+    transform: perspective(900px) rotateX(12deg) rotateY(-4.5deg) rotateZ(2.8deg) skewX(-1.8deg) skewY(0.8deg) translateY(-1px);
+    border-bottom-right-radius: 14px;
+    border-bottom-left-radius: 4px;
+    box-shadow: 6px 14px 18px -3px rgba(0, 0, 0, 0.11);
+  }
+  75% {
+    /* Gần chạm bảng, góc giấy duỗi dần về phẳng */
+    transform: perspective(900px) rotateX(4deg) rotateY(-1.5deg) rotateZ(1deg) skewX(-0.6deg) skewY(0.3deg);
+    border-bottom-right-radius: 7px;
+    border-bottom-left-radius: 3px;
+    box-shadow: 3px 6px 10px rgba(0, 0, 0, 0.07);
+  }
+  100% {
+    /* Đỗ êm ái hoàn toàn về vị trí ban đầu */
+    transform: perspective(900px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skewX(0deg) skewY(0deg);
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  }
+}
+
+@keyframes paperWindToLeft {
+  0% {
+    transform: perspective(900px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skewX(0deg) skewY(0deg);
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  }
+  24% {
+    /* Chuột lướt sang trái: đuôi giấy bay vểnh lên và dạt hẳn sang trái */
+    transform: perspective(900px) rotateX(24deg) rotateY(9deg) rotateZ(-5.5deg) skewX(3.5deg) skewY(-1.5deg) translateY(-2px);
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 26px;
+    box-shadow: -10px 22px 28px -4px rgba(0, 0, 0, 0.16), -4px 8px 12px rgba(0, 0, 0, 0.08);
+  }
+  50% {
+    /* Từ từ hạ êm xuống theo cùng hướng mà KHÔNG bị lắc giật ngược lại sang phải */
+    transform: perspective(900px) rotateX(12deg) rotateY(4.5deg) rotateZ(-2.8deg) skewX(1.8deg) skewY(-0.8deg) translateY(-1px);
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 14px;
+    box-shadow: -6px 14px 18px -3px rgba(0, 0, 0, 0.11);
+  }
+  75% {
+    /* Gần chạm bảng, góc giấy duỗi dần về phẳng */
+    transform: perspective(900px) rotateX(4deg) rotateY(1.5deg) rotateZ(-1deg) skewX(0.6deg) skewY(-0.3deg);
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 7px;
+    box-shadow: -3px 6px 10px rgba(0, 0, 0, 0.07);
+  }
+  100% {
+    /* Đỗ êm ái hoàn toàn về vị trí ban đầu */
+    transform: perspective(900px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skewX(0deg) skewY(0deg);
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  }
+}
+
+/* Ánh sáng & bóng đổ gợn sóng khi giấy uốn cong theo luồng gió */
+@keyframes paperShadingRight {
+  0%, 100% { opacity: 0; }
+  24% {
+    opacity: 0.9;
+    background: linear-gradient(135deg, rgba(255,255,255,0) 25%, rgba(255,255,255,0.45) 55%, rgba(0,0,0,0.08) 85%);
+  }
+  50% {
+    opacity: 0.5;
+    background: linear-gradient(145deg, rgba(255,255,255,0) 30%, rgba(255,255,255,0.3) 60%, rgba(0,0,0,0.05) 90%);
+  }
+  75% { opacity: 0.2; }
+}
+
+@keyframes paperShadingLeft {
+  0%, 100% { opacity: 0; }
+  24% {
+    opacity: 0.9;
+    background: linear-gradient(225deg, rgba(255,255,255,0) 25%, rgba(255,255,255,0.45) 55%, rgba(0,0,0,0.08) 85%);
+  }
+  50% {
+    opacity: 0.5;
+    background: linear-gradient(215deg, rgba(255,255,255,0) 30%, rgba(255,255,255,0.3) 60%, rgba(0,0,0,0.05) 90%);
+  }
+  75% { opacity: 0.2; }
+}

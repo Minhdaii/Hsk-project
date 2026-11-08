@@ -4,6 +4,10 @@ node_modules/
 # Build
 dist/
 build/
+.gradle/
+local.properties
+*.iml
+.idea/
 
 # Environment variables
 .env

@@ -10,6 +10,7 @@ import { FavoritesModule } from './favorites/favorites.module';
 import { LeaderboardModule } from './leaderboard/leaderboard.module';
 import { CategoriesModule } from './categories/categories.module';
 import { RecognizeModule } from './recognize/recognize.module';
+import { FeedbackModule } from './feedback/feedback.module';
 
 @Controller()
 class HealthController {
@@ -18,6 +19,20 @@ class HealthController {
 }
 
 @Module({
-  imports: [PrismaModule, AuthModule, WordsModule, QuizModule, StudyModule, GrammarModule, ExercisesModule, FavoritesModule, LeaderboardModule, CategoriesModule, RecognizeModule],
+  imports: [
+    PrismaModule,
+    AuthModule,
+    WordsModule,
+    QuizModule,
+    StudyModule,
+    GrammarModule,
+    ExercisesModule,
+    FavoritesModule,
+    LeaderboardModule,
+    CategoriesModule,
+    RecognizeModule,
+    FeedbackModule,
+  ],
+  controllers: [HealthController],
 })
 export class AppModule {}

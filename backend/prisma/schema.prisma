@@ -30,6 +30,7 @@ model User {
   activity     DailyActivity[]
   grammarProgress GrammarProgress[]
   grammarAttempts GrammarAttempt[]
+  feedbacks    Feedback[]
 
   @@map("users")
 }
@@ -248,4 +249,27 @@ model DailyActivity {
 
   @@id([userId, date])
   @@map("daily_activity")
+}
+
+
+// Bang thong bao gop y bao mat (School bulletin board)
+model Feedback {
+  id        Int      @id @default(autoincrement())
+  userId    Int?     @map("user_id")
+  name      String?  @db.VarChar(191) // Ten nguoi gui hoac An danh
+  category  String   @default("suggestion") @db.VarChar(32) // suggestion | bug | content | compliment
+  content   String   @db.Text // Noi dung gop y bi mat (chi admin/dev doc duoc)
+  color     String   @default("yellow") @db.VarChar(32) // yellow, pink, blue, green, purple, orange
+  rotation  Float    @default(0) // goc nghieng (-5 den 5 deg)
+  posX      Float?   @map("pos_x") // vi tri X tren bang (%)
+  posY      Float?   @map("pos_y") // vi tri Y tren bang (%)
+  pinType   String   @default("red") @map("pin_type") @db.VarChar(32) // red, gold, blue, green, tape
+  status    String   @default("pending") @db.VarChar(32) // pending | reviewed | resolved
+  adminNote String?  @map("admin_note") @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([status])
+  @@index([createdAt])
+  @@map("feedbacks")
 }

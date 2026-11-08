@@ -75,3 +75,45 @@ export type GQuestion =
   | { type: 'match'; left: { grammarId: number; label: string }[]; right: { grammarId: number; text: string }[] };
 export type GGraded = { correct: boolean; solution: string; explanation: string | null };
 export type GProgressSummary = { summary: { total: number; learned: number; favorites: number; attempts: number; correct: number; accuracy: number | null }; items: unknown[] };
+
+
+/* ---------- Bảng thông báo góp ý bảo mật (School Bulletin Board) ---------- */
+export type FeedbackCategory = 'suggestion' | 'bug' | 'content' | 'compliment';
+
+export type FeedbackNote = {
+  id: number;
+  category: FeedbackCategory;
+  color: string;
+  rotation: number;
+  posX: number;
+  posY: number;
+  pinType: string;
+  status: 'pending' | 'reviewed' | 'resolved';
+  createdAt: string;
+  isMine: boolean;
+  author: string;
+  content?: string; // Chỉ hiển thị khi là ghi chú của bạn hoặc là Admin/Dev!
+};
+
+export type FeedbackBoardData = {
+  totalCount: number;
+  categoryCounts: Record<string, number>;
+  items: FeedbackNote[];
+};
+
+export type AdminFeedbackItem = {
+  id: number;
+  userId: number | null;
+  name: string | null;
+  category: string;
+  content: string;
+  color: string;
+  rotation: number;
+  posX: number | null;
+  posY: number | null;
+  pinType: string;
+  status: 'pending' | 'reviewed' | 'resolved';
+  adminNote: string | null;
+  createdAt: string;
+  user: { id: number; email: string; username: string; role: string } | null;
+};

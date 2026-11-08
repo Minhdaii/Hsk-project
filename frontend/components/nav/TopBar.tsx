@@ -1,8 +1,8 @@
 'use client';
 import Link from 'next/link';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { useRouter } from 'next/navigation';
-import { Bell, LogOut, Search, User as UserIcon } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { Bell, LogOut, MessageSquarePlus, Search, User as UserIcon } from 'lucide-react';
 import type { AuthUser, Stats } from '@/lib/types';
 import StreakBadge from '@/components/StreakBadge';
 import { SECTIONS, type Section } from './config';
@@ -99,8 +99,10 @@ function Account({ user, onLogout }: { user: AuthUser | null; onLogout: () => vo
   );
 }
 
-/** Thanh trên: logo, bốn khu vực (chỉ icon) ở giữa, tìm kiếm / thông báo / tài khoản bên phải */
+/** Thanh trên: logo, bốn khu vực (chỉ icon) ở giữa, tìm kiếm / góp ý / thông báo / tài khoản bên phải */
 export default function TopBar({ section, user, stats, onLogout }: { section: Section; user: AuthUser | null; stats: Stats | null; onLogout: () => void }): ReactNode {
+  const pathname = usePathname();
+
   return (
     <header className="sticky top-0 z-30 bg-paper/90 px-3 pb-3 pt-[max(env(safe-area-inset-top),0.75rem)] backdrop-blur sm:px-6 lg:px-8">
       <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-2 lg:grid lg:grid-cols-[1fr_auto_1fr]">
@@ -111,6 +113,12 @@ export default function TopBar({ section, user, stats, onLogout }: { section: Se
         <div className="flex items-center gap-1.5 lg:justify-self-end">
           {user && <div className="mr-0.5 sm:mr-1"><StreakBadge stats={stats} /></div>}
           <SearchControl />
+          <IconLink
+            href="/feedback"
+            label="Góp ý & Báo lỗi"
+            icon={MessageSquarePlus}
+            active={pathname === '/feedback'}
+          />
           {user && <Notices stats={stats} />}
           <Account user={user} onLogout={onLogout} />
         </div>
