@@ -7,6 +7,7 @@ import type { ClozeQuestion, ExerciseMeta, OrderQuestion, Word } from '@/lib/typ
 import { speak } from '@/lib/speak';
 import SpeakButton from '@/components/SpeakButton';
 import CountPicker from '@/components/CountPicker';
+import ChainaStrokeLoading from '@/components/ChainaStrokeLoading';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import Anim from '@/components/motion/Anim';
 import { AnswerPanel, GameHeader, GameResult, useCombo } from '@/components/game/GameBits';
@@ -49,7 +50,11 @@ function Problem({ msg, onExit }: { msg: string; onExit: () => void }) {
   );
 }
 
-const Loading = () => <div className="editorial-card flex h-48 items-center justify-center text-xs text-stone-600">Đang chuẩn bị nội dung bài tập…</div>;
+const Loading = () => (
+  <div className="editorial-card flex min-h-[15rem] items-center justify-center p-6">
+    <ChainaStrokeLoading mode="INLINE" size="md" message="Đang chuẩn bị nội dung bài tập…" />
+  </div>
+);
 
 function NextButton({ last, onClick }: { last: boolean; onClick: () => void }) {
   return (
@@ -692,7 +697,7 @@ function ExercisesContent() {
 
 export default function ExercisesPage() {
   return (
-    <Suspense fallback={<div className="lab-surface flex h-48 items-center justify-center text-sm text-stone-600">Đang tải phòng luyện tập…</div>}>
+    <Suspense fallback={<ChainaStrokeLoading mode="PAGE" message="Đang tải phòng luyện tập…" />}>
       <ExercisesContent />
     </Suspense>
   );

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { api } from '@/lib/api';
 import type { LeaderRow } from '@/lib/types';
 import PageHeader from '@/components/PageHeader';
-import Skeleton from '@/components/Skeleton';
+import ChainaStrokeLoading from '@/components/ChainaStrokeLoading';
 import Anim from '@/components/motion/Anim';
 
 export default function LeaderboardPage() {
@@ -31,10 +31,8 @@ export default function LeaderboardPage() {
       )}
 
       {!rows && !error && (
-        <div className="space-y-3">
-          {[1, 2, 3, 4, 5].map((i) => (
-            <Skeleton key={i} className="h-14" />
-          ))}
+        <div className="editorial-card flex min-h-[18rem] items-center justify-center p-6">
+          <ChainaStrokeLoading mode="INLINE" size="md" message="Đang tải bảng xếp hạng…" />
         </div>
       )}
 

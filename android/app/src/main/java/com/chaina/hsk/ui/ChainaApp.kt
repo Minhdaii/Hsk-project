@@ -4,16 +4,15 @@ import android.content.Context
 import android.speech.tts.TextToSpeech
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
@@ -22,17 +21,22 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
@@ -44,59 +48,58 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.AccountCircle
-import androidx.compose.material.icons.rounded.AutoStories
-import androidx.compose.material.icons.rounded.Bolt
+import androidx.compose.material.icons.automirrored.outlined.MenuBook
+import androidx.compose.material.icons.automirrored.rounded.Logout
+import androidx.compose.material.icons.automirrored.rounded.MenuBook
+import androidx.compose.material.icons.automirrored.rounded.VolumeUp
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.PhotoCamera
+import androidx.compose.material.icons.outlined.SportsEsports
+import androidx.compose.material.icons.outlined.Style
+import androidx.compose.material.icons.outlined.Timeline
 import androidx.compose.material.icons.rounded.Bookmark
+import androidx.compose.material.icons.rounded.BookmarkBorder
 import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.Email
-import androidx.compose.material.icons.rounded.Explore
 import androidx.compose.material.icons.rounded.Face
 import androidx.compose.material.icons.rounded.Feedback
 import androidx.compose.material.icons.rounded.Gavel
-import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Info
+import androidx.compose.material.icons.rounded.LocalFireDepartment
 import androidx.compose.material.icons.rounded.Lock
-import androidx.compose.material.icons.rounded.Logout
-import androidx.compose.material.icons.rounded.MenuBook
 import androidx.compose.material.icons.rounded.Person
-import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.Schedule
 import androidx.compose.material.icons.rounded.School
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Security
 import androidx.compose.material.icons.rounded.Shield
-import androidx.compose.material.icons.rounded.SportsEsports
-import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material.icons.rounded.TaskAlt
-import androidx.compose.material.icons.rounded.ThumbUp
-import androidx.compose.material.icons.rounded.VolumeUp
+import androidx.compose.material.icons.rounded.Timeline
+import androidx.compose.material.icons.rounded.Visibility
+import androidx.compose.material.icons.rounded.VisibilityOff
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
-import androidx.compose.material3.TabRowDefaults
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -113,59 +116,110 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.chaina.hsk.R
+import com.chaina.hsk.data.ActivityData
 import com.chaina.hsk.data.ApiClient
 import com.chaina.hsk.data.ApiException
 import com.chaina.hsk.data.LevelProgress
 import com.chaina.hsk.data.Stats
 import com.chaina.hsk.data.StudyCard
+import com.chaina.hsk.data.StudyOption
 import com.chaina.hsk.data.TokenStore
 import com.chaina.hsk.data.User
 import com.chaina.hsk.data.Word
-import com.chaina.hsk.ui.components.AnimatedStreakPill
+import androidx.credentials.CredentialManager
+import androidx.credentials.CustomCredential
+import androidx.credentials.GetCredentialRequest
+import androidx.credentials.exceptions.GetCredentialCancellationException
+import androidx.credentials.exceptions.GetCredentialException
+import com.chaina.hsk.BuildConfig
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import com.chaina.hsk.ui.components.ArrowUpRightIcon
+import com.chaina.hsk.ui.components.ChainaLoadingBackground
+import com.chaina.hsk.ui.components.ChainaLoadingMode
+import com.chaina.hsk.ui.components.ChainaLoadingSize
+import com.chaina.hsk.ui.components.ChainaStrokeLoading
+import com.chaina.hsk.ui.components.CircleActionButton
 import com.chaina.hsk.ui.components.InkCard
 import com.chaina.hsk.ui.components.InkNavItem
 import com.chaina.hsk.ui.components.InkPrimaryButton
 import com.chaina.hsk.ui.components.InkTopBar
 import com.chaina.hsk.ui.components.LevelBadge
-import com.chaina.hsk.ui.components.MetricStatPill
 import com.chaina.hsk.ui.components.ModernInkBottomBar
+import com.chaina.hsk.ui.components.SegmentedPillBar
+import com.chaina.hsk.ui.components.VectorFlameCanvas
+import com.chaina.hsk.ui.components.WebTopBar
+import com.chaina.hsk.ui.components.WebWeeklyChart
+import com.chaina.hsk.ui.theme.AmberBorder
 import com.chaina.hsk.ui.theme.AmberGold
 import com.chaina.hsk.ui.theme.AmberSoft
+import com.chaina.hsk.ui.theme.BentoLavenderEnd
+import com.chaina.hsk.ui.theme.BentoLavenderStart
+import com.chaina.hsk.ui.theme.BentoMintEnd
+import com.chaina.hsk.ui.theme.BentoMintStart
+import com.chaina.hsk.ui.theme.BentoPeachEnd
+import com.chaina.hsk.ui.theme.BentoPeachStart
+import com.chaina.hsk.ui.theme.BentoSkyEnd
+import com.chaina.hsk.ui.theme.BentoSkyStart
 import com.chaina.hsk.ui.theme.Brand
 import com.chaina.hsk.ui.theme.BrandBorder
 import com.chaina.hsk.ui.theme.BrandDark
+import com.chaina.hsk.ui.theme.BrandLavender
 import com.chaina.hsk.ui.theme.BrandSoft
-import java.util.Locale
+import com.chaina.hsk.ui.theme.EmeraldDot
+import com.chaina.hsk.ui.theme.FlameBg
+import com.chaina.hsk.ui.theme.FlameBorder
+import com.chaina.hsk.ui.theme.FlameOrange
 import com.chaina.hsk.ui.theme.InkBlack
 import com.chaina.hsk.ui.theme.InkBorder
-import com.chaina.hsk.ui.theme.InkCharcoal
 import com.chaina.hsk.ui.theme.InkLight
 import com.chaina.hsk.ui.theme.InkMuted
 import com.chaina.hsk.ui.theme.InkTheme
-import com.chaina.hsk.ui.theme.JadeGreen
 import com.chaina.hsk.ui.theme.JadeBorder
+import com.chaina.hsk.ui.theme.JadeGreen
 import com.chaina.hsk.ui.theme.JadeSoft
+import com.chaina.hsk.ui.theme.LineDark
 import com.chaina.hsk.ui.theme.Paper
 import com.chaina.hsk.ui.theme.PaperMuted
 import com.chaina.hsk.ui.theme.PaperPure
 import com.chaina.hsk.ui.theme.RedBad
 import com.chaina.hsk.ui.theme.RedBorder
 import com.chaina.hsk.ui.theme.RedSoft
+import com.chaina.hsk.ui.theme.ToneLavenderStart
+import com.chaina.hsk.ui.theme.ToneLimeStart
+import com.chaina.hsk.ui.theme.ToneSkyStart
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.json.JSONArray
 import org.json.JSONObject
+import java.util.Calendar
+import java.util.Locale
+
+private data class DashboardBundle(
+    val stats: Stats,
+    val levels: List<LevelProgress>,
+    val daily: Word?,
+    val activity: ActivityData?,
+    val leaderboardTop: List<JSONObject>,
+)
 
 @Composable
 fun ChainaApp(api: ApiClient, tokens: TokenStore) {
@@ -174,28 +228,71 @@ fun ChainaApp(api: ApiClient, tokens: TokenStore) {
         var user by remember { mutableStateOf<User?>(null) }
         var booting by remember { mutableStateOf(true) }
         var tab by remember { mutableStateOf(AppDestination.Home) }
+        var returnTab by remember { mutableStateOf(AppDestination.Home) }
         var hskLevel by remember { mutableIntStateOf(1) }
         var refreshKey by remember { mutableIntStateOf(0) }
+
         var stats by remember { mutableStateOf<Stats?>(null) }
         var levels by remember { mutableStateOf<List<LevelProgress>>(emptyList()) }
         var daily by remember { mutableStateOf<Word?>(null) }
+        var activity by remember { mutableStateOf<ActivityData?>(null) }
+        var leaderboardTop by remember { mutableStateOf<List<JSONObject>>(emptyList()) }
         var dashboardLoading by remember { mutableStateOf(false) }
         var dashboardError by remember { mutableStateOf<String?>(null) }
         var onboarding by remember { mutableStateOf(false) }
 
-        // Practice active minigame mode (match, order, cloze, listen, dialogue, quiz)
-        var practiceMode by remember { mutableStateOf<String?>(null) }
+        // TopBar interactive panels
+        var showTopSearch by remember { mutableStateOf(false) }
+        var topSearchText by remember { mutableStateOf("") }
+        var pendingWordSearch by remember { mutableStateOf("") }
+        var wordSearchTrigger by remember { mutableIntStateOf(0) }
+        var showStreakDialog by remember { mutableStateOf(false) }
+        var showNoticePanel by remember { mutableStateOf(false) }
+        var showAvatarMenu by remember { mutableStateOf(false) }
 
-        // Vocabulary top tab selector (Tra từ, Chủ đề, Ngữ pháp, Sổ từ)
+        // Sub-navigation & Practice session configuration states
+        var practiceMode by remember { mutableStateOf<String?>(null) }
+        var practiceLevel by remember { mutableIntStateOf(1) }
+        var practiceCount by remember { mutableIntStateOf(10) }
         var vocabSubTab by remember { mutableIntStateOf(0) }
-        // Progress top tab selector (Lộ trình, Thống kê, Xếp hạng)
         var progressSubTab by remember { mutableIntStateOf(0) }
+
+        fun openSubScreen(target: AppDestination) {
+            showTopSearch = false
+            showNoticePanel = false
+            showAvatarMenu = false
+            if (tab !in listOf(
+                    AppDestination.Account,
+                    AppDestination.Feedback,
+                    AppDestination.Writing,
+                    AppDestination.PinyinBoss,
+                    AppDestination.GrammarPractice,
+                    AppDestination.CameraTranslate,
+                    AppDestination.Privacy,
+                    AppDestination.Credits,
+                )
+            ) {
+                returnTab = tab
+            }
+            tab = target
+        }
+
+        fun jumpToWordSearch(query: String) {
+            pendingWordSearch = query.trim()
+            wordSearchTrigger++
+            vocabSubTab = 0
+            showTopSearch = false
+            showNoticePanel = false
+            tab = AppDestination.Words
+        }
 
         LaunchedEffect(Unit) {
             val token = withContext(Dispatchers.IO) { tokens.read() }
             if (token != null) {
                 try {
                     user = api.me()
+                } catch (error: CancellationException) {
+                    throw error
                 } catch (error: ApiException) {
                     if (error.status == 401) withContext(Dispatchers.IO) { tokens.clear() }
                 } catch (_: Exception) { }
@@ -208,15 +305,28 @@ fun ChainaApp(api: ApiClient, tokens: TokenStore) {
             dashboardLoading = true
             dashboardError = null
             try {
-                val results = withContext(Dispatchers.IO) {
+                val bundle = withContext(Dispatchers.IO) {
                     val fetchedStats = api.stats()
                     val fetchedLevels = api.levels()
                     val fetchedDaily = runCatching { api.dailyWord() }.getOrNull()
-                    Triple(fetchedStats, fetchedLevels, fetchedDaily)
+                    val fetchedActivity = runCatching { api.activityData() }.getOrNull()
+                    val fetchedLb = runCatching { api.leaderboard() }.getOrNull()
+                    val top3 = buildList {
+                        if (fetchedLb != null) {
+                            for (i in 0 until minOf(3, fetchedLb.length())) {
+                                fetchedLb.optJSONObject(i)?.let(::add)
+                            }
+                        }
+                    }
+                    DashboardBundle(fetchedStats, fetchedLevels, fetchedDaily, fetchedActivity, top3)
                 }
-                stats = results.first
-                levels = results.second
-                daily = results.third
+                stats = bundle.stats
+                levels = bundle.levels
+                daily = bundle.daily
+                activity = bundle.activity
+                leaderboardTop = bundle.leaderboardTop
+            } catch (error: CancellationException) {
+                throw error
             } catch (error: Exception) {
                 dashboardError = error.message ?: "Không tải được dữ liệu học tập"
             }
@@ -241,147 +351,299 @@ fun ChainaApp(api: ApiClient, tokens: TokenStore) {
                         stats = null
                         levels = emptyList()
                         daily = null
+                        activity = null
+                        leaderboardTop = emptyList()
+                        practiceMode = null
+                        showTopSearch = false
+                        showNoticePanel = false
+                        showAvatarMenu = false
                         tab = AppDestination.Home
                     }
                 }
 
-                // Handle system back navigation gracefully
-                val isSubScreen = (tab in listOf(
-                    AppDestination.Review,
+                val isFocusedSubScreen = (tab in listOf(
+                    AppDestination.Account,
+                    AppDestination.Feedback,
                     AppDestination.Writing,
                     AppDestination.PinyinBoss,
                     AppDestination.GrammarPractice,
+                    AppDestination.CameraTranslate,
                     AppDestination.Privacy,
-                    AppDestination.Credits
+                    AppDestination.Credits,
                 )) || (tab == AppDestination.Practice && practiceMode != null)
 
-                BackHandler(enabled = isSubScreen) {
+                val navigateBack: () -> Unit = {
                     if (tab == AppDestination.Practice && practiceMode != null) {
                         practiceMode = null
-                    } else when (tab) {
-                        AppDestination.Review -> tab = AppDestination.Home
-                        AppDestination.Writing, AppDestination.PinyinBoss, AppDestination.GrammarPractice -> tab = AppDestination.Practice
-                        AppDestination.Privacy, AppDestination.Credits -> tab = AppDestination.Account
-                        else -> tab = AppDestination.Home
+                    } else {
+                        when (tab) {
+                            AppDestination.Writing,
+                            AppDestination.PinyinBoss,
+                            AppDestination.GrammarPractice -> tab = if (returnTab == AppDestination.Home) AppDestination.Home else AppDestination.Practice
+                            AppDestination.Privacy,
+                            AppDestination.Credits -> tab = AppDestination.Account
+                            AppDestination.Account,
+                            AppDestination.CameraTranslate,
+                            AppDestination.Feedback -> tab = returnTab
+                            else -> tab = AppDestination.Home
+                        }
                     }
                 }
 
+                BackHandler(enabled = isFocusedSubScreen || showTopSearch || showNoticePanel) {
+                    when {
+                        showNoticePanel -> showNoticePanel = false
+                        showTopSearch -> showTopSearch = false
+                        else -> navigateBack()
+                    }
+                }
+
+                // 5-Tab Mobile-Optimized Bottom Nav (Ôn tập SM-2 centered as core mobile habit)
                 val navItems = listOf(
-                    InkNavItem("home", "Tổng quan", Icons.Rounded.Home),
-                    InkNavItem("vocab", "Học tập", Icons.Rounded.AutoStories),
-                    InkNavItem("practice", "Luyện tập", Icons.Rounded.SportsEsports),
-                    InkNavItem("progress", "Lộ trình", Icons.Rounded.Explore),
-                    InkNavItem("account", "Tài khoản", Icons.Rounded.AccountCircle),
+                    InkNavItem("home", "Tổng quan", Icons.Outlined.Home),
+                    InkNavItem("vocab", "Từ vựng", Icons.AutoMirrored.Outlined.MenuBook),
+                    InkNavItem("review", "Ôn tập", Icons.Outlined.Style, badgeCount = stats?.due ?: 0),
+                    InkNavItem("practice", "Luyện tập", Icons.Outlined.SportsEsports),
+                    InkNavItem("progress", "Tiến độ", Icons.Outlined.Timeline),
                 )
 
                 val currentPrimaryNav = when (tab) {
-                    AppDestination.Home, AppDestination.Review -> "home"
+                    AppDestination.Home -> "home"
                     AppDestination.Words, AppDestination.Categories, AppDestination.Grammar, AppDestination.Favorites -> "vocab"
+                    AppDestination.Review -> "review"
                     AppDestination.Practice, AppDestination.Writing, AppDestination.PinyinBoss, AppDestination.GrammarPractice -> "practice"
                     AppDestination.Path, AppDestination.Stats, AppDestination.Leaderboard -> "progress"
-                    AppDestination.Account, AppDestination.Privacy, AppDestination.Credits -> "account"
+                    AppDestination.CameraTranslate, AppDestination.Account, AppDestination.Feedback, AppDestination.Privacy, AppDestination.Credits -> "home"
                 }
+
+                val userInitial = (currentUser.fullName?.trim()?.takeIf { it.isNotEmpty() } ?: currentUser.username)
+                    .firstOrNull()?.uppercase() ?: "C"
 
                 Scaffold(
                     containerColor = Paper,
                     topBar = {
-                        val title = when (tab) {
-                            AppDestination.Home -> "Chaina HSK"
-                            AppDestination.Review -> "Ôn tập SM-2"
-                            AppDestination.Words, AppDestination.Categories, AppDestination.Grammar, AppDestination.Favorites -> "Kho từ vựng & Ngữ pháp"
-                            AppDestination.Practice -> {
-                                if (practiceMode != null) practiceTitle(practiceMode!!) else "Phòng luyện tập"
-                            }
-                            AppDestination.Writing -> "Luyện viết chữ Hán"
-                            AppDestination.PinyinBoss -> "Pinyin Boss"
-                            AppDestination.GrammarPractice -> "Luyện ngữ pháp"
-                            AppDestination.Path, AppDestination.Stats, AppDestination.Leaderboard -> "Lộ trình & Thành tích"
-                            AppDestination.Account -> "Hồ sơ cá nhân"
-                            AppDestination.Privacy -> "Quyền riêng tư"
-                            AppDestination.Credits -> "Nguồn dữ liệu"
-                        }
-                        val subtitle = when (tab) {
-                            AppDestination.Home -> "Học tiếng Trung HSK 1–3"
-                            AppDestination.Review -> "Cấp độ HSK $hskLevel · Lặp lại ngắt quãng"
-                            AppDestination.Words, AppDestination.Categories, AppDestination.Grammar, AppDestination.Favorites -> "Tra từ, chủ đề, ngữ pháp và sổ tay"
-                            AppDestination.Practice -> {
-                                if (practiceMode != null) "Cấp độ HSK $hskLevel" else "Game phản xạ, ghép từ và thử thách"
-                            }
-                            AppDestination.Writing -> "Tập viết chữ Hán và nhận diện nét"
-                            AppDestination.PinyinBoss -> "Thử thách gõ pinyin tốc độ cao · HSK $hskLevel"
-                            AppDestination.GrammarPractice -> "Bài tập cấu trúc câu · HSK $hskLevel"
-                            AppDestination.Path, AppDestination.Stats, AppDestination.Leaderboard -> "Hành trình và bảng xếp hạng học tập"
-                            AppDestination.Account -> currentUser.email
-                            else -> null
-                        }
-
-                        val onBackAction: (() -> Unit)? = if (tab == AppDestination.Practice && practiceMode != null) {
-                            { practiceMode = null }
-                        } else if (isSubScreen) {
-                            {
-                                when (tab) {
-                                    AppDestination.Review -> tab = AppDestination.Home
-                                    AppDestination.Writing, AppDestination.PinyinBoss, AppDestination.GrammarPractice -> tab = AppDestination.Practice
-                                    AppDestination.Privacy, AppDestination.Credits -> tab = AppDestination.Account
-                                    else -> tab = AppDestination.Home
+                        Column {
+                            if (isFocusedSubScreen) {
+                                val title = when (tab) {
+                                    AppDestination.Practice -> if (practiceMode != null) practiceTitle(practiceMode!!) else "Phòng luyện tập"
+                                    AppDestination.Writing -> "Luyện viết chữ Hán"
+                                    AppDestination.PinyinBoss -> "Pinyin Boss"
+                                    AppDestination.GrammarPractice -> "Luyện ngữ pháp"
+                                    AppDestination.CameraTranslate -> "Dịch qua Máy ảnh"
+                                    AppDestination.Feedback -> "Khung góp ý"
+                                    AppDestination.Account -> "Hồ sơ cá nhân"
+                                    AppDestination.Privacy -> "Quyền riêng tư"
+                                    AppDestination.Credits -> "Nguồn dữ liệu"
+                                    else -> "Chaina"
                                 }
-                            }
-                        } else null
+                                val subtitle = when (tab) {
+                                    AppDestination.Practice -> "HSK $practiceLevel · $practiceCount ${if (practiceMode == "match") "cặp từ" else "câu"}"
+                                    AppDestination.Writing -> "HSK $practiceLevel · $practiceCount chữ mẫu · Ô kẻ Mễ"
+                                    AppDestination.PinyinBoss -> "HSK $practiceLevel · $practiceCount từ · Phiên âm"
+                                    AppDestination.GrammarPractice -> "HSK $practiceLevel · $practiceCount câu ngữ pháp"
+                                    AppDestination.CameraTranslate -> "Chỉ dịch Tiếng Trung (简体/繁體) → Tiếng Việt"
+                                    AppDestination.Feedback -> "Nội dung bảo mật riêng tư"
+                                    AppDestination.Account -> currentUser.email
+                                    else -> null
+                                }
+                                InkTopBar(
+                                    title = title,
+                                    subtitle = subtitle,
+                                    onBack = navigateBack,
+                                )
+                            } else {
+                                Box {
+                                    WebTopBar(
+                                        userInitial = userInitial,
+                                        stats = stats,
+                                        feedbackActive = tab == AppDestination.Feedback,
+                                        searchActive = showTopSearch,
+                                        cameraActive = tab == AppDestination.CameraTranslate,
+                                        noticesActive = showNoticePanel,
+                                        onLogoClick = {
+                                            practiceMode = null
+                                            showTopSearch = false
+                                            showNoticePanel = false
+                                            showAvatarMenu = false
+                                            tab = AppDestination.Home
+                                        },
+                                        onStreakClick = {
+                                            showNoticePanel = false
+                                            showTopSearch = false
+                                            showStreakDialog = true
+                                        },
+                                        onSearchClick = {
+                                            showNoticePanel = false
+                                            showAvatarMenu = false
+                                            showTopSearch = !showTopSearch
+                                        },
+                                        onCameraClick = {
+                                            openSubScreen(AppDestination.CameraTranslate)
+                                        },
+                                        onFeedbackClick = {
+                                            showTopSearch = false
+                                            showNoticePanel = false
+                                            openSubScreen(AppDestination.Feedback)
+                                        },
+                                        onNoticesClick = {
+                                            showTopSearch = false
+                                            showAvatarMenu = false
+                                            showNoticePanel = !showNoticePanel
+                                        },
+                                        onAvatarClick = {
+                                            showNoticePanel = false
+                                            showTopSearch = false
+                                            showAvatarMenu = true
+                                        },
+                                    )
 
-                        InkTopBar(
-                            title = title,
-                            subtitle = subtitle,
-                            onBack = onBackAction,
-                            actions = {
-                                if (tab == AppDestination.Home) {
-                                    IconButton(
-                                        onClick = { refreshKey++ },
-                                        modifier = Modifier
-                                            .size(38.dp)
-                                            .clip(CircleShape)
-                                            .background(PaperMuted)
-                                    ) {
-                                        Icon(
-                                            Icons.Rounded.Refresh,
-                                            contentDescription = "Tải lại",
-                                            tint = InkBlack,
-                                            modifier = Modifier.size(19.dp)
-                                        )
+                                    Box(modifier = Modifier.align(Alignment.BottomEnd).padding(end = 14.dp)) {
+                                        DropdownMenu(
+                                            expanded = showAvatarMenu,
+                                            onDismissRequest = { showAvatarMenu = false },
+                                            modifier = Modifier.background(PaperPure).widthIn(min = 210.dp),
+                                        ) {
+                                            Column(Modifier.padding(horizontal = 16.dp, vertical = 10.dp)) {
+                                                Text(
+                                                    text = currentUser.fullName?.ifBlank { currentUser.username } ?: currentUser.username,
+                                                    fontWeight = FontWeight.Bold,
+                                                    fontSize = 14.sp,
+                                                    color = InkBlack,
+                                                    maxLines = 1,
+                                                    overflow = TextOverflow.Ellipsis,
+                                                )
+                                                Text(
+                                                    text = currentUser.email,
+                                                    fontSize = 11.5.sp,
+                                                    color = InkMuted,
+                                                    maxLines = 1,
+                                                    overflow = TextOverflow.Ellipsis,
+                                                )
+                                                if (currentUser.isAdmin) {
+                                                    Surface(
+                                                        color = BrandSoft,
+                                                        shape = CircleShape,
+                                                        modifier = Modifier.padding(top = 6.dp),
+                                                    ) {
+                                                        Text(
+                                                            "Quản trị viên",
+                                                            fontSize = 10.sp,
+                                                            fontWeight = FontWeight.Bold,
+                                                            color = BrandDark,
+                                                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
+                                                        )
+                                                    }
+                                                }
+                                            }
+                                            HorizontalDivider(color = InkBorder.copy(alpha = 0.7f))
+                                            DropdownMenuItem(
+                                                text = { Text("Tài khoản & Hồ sơ", fontSize = 13.5.sp, color = InkBlack, fontWeight = FontWeight.Medium) },
+                                                leadingIcon = { Icon(Icons.Rounded.Person, null, tint = InkMuted, modifier = Modifier.size(18.dp)) },
+                                                onClick = { showAvatarMenu = false; openSubScreen(AppDestination.Account) },
+                                            )
+                                            DropdownMenuItem(
+                                                text = { Text("Thống kê tiến độ", fontSize = 13.5.sp, color = InkBlack, fontWeight = FontWeight.Medium) },
+                                                leadingIcon = { Icon(Icons.Rounded.Timeline, null, tint = InkMuted, modifier = Modifier.size(18.dp)) },
+                                                onClick = {
+                                                    showAvatarMenu = false
+                                                    progressSubTab = 1
+                                                    tab = AppDestination.Stats
+                                                },
+                                            )
+                                            DropdownMenuItem(
+                                                text = { Text("Khung ghi chú góp ý", fontSize = 13.5.sp, color = InkBlack, fontWeight = FontWeight.Medium) },
+                                                leadingIcon = { Icon(Icons.Rounded.Feedback, null, tint = BrandDark, modifier = Modifier.size(18.dp)) },
+                                                onClick = { showAvatarMenu = false; openSubScreen(AppDestination.Feedback) },
+                                            )
+                                            HorizontalDivider(color = InkBorder.copy(alpha = 0.7f))
+                                            DropdownMenuItem(
+                                                text = { Text("Đăng xuất", fontSize = 13.5.sp, color = RedBad, fontWeight = FontWeight.SemiBold) },
+                                                leadingIcon = { Icon(Icons.AutoMirrored.Rounded.Logout, null, tint = RedBad, modifier = Modifier.size(18.dp)) },
+                                                onClick = signOut,
+                                            )
+                                        }
                                     }
                                 }
                             }
-                        )
+
+                            AnimatedVisibility(
+                                visible = showTopSearch && !isFocusedSubScreen,
+                                enter = expandVertically() + fadeIn(),
+                                exit = shrinkVertically() + fadeOut(),
+                            ) {
+                                Surface(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    color = PaperPure,
+                                ) {
+                                    Column {
+                                        Row(
+                                            modifier = Modifier
+                                                .fillMaxWidth()
+                                                .padding(horizontal = 14.dp, vertical = 10.dp),
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                        ) {
+                                            PillSearchInput(
+                                                value = topSearchText,
+                                                onValueChange = { topSearchText = it },
+                                                placeholder = "Tra nhanh chữ Hán, pinyin, nghĩa...",
+                                                onSubmit = { jumpToWordSearch(topSearchText) },
+                                                modifier = Modifier.weight(1f),
+                                            )
+                                            CircleActionButton(
+                                                onClick = { openSubScreen(AppDestination.CameraTranslate) },
+                                                size = 38.dp,
+                                                containerColor = BrandSoft,
+                                                borderColor = BrandBorder,
+                                            ) {
+                                                Icon(Icons.Outlined.PhotoCamera, contentDescription = "Dịch Camera", tint = BrandDark, modifier = Modifier.size(19.dp))
+                                            }
+                                            CircleActionButton(
+                                                onClick = { showTopSearch = false },
+                                                size = 36.dp,
+                                                containerColor = PaperMuted,
+                                            ) {
+                                                Icon(Icons.Rounded.Close, contentDescription = "Đóng tìm kiếm", tint = InkMuted, modifier = Modifier.size(18.dp))
+                                            }
+                                        }
+                                        HorizontalDivider(color = InkBorder.copy(alpha = 0.7f))
+                                    }
+                                }
+                            }
+                        }
                     },
                     bottomBar = {
-                        ModernInkBottomBar(
-                            items = navItems,
-                            selectedId = currentPrimaryNav,
-                            onSelect = { navId ->
-                                when (navId) {
-                                    "home" -> tab = AppDestination.Home
-                                    "vocab" -> {
-                                        tab = when (vocabSubTab) {
-                                            0 -> AppDestination.Words
-                                            1 -> AppDestination.Categories
-                                            2 -> AppDestination.Grammar
-                                            else -> AppDestination.Favorites
+                        if (!isFocusedSubScreen) {
+                            ModernInkBottomBar(
+                                items = navItems,
+                                selectedId = currentPrimaryNav,
+                                onSelect = { navId ->
+                                    practiceMode = null
+                                    showTopSearch = false
+                                    showNoticePanel = false
+                                    when (navId) {
+                                        "home" -> tab = AppDestination.Home
+                                        "vocab" -> {
+                                            tab = when (vocabSubTab) {
+                                                0 -> AppDestination.Words
+                                                1 -> AppDestination.Categories
+                                                2 -> AppDestination.Grammar
+                                                else -> AppDestination.Favorites
+                                            }
+                                        }
+                                        "review" -> tab = AppDestination.Review
+                                        "practice" -> tab = AppDestination.Practice
+                                        "progress" -> {
+                                            tab = when (progressSubTab) {
+                                                0 -> AppDestination.Path
+                                                1 -> AppDestination.Stats
+                                                else -> AppDestination.Leaderboard
+                                            }
                                         }
                                     }
-                                    "practice" -> {
-                                        practiceMode = null
-                                        tab = AppDestination.Practice
-                                    }
-                                    "progress" -> {
-                                        tab = when (progressSubTab) {
-                                            0 -> AppDestination.Path
-                                            1 -> AppDestination.Stats
-                                            else -> AppDestination.Leaderboard
-                                        }
-                                    }
-                                    "account" -> tab = AppDestination.Account
                                 }
-                            }
-                        )
+                            )
+                        }
                     }
                 ) { padding ->
                     Box(
@@ -392,176 +654,482 @@ fun ChainaApp(api: ApiClient, tokens: TokenStore) {
                         AnimatedContent(
                             targetState = tab,
                             transitionSpec = {
-                                (fadeIn(animationSpec = tween(180, easing = LinearOutSlowInEasing)) +
-                                        slideInHorizontally(animationSpec = tween(220, easing = FastOutSlowInEasing)) { it / 5 })
+                                (fadeIn(animationSpec = tween(170, easing = LinearOutSlowInEasing)) +
+                                        slideInHorizontally(animationSpec = tween(200, easing = FastOutSlowInEasing)) { it / 7 })
                                     .togetherWith(
-                                        fadeOut(animationSpec = tween(150)) +
-                                                slideOutHorizontally(animationSpec = tween(180)) { -it / 5 }
+                                        fadeOut(animationSpec = tween(140)) +
+                                                slideOutHorizontally(animationSpec = tween(170)) { -it / 7 }
                                     )
                             },
                             label = "tab-screen-transition"
                         ) { targetTab ->
                             when (targetTab) {
                                 AppDestination.Home -> HomeScreen(
+                                    api = api,
                                     user = currentUser,
                                     stats = stats,
                                     levels = levels,
                                     daily = daily,
+                                    activity = activity,
+                                    leaderboardTop = leaderboardTop,
                                     loading = dashboardLoading,
                                     error = dashboardError,
                                     onRefresh = { refreshKey++ },
-                                    onChooseLevel = { hskLevel = it; tab = AppDestination.Review },
-                                    onExploreVocab = { tab = AppDestination.Words },
-                                    onWriting = { tab = AppDestination.Writing },
-                                    onBoss = { tab = AppDestination.PinyinBoss },
-                                    onPractice = { tab = AppDestination.Practice },
-                                    onFavorites = {
-                                        vocabSubTab = 3
-                                        tab = AppDestination.Favorites
-                                    },
-                                    onAccount = { tab = AppDestination.Account }
+                                    onChooseLevel = { lvl -> hskLevel = lvl; tab = AppDestination.Review },
+                                    onOpenPath = { progressSubTab = 0; tab = AppDestination.Path },
+                                    onLeaderboard = { progressSubTab = 2; tab = AppDestination.Leaderboard },
+                                    onStats = { progressSubTab = 1; tab = AppDestination.Stats },
                                 )
-                                AppDestination.Words, AppDestination.Categories, AppDestination.Grammar, AppDestination.Favorites -> {
-                                    Column(Modifier.fillMaxSize()) {
-                                        val vocabTabs = listOf("Tra từ", "Chủ đề", "Ngữ pháp", "Sổ từ")
-                                        val currentVocabIndex = when (targetTab) {
-                                            AppDestination.Words -> 0
-                                            AppDestination.Categories -> 1
-                                            AppDestination.Grammar -> 2
-                                            AppDestination.Favorites -> 3
-                                            else -> 0
-                                        }
-                                        TabRow(
-                                            selectedTabIndex = currentVocabIndex,
-                                            containerColor = PaperPure,
-                                            contentColor = Brand,
-                                            indicator = { tabPositions ->
-                                                TabRowDefaults.SecondaryIndicator(
-                                                    Modifier.tabIndicatorOffset(tabPositions[currentVocabIndex]),
-                                                    color = Brand,
-                                                    height = 2.5.dp
-                                                )
-                                            },
-                                            divider = { Box(Modifier.fillMaxWidth().height(1.dp).background(InkBorder)) }
-                                        ) {
-                                            vocabTabs.forEachIndexed { index, label ->
-                                                Tab(
-                                                    selected = currentVocabIndex == index,
-                                                    onClick = {
-                                                        vocabSubTab = index
-                                                        tab = when (index) {
-                                                            0 -> AppDestination.Words
-                                                            1 -> AppDestination.Categories
-                                                            2 -> AppDestination.Grammar
-                                                            else -> AppDestination.Favorites
-                                                        }
-                                                    },
-                                                    text = {
-                                                        Text(
-                                                            label,
-                                                            fontSize = 13.sp,
-                                                            fontWeight = if (currentVocabIndex == index) FontWeight.Bold else FontWeight.Medium,
-                                                            color = if (currentVocabIndex == index) Brand else InkMuted,
-                                                        )
-                                                    }
-                                                )
-                                            }
-                                        }
 
+                                AppDestination.Words,
+                                AppDestination.Categories,
+                                AppDestination.Grammar,
+                                AppDestination.Favorites -> {
+                                    val currentVocabIndex = when (targetTab) {
+                                        AppDestination.Words -> 0
+                                        AppDestination.Categories -> 1
+                                        AppDestination.Grammar -> 2
+                                        AppDestination.Favorites -> 3
+                                        else -> 0
+                                    }
+                                    Column(Modifier.fillMaxSize()) {
+                                        SegmentedPillBar(
+                                            items = listOf("Tra từ", "Chủ đề", "Ngữ pháp", "Sổ từ"),
+                                            selectedIndex = currentVocabIndex,
+                                            onSelect = { index ->
+                                                vocabSubTab = index
+                                                tab = when (index) {
+                                                    0 -> AppDestination.Words
+                                                    1 -> AppDestination.Categories
+                                                    2 -> AppDestination.Grammar
+                                                    else -> AppDestination.Favorites
+                                                }
+                                            },
+                                        )
                                         Box(Modifier.fillMaxSize()) {
                                             when (targetTab) {
-                                                AppDestination.Words -> WordsScreen(api)
+                                                AppDestination.Words -> WordsScreen(
+                                                    api = api,
+                                                    externalQuery = pendingWordSearch,
+                                                    searchTrigger = wordSearchTrigger,
+                                                    onOpenCamera = { openSubScreen(AppDestination.CameraTranslate) },
+                                                )
                                                 AppDestination.Categories -> CategoriesFeature(api)
                                                 AppDestination.Grammar -> GrammarFeature(api)
                                                 AppDestination.Favorites -> FavoritesFeature(api)
-                                                else -> WordsScreen(api)
+                                                else -> WordsScreen(
+                                                    api = api,
+                                                    externalQuery = pendingWordSearch,
+                                                    searchTrigger = wordSearchTrigger,
+                                                    onOpenCamera = { openSubScreen(AppDestination.CameraTranslate) },
+                                                )
                                             }
                                         }
                                     }
                                 }
+
+                                AppDestination.Review -> StudyScreen(
+                                    api = api,
+                                    initialLevel = hskLevel,
+                                    onStatsChanged = { refreshKey++ },
+                                )
+
                                 AppDestination.Practice -> PracticeHubFeature(
                                     api = api,
                                     initialLevel = hskLevel,
                                     activeMode = practiceMode,
                                     onModeChange = { practiceMode = it },
-                                    onWriting = { tab = AppDestination.Writing },
-                                    onBoss = { tab = AppDestination.PinyinBoss },
-                                    onGrammar = { tab = AppDestination.GrammarPractice }
+                                    onLevelCountSelected = { lvl, cnt ->
+                                        hskLevel = lvl
+                                        practiceLevel = lvl
+                                        practiceCount = cnt
+                                    },
+                                    onLaunchWriting = { lvl, cnt ->
+                                        hskLevel = lvl
+                                        practiceLevel = lvl
+                                        practiceCount = cnt
+                                        openSubScreen(AppDestination.Writing)
+                                    },
+                                    onLaunchBoss = { lvl, cnt ->
+                                        hskLevel = lvl
+                                        practiceLevel = lvl
+                                        practiceCount = cnt
+                                        openSubScreen(AppDestination.PinyinBoss)
+                                    },
+                                    onLaunchGrammar = { lvl, cnt ->
+                                        hskLevel = lvl
+                                        practiceLevel = lvl
+                                        practiceCount = cnt
+                                        openSubScreen(AppDestination.GrammarPractice)
+                                    },
                                 )
-                                AppDestination.Path, AppDestination.Stats, AppDestination.Leaderboard -> {
+
+                                AppDestination.Path,
+                                AppDestination.Stats,
+                                AppDestination.Leaderboard -> {
+                                    val currentProgressIndex = when (targetTab) {
+                                        AppDestination.Path -> 0
+                                        AppDestination.Stats -> 1
+                                        AppDestination.Leaderboard -> 2
+                                        else -> 0
+                                    }
                                     Column(Modifier.fillMaxSize()) {
-                                        val progressTabs = listOf("Lộ trình", "Thống kê", "Xếp hạng")
-                                        val currentProgressIndex = when (targetTab) {
-                                            AppDestination.Path -> 0
-                                            AppDestination.Stats -> 1
-                                            AppDestination.Leaderboard -> 2
-                                            else -> 0
-                                        }
-                                        TabRow(
-                                            selectedTabIndex = currentProgressIndex,
-                                            containerColor = PaperPure,
-                                            contentColor = Brand,
-                                            indicator = { tabPositions ->
-                                                TabRowDefaults.SecondaryIndicator(
-                                                    Modifier.tabIndicatorOffset(tabPositions[currentProgressIndex]),
-                                                    color = Brand,
-                                                    height = 2.5.dp
-                                                )
+                                        SegmentedPillBar(
+                                            items = listOf("Lộ trình", "Thống kê", "Xếp hạng"),
+                                            selectedIndex = currentProgressIndex,
+                                            onSelect = { index ->
+                                                progressSubTab = index
+                                                tab = when (index) {
+                                                    0 -> AppDestination.Path
+                                                    1 -> AppDestination.Stats
+                                                    else -> AppDestination.Leaderboard
+                                                }
                                             },
-                                            divider = { Box(Modifier.fillMaxWidth().height(1.dp).background(InkBorder)) }
-                                        ) {
-                                            progressTabs.forEachIndexed { index, label ->
-                                                Tab(
-                                                    selected = currentProgressIndex == index,
-                                                    onClick = {
-                                                        progressSubTab = index
-                                                        tab = when (index) {
-                                                            0 -> AppDestination.Path
-                                                            1 -> AppDestination.Stats
-                                                            else -> AppDestination.Leaderboard
-                                                        }
-                                                    },
-                                                    text = {
-                                                        Text(
-                                                            label,
-                                                            fontSize = 13.sp,
-                                                            fontWeight = if (currentProgressIndex == index) FontWeight.Bold else FontWeight.Medium,
-                                                            color = if (currentProgressIndex == index) Brand else InkMuted,
-                                                        )
-                                                    }
-                                                )
-                                            }
-                                        }
+                                        )
                                         Box(Modifier.fillMaxSize()) {
                                             when (targetTab) {
-                                                AppDestination.Path -> LearningPathFeature(onPractice = { hskLevel = it; tab = AppDestination.Practice })
+                                                AppDestination.Path -> LearningPathFeature(onPractice = { hskLevel = it; practiceLevel = it; tab = AppDestination.Practice })
                                                 AppDestination.Stats -> StatisticsFeature(api)
                                                 AppDestination.Leaderboard -> LeaderboardFeature(api)
-                                                else -> LearningPathFeature(onPractice = { hskLevel = it; tab = AppDestination.Practice })
+                                                else -> LearningPathFeature(onPractice = { hskLevel = it; practiceLevel = it; tab = AppDestination.Practice })
                                             }
                                         }
                                     }
                                 }
-                                AppDestination.Review -> StudyScreen(
+
+                                AppDestination.GrammarPractice -> GrammarPracticeFeature(
                                     api = api,
-                                    initialLevel = hskLevel,
-                                    onStatsChanged = { refreshKey++ }
+                                    initialLevel = practiceLevel,
+                                    initialCount = practiceCount,
+                                    autoStart = true,
                                 )
-                                AppDestination.GrammarPractice -> GrammarPracticeFeature(api, hskLevel)
-                                AppDestination.Writing -> WritingFeature(api)
-                                AppDestination.PinyinBoss -> PinyinBossFeature(api, hskLevel)
+                                AppDestination.Writing -> WritingFeature(
+                                    api = api,
+                                    initialLevel = practiceLevel,
+                                    initialCount = practiceCount,
+                                )
+                                AppDestination.PinyinBoss -> PinyinBossFeature(
+                                    api = api,
+                                    level = practiceLevel,
+                                    count = practiceCount,
+                                )
+                                AppDestination.CameraTranslate -> CameraTranslateScreen(
+                                    onLookupWord = { query -> jumpToWordSearch(query) },
+                                )
+                                AppDestination.Feedback -> FeedbackBoardScreen(api, currentUser)
                                 AppDestination.Account -> AccountScreen(
                                     user = currentUser,
+                                    stats = stats,
                                     api = api,
                                     onSaved = { user = it; refreshKey++ },
-                                    onPrivacy = { tab = AppDestination.Privacy },
-                                    onCredits = { tab = AppDestination.Credits },
-                                    onLogout = signOut
+                                    onFeedback = { openSubScreen(AppDestination.Feedback) },
+                                    onPrivacy = { openSubScreen(AppDestination.Privacy) },
+                                    onCredits = { openSubScreen(AppDestination.Credits) },
+                                    onLogout = signOut,
                                 )
                                 AppDestination.Privacy, AppDestination.Credits -> InformationFeature(targetTab)
                             }
                         }
+
+                        // Pull-down Top Notification Sheet (anchored below WebTopBar, no centered pop-up)
+                        AnimatedVisibility(
+                            visible = showNoticePanel && !isFocusedSubScreen,
+                            enter = fadeIn(tween(180)),
+                            exit = fadeOut(tween(150)),
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(Color.Black.copy(alpha = 0.28f))
+                                    .clickable(
+                                        interactionSource = remember { MutableInteractionSource() },
+                                        indication = null,
+                                    ) { showNoticePanel = false }
+                            )
+                        }
+
+                        AnimatedVisibility(
+                            visible = showNoticePanel && !isFocusedSubScreen,
+                            enter = expandVertically(
+                                expandFrom = Alignment.Top,
+                                animationSpec = tween(220, easing = FastOutSlowInEasing),
+                            ) + fadeIn(tween(170)),
+                            exit = shrinkVertically(
+                                shrinkTowards = Alignment.Top,
+                                animationSpec = tween(180, easing = FastOutSlowInEasing),
+                            ) + fadeOut(tween(140)),
+                        ) {
+                            val s = stats
+                            val due = s?.due ?: 0
+                            val atRisk = s?.atRisk == true && s.studiedToday == false
+                            val broken = (s?.brokenStreak ?: 0) > 0 && s?.studiedToday == false
+                            val noticeCount = (if (due > 0) 1 else 0) + (if (atRisk) 1 else 0) + (if (broken) 1 else 0)
+
+                            Surface(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable(
+                                        interactionSource = remember { MutableInteractionSource() },
+                                        indication = null,
+                                    ) {},
+                                color = PaperPure,
+                                shape = RoundedCornerShape(bottomStart = 26.dp, bottomEnd = 26.dp),
+                                shadowElevation = 12.dp,
+                            ) {
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(horizontal = 16.dp)
+                                        .padding(top = 14.dp, bottom = 10.dp),
+                                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                                ) {
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically,
+                                    ) {
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                        ) {
+                                            Text(
+                                                "Thông báo học tập",
+                                                fontSize = 17.sp,
+                                                fontWeight = FontWeight.ExtraBold,
+                                                color = InkBlack,
+                                            )
+                                            if (noticeCount > 0) {
+                                                Surface(
+                                                    shape = CircleShape,
+                                                    color = BrandSoft,
+                                                    border = BorderStroke(1.dp, BrandBorder),
+                                                ) {
+                                                    Text(
+                                                        "$noticeCount mới",
+                                                        fontSize = 11.sp,
+                                                        fontWeight = FontWeight.Bold,
+                                                        color = BrandDark,
+                                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
+                                                    )
+                                                }
+                                            }
+                                        }
+                                        CircleActionButton(
+                                            onClick = { showNoticePanel = false },
+                                            size = 32.dp,
+                                            containerColor = PaperMuted,
+                                        ) {
+                                            Icon(
+                                                Icons.Rounded.Close,
+                                                contentDescription = "Đóng thông báo",
+                                                tint = InkMuted,
+                                                modifier = Modifier.size(16.dp),
+                                            )
+                                        }
+                                    }
+
+                                    Column(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .heightIn(max = 360.dp)
+                                            .verticalScroll(rememberScrollState()),
+                                        verticalArrangement = Arrangement.spacedBy(10.dp),
+                                    ) {
+                                        if (due > 0) {
+                                            Surface(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .clip(RoundedCornerShape(16.dp))
+                                                    .clickable {
+                                                        showNoticePanel = false
+                                                        hskLevel = currentUser.targetHskLevel?.coerceIn(1, 3) ?: 1
+                                                        tab = AppDestination.Review
+                                                    },
+                                                shape = RoundedCornerShape(16.dp),
+                                                color = BrandSoft,
+                                                border = BorderStroke(1.dp, BrandBorder),
+                                            ) {
+                                                Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                                    Row(
+                                                        Modifier.fillMaxWidth(),
+                                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                                        verticalAlignment = Alignment.CenterVertically,
+                                                    ) {
+                                                        Text("Ôn tập SM-2 đến hạn", fontSize = 13.5.sp, fontWeight = FontWeight.Bold, color = BrandDark)
+                                                        Text("Ôn ngay ›", fontSize = 11.5.sp, fontWeight = FontWeight.Bold, color = BrandDark)
+                                                    }
+                                                    Text("Bạn có $due từ cần ôn lại hôm nay để giữ trí nhớ dài hạn.", fontSize = 12.5.sp, color = InkBlack, lineHeight = 18.sp)
+                                                }
+                                            }
+                                        }
+                                        if (atRisk) {
+                                            Surface(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .clip(RoundedCornerShape(16.dp))
+                                                    .clickable {
+                                                        showNoticePanel = false
+                                                        hskLevel = currentUser.targetHskLevel?.coerceIn(1, 3) ?: 1
+                                                        tab = AppDestination.Review
+                                                    },
+                                                shape = RoundedCornerShape(16.dp),
+                                                color = FlameBg,
+                                                border = BorderStroke(1.dp, FlameBorder),
+                                            ) {
+                                                Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                                    Row(
+                                                        Modifier.fillMaxWidth(),
+                                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                                        verticalAlignment = Alignment.CenterVertically,
+                                                    ) {
+                                                        Text("Giữ chuỗi ${s?.streak ?: 0} ngày", fontSize = 13.5.sp, fontWeight = FontWeight.Bold, color = FlameOrange)
+                                                        Text("Ôn ngay ›", fontSize = 11.5.sp, fontWeight = FontWeight.Bold, color = FlameOrange)
+                                                    }
+                                                    Text("Bạn chưa học hôm nay. Ôn ít nhất 1 từ để không mất chuỗi!", fontSize = 12.5.sp, color = InkBlack, lineHeight = 18.sp)
+                                                }
+                                            }
+                                        }
+                                        if (broken) {
+                                            Surface(
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .clip(RoundedCornerShape(16.dp))
+                                                    .clickable {
+                                                        showNoticePanel = false
+                                                        hskLevel = currentUser.targetHskLevel?.coerceIn(1, 3) ?: 1
+                                                        tab = AppDestination.Review
+                                                    },
+                                                shape = RoundedCornerShape(16.dp),
+                                                color = RedSoft,
+                                                border = BorderStroke(1.dp, RedBorder),
+                                            ) {
+                                                Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                                    Text("Chuỗi ${s?.brokenStreak ?: 0} ngày đã tạm dừng", fontSize = 13.5.sp, fontWeight = FontWeight.Bold, color = RedBad)
+                                                    Text("Hãy học 1 bài hôm nay để khởi động lại chuỗi mới.", fontSize = 12.5.sp, color = InkBlack, lineHeight = 18.sp)
+                                                }
+                                            }
+                                        }
+                                        if (due == 0 && !atRisk && !broken) {
+                                            Surface(
+                                                modifier = Modifier.fillMaxWidth(),
+                                                shape = RoundedCornerShape(16.dp),
+                                                color = PaperMuted,
+                                            ) {
+                                                Text(
+                                                    text = "Không có thông báo mới. Bạn đang giữ nhịp độ học tập rất ổn định.",
+                                                    fontSize = 13.sp,
+                                                    color = InkMuted,
+                                                    modifier = Modifier.padding(14.dp),
+                                                    lineHeight = 19.sp,
+                                                )
+                                            }
+                                        }
+                                    }
+
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .clickable(
+                                                interactionSource = remember { MutableInteractionSource() },
+                                                indication = null,
+                                            ) { showNoticePanel = false }
+                                            .padding(top = 4.dp),
+                                        contentAlignment = Alignment.Center,
+                                    ) {
+                                        Box(
+                                            modifier = Modifier
+                                                .width(42.dp)
+                                                .height(4.dp)
+                                                .clip(CircleShape)
+                                                .background(LineDark)
+                                        )
+                                    }
+                                }
+                            }
+                        }
                     }
+                }
+
+                // Streak Dialog from WebTopBar flame pill
+                if (showStreakDialog) {
+                    val s = stats
+                    val days = s?.streak ?: currentUser.streak
+                    val studied = s?.studiedToday == true
+                    val broken = s?.brokenStreak ?: 0
+                    val headline = when {
+                        studied -> "Chuỗi $days ngày đã được thắp sáng hôm nay"
+                        days > 0 -> "Chuỗi $days ngày đang chờ bạn giữ lửa"
+                        broken > 0 -> "Chuỗi $broken ngày đã tắt · Bắt đầu lại hôm nay"
+                        else -> "Chưa có chuỗi · Học 1 bài để khởi động"
+                    }
+                    val detailCopy = when {
+                        studied -> "Hoàn thành ít nhất một thẻ nhớ mỗi ngày để nối dài chuỗi học tập."
+                        days > 0 -> "Ôn tập ít nhất một từ vựng ngay hôm nay để chuỗi không bị đứt vào cuối ngày."
+                        else -> "Ôn tập một từ bất kỳ để khởi tạo lại ngọn lửa chuỗi học tập của bạn."
+                    }
+
+                    AlertDialog(
+                        onDismissRequest = { showStreakDialog = false },
+                        containerColor = PaperPure,
+                        shape = RoundedCornerShape(24.dp),
+                        title = {
+                            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                                Surface(
+                                    shape = CircleShape,
+                                    color = if (days > 0 || studied) FlameBg else PaperMuted,
+                                    border = BorderStroke(1.dp, if (days > 0 || studied) FlameBorder else InkBorder),
+                                    modifier = Modifier.size(40.dp),
+                                ) {
+                                    Box(contentAlignment = Alignment.Center) {
+                                        VectorFlameCanvas(active = days > 0 || studied, litToday = studied, modifier = Modifier.size(width = 18.dp, height = 22.dp))
+                                    }
+                                }
+                                Text("Chuỗi học tập", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = InkBlack)
+                            }
+                        },
+                        text = {
+                            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                                Text(headline, fontSize = 15.sp, fontWeight = FontWeight.Bold, color = if (studied) JadeGreen else FlameOrange)
+                                Text(detailCopy, fontSize = 13.sp, color = InkMuted, lineHeight = 19.sp)
+                                Surface(shape = RoundedCornerShape(14.dp), color = PaperMuted) {
+                                    Row(
+                                        Modifier.fillMaxWidth().padding(12.dp),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically,
+                                    ) {
+                                        Text("Tổng XP tích lũy", fontSize = 12.5.sp, color = InkMuted)
+                                        Text("${s?.xp ?: currentUser.xp} XP", fontSize = 14.sp, fontWeight = FontWeight.Bold, color = InkBlack)
+                                    }
+                                }
+                            }
+                        },
+                        confirmButton = {
+                            if (!studied) {
+                                Button(
+                                    onClick = {
+                                        showStreakDialog = false
+                                        hskLevel = currentUser.targetHskLevel?.coerceIn(1, 3) ?: 1
+                                        tab = AppDestination.Review
+                                    },
+                                    shape = CircleShape,
+                                    colors = ButtonDefaults.buttonColors(containerColor = InkBlack),
+                                ) {
+                                    Text("Ôn ngay", fontWeight = FontWeight.Bold)
+                                }
+                            } else {
+                                TextButton(onClick = { showStreakDialog = false }) {
+                                    Text("Đóng", color = InkBlack, fontWeight = FontWeight.Bold)
+                                }
+                            }
+                        },
+                        dismissButton = {
+                            if (!studied) {
+                                TextButton(onClick = { showStreakDialog = false }) {
+                                    Text("Để sau", color = InkMuted)
+                                }
+                            }
+                        },
+                    )
                 }
 
                 if (onboarding) {
@@ -579,47 +1147,87 @@ fun ChainaApp(api: ApiClient, tokens: TokenStore) {
 }
 
 @Composable
-private fun CleanLoadingScreen() {
-    val infiniteTransition = rememberInfiniteTransition(label = "loading-pulse")
-    val bob by infiniteTransition.animateFloat(
-        initialValue = -5f,
-        targetValue = 5f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(1200, easing = FastOutSlowInEasing),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "cat-bob"
-    )
-
-    Box(
-        Modifier
-            .fillMaxSize()
-            .background(Paper)
-            .windowInsetsPadding(WindowInsets.safeDrawing),
-        contentAlignment = Alignment.Center
+private fun PillSearchInput(
+    value: String,
+    onValueChange: (String) -> Unit,
+    placeholder: String,
+    onSubmit: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Surface(
+        modifier = modifier.height(48.dp),
+        shape = CircleShape,
+        color = PaperMuted,
+        border = BorderStroke(1.dp, InkBorder.copy(alpha = 0.7f)),
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+        Row(
+            modifier = Modifier.fillMaxSize().padding(start = 18.dp, end = 5.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            Image(
-                painterResource(R.drawable.cat_head),
-                contentDescription = "Đang tải",
+            Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.CenterStart) {
+                if (value.isEmpty()) {
+                    Text(
+                        text = placeholder,
+                        color = InkLight,
+                        fontSize = 13.5.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
+                BasicTextField(
+                    value = value,
+                    onValueChange = onValueChange,
+                    singleLine = true,
+                    textStyle = TextStyle(color = InkBlack, fontSize = 14.sp, fontWeight = FontWeight.Medium),
+                    cursorBrush = SolidColor(Brand),
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                    keyboardActions = KeyboardActions(onSearch = { onSubmit() }),
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
+            if (value.isNotEmpty()) {
+                CircleActionButton(
+                    onClick = { onValueChange("") },
+                    size = 30.dp,
+                    containerColor = Color.Transparent,
+                ) {
+                    Icon(Icons.Rounded.Close, contentDescription = "Xóa", tint = InkMuted, modifier = Modifier.size(16.dp))
+                }
+            }
+            Surface(
                 modifier = Modifier
-                    .width(200.dp)
-                    .graphicsLayer { translationY = bob }
-            )
-            CircularProgressIndicator(
-                modifier = Modifier.size(24.dp),
-                color = Brand,
-                strokeWidth = 2.5.dp
-            )
+                    .size(38.dp)
+                    .clip(CircleShape)
+                    .clickable(onClick = onSubmit),
+                shape = CircleShape,
+                color = InkBlack,
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Icon(
+                        imageVector = Icons.Rounded.Search,
+                        contentDescription = "Tìm",
+                        tint = Color.White,
+                        modifier = Modifier.size(18.dp),
+                    )
+                }
+            }
         }
     }
 }
 
 @Composable
+private fun CleanLoadingScreen() {
+    ChainaStrokeLoading(
+        mode = ChainaLoadingMode.FULL_SCREEN,
+        background = ChainaLoadingBackground.PAPER,
+        message = "Đang khởi tạo không gian học tập…",
+    )
+}
+
+@Composable
 private fun AuthScreen(api: ApiClient, onAuthenticated: suspend (String, User, Boolean) -> Unit) {
+    val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var registering by remember { mutableStateOf(false) }
     var identifier by remember { mutableStateOf("") }
@@ -631,6 +1239,7 @@ private fun AuthScreen(api: ApiClient, onAuthenticated: suspend (String, User, B
     var password by remember { mutableStateOf("") }
     var confirm by remember { mutableStateOf("") }
     var busy by remember { mutableStateOf(false) }
+    var googleBusy by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
 
     Column(
@@ -644,22 +1253,21 @@ private fun AuthScreen(api: ApiClient, onAuthenticated: suspend (String, User, B
     ) {
         Spacer(Modifier.height(20.dp))
 
-        // Clean Official Chaina Logo (No redundant seal added)
         Image(
             painterResource(R.drawable.chaina_wordmark),
             contentDescription = "Chaina",
-            modifier = Modifier.width(160.dp).height(52.dp)
+            modifier = Modifier.width(148.dp).height(48.dp)
         )
 
         Text(
             text = if (registering) "Tạo tài khoản mới" else "Chào mừng trở lại",
-            fontSize = 25.sp,
+            fontSize = 24.sp,
             fontWeight = FontWeight.ExtraBold,
             color = InkBlack,
             modifier = Modifier.padding(top = 18.dp)
         )
         Text(
-            text = if (registering) "Tạo Chaina ID để lưu tiến độ học tập trên mọi thiết bị." else "Đăng nhập để tiếp tục hành trình học tiếng Trung HSK.",
+            text = if (registering) "Tạo Chaina ID để đồng bộ tiến độ học tập." else "Đăng nhập để tiếp tục hành trình HSK.",
             color = InkMuted,
             fontSize = 13.sp,
             textAlign = TextAlign.Center,
@@ -668,12 +1276,78 @@ private fun AuthScreen(api: ApiClient, onAuthenticated: suspend (String, User, B
 
         InkCard(
             modifier = Modifier.widthIn(max = 500.dp).fillMaxWidth(),
-            shapeRadius = 22.dp,
+            shapeRadius = 24.dp,
         ) {
             Column(
                 Modifier.padding(20.dp),
                 verticalArrangement = Arrangement.spacedBy(13.dp)
             ) {
+                // Tiếp tục với Google
+                GoogleSignInButton(
+                    onClick = {
+                        scope.launch {
+                            error = null
+                            val webClientId = BuildConfig.GOOGLE_WEB_CLIENT_ID
+                            if (webClientId.isBlank()) {
+                                error = "Chưa cấu hình GOOGLE_WEB_CLIENT_ID trong gradle.properties."
+                                return@launch
+                            }
+                            googleBusy = true
+                            try {
+                                val credentialManager = CredentialManager.create(context)
+                                val googleIdOption = GetGoogleIdOption.Builder()
+                                    .setFilterByAuthorizedAccounts(false)
+                                    .setServerClientId(webClientId)
+                                    .setAutoSelectEnabled(false)
+                                    .build()
+                                val req = GetCredentialRequest.Builder()
+                                    .addCredentialOption(googleIdOption)
+                                    .build()
+                                val response = credentialManager.getCredential(
+                                    request = req,
+                                    context = context,
+                                )
+                                val cred = response.credential
+                                if (cred is CustomCredential &&
+                                    cred.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
+                                ) {
+                                    val googleCred = GoogleIdTokenCredential.createFrom(cred.data)
+                                    val idToken = googleCred.idToken
+                                    val (token, signedIn, isNew) = api.googleAuth(idToken)
+                                    onAuthenticated(token, signedIn, isNew)
+                                } else {
+                                    error = "Không nhận diện được phản hồi xác thực Google."
+                                }
+                            } catch (e: GetCredentialCancellationException) {
+                                // Người dùng bấm huỷ
+                            } catch (e: CancellationException) {
+                                throw e
+                            } catch (e: Exception) {
+                                error = e.message ?: "Đăng nhập Google thất bại."
+                            } finally {
+                                googleBusy = false
+                            }
+                        }
+                    },
+                    loading = googleBusy,
+                    enabled = !busy && !googleBusy,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 2.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    HorizontalDivider(modifier = Modifier.weight(1f), color = InkBorder.copy(alpha = 0.7f))
+                    Text(
+                        text = if (registering) "hoặc bằng email" else "hoặc bằng tài khoản",
+                        color = InkMuted,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Medium,
+                        modifier = Modifier.padding(horizontal = 10.dp)
+                    )
+                    HorizontalDivider(modifier = Modifier.weight(1f), color = InkBorder.copy(alpha = 0.7f))
+                }
                 if (registering) {
                     ModernFormField(fullName, { fullName = it }, "Họ và tên")
                     ModernFormField(username, { username = it }, "Username")
@@ -717,6 +1391,8 @@ private fun AuthScreen(api: ApiClient, onAuthenticated: suspend (String, User, B
                                     api.login(identifier.trim(), password)
                                 }
                                 onAuthenticated(token, signedIn, registering)
+                            } catch (e: CancellationException) {
+                                throw e
                             } catch (e: Exception) {
                                 error = e.message ?: "Không đăng nhập được."
                             }
@@ -733,7 +1409,7 @@ private fun AuthScreen(api: ApiClient, onAuthenticated: suspend (String, User, B
                 ) {
                     Text(
                         if (registering) "Đã có tài khoản? Đăng nhập ngay" else "Chưa có tài khoản? Đăng ký miễn phí",
-                        color = Brand,
+                        color = BrandDark,
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 13.sp
                     )
@@ -741,7 +1417,7 @@ private fun AuthScreen(api: ApiClient, onAuthenticated: suspend (String, User, B
             }
         }
 
-        Spacer(Modifier.height(28.dp))
+        Spacer(Modifier.height(26.dp))
         Text(
             "HỌC TỪNG CHÚT · TIẾN BỘ MỖI NGÀY",
             fontSize = 10.sp,
@@ -749,6 +1425,58 @@ private fun AuthScreen(api: ApiClient, onAuthenticated: suspend (String, User, B
             color = InkMuted,
             fontWeight = FontWeight.Bold
         )
+    }
+}
+
+@Composable
+private fun GoogleSignInButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    loading: Boolean = false,
+) {
+    Surface(
+        onClick = onClick,
+        enabled = enabled && !loading,
+        shape = RoundedCornerShape(16.dp),
+        color = Color.White,
+        border = BorderStroke(1.dp, InkBorder),
+        shadowElevation = 0.5.dp,
+        modifier = modifier.height(48.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            if (loading) {
+                ChainaStrokeLoading(
+                    mode = ChainaLoadingMode.COMPACT,
+                    widthDp = 22.dp,
+                    background = ChainaLoadingBackground.LIGHT,
+                )
+                Spacer(Modifier.width(10.dp))
+                Text(
+                    text = "Đang xác thực với Google…",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = InkBlack
+                )
+            } else {
+                Image(
+                    painter = painterResource(R.drawable.ic_google_logo),
+                    contentDescription = "Google",
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(Modifier.width(10.dp))
+                Text(
+                    text = "Tiếp tục với Google",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = InkBlack
+                )
+            }
+        }
     }
 }
 
@@ -764,15 +1492,12 @@ data class ChainaAvatar(
 )
 
 val AVATAR_COLLECTION = listOf(
-    // Limited Editions
     ChainaAvatar("dragon", "Hoàng Long", "🐲", "金龙", "Rồng Vàng Hoàng Gia · Vương giả HSK", isLimited = true, tag = "LIMITED", gradientColors = listOf(Color(0xFFFFD700), Color(0xFFFFA500))),
     ChainaAvatar("phoenix", "Chu Tước", "🔥", "朱雀", "Phượng Hoàng Lửa · Tái sinh & Bất diệt", isLimited = true, tag = "LIMITED", gradientColors = listOf(Color(0xFFFF416C), Color(0xFFFF4B2B))),
     ChainaAvatar("scholar", "Trạng Nguyên", "👑", "状元", "Trạng Nguyên Bảng Nhãn · Đỉnh cao học vấn", isLimited = true, tag = "VIP", gradientColors = listOf(Color(0xFF8E2DE2), Color(0xFF4A00E0))),
     ChainaAvatar("palace", "Cố Cung", "🏯", "紫禁城", "Hoàng Thành Cố Cung · Bản sắc ngàn năm", isLimited = true, tag = "MYTHIC", gradientColors = listOf(Color(0xFFE65C00), Color(0xFFF9D423))),
     ChainaAvatar("monkey", "Mỹ Hầu Vương", "🐵", "美猴王", "Tề Thiên Đại Thánh · Trí dũng vô song", isLimited = true, tag = "EVENT", gradientColors = listOf(Color(0xFFFF8008), Color(0xFFFFC837))),
     ChainaAvatar("moon", "Nguyệt Lão", "🌙", "月老", "Trăng Rằm Viên Mãn · Trí tuệ thấu suốt", isLimited = true, tag = "LIMITED", gradientColors = listOf(Color(0xFF3A1C71), Color(0xFFD76D77))),
-
-    // Mascot & Cultural Editions
     ChainaAvatar("cat", "Chiêu Tài Miêu", "🐱", "招财猫", "Mèo Thần Tài · May mắn & Khởi sắc", gradientColors = listOf(Color(0xFFF093FB), Color(0xFFF5576C))),
     ChainaAvatar("panda", "Bảo Bảo", "🐼", "宝贝熊", "Gấu Trúc Tứ Xuyên · Kiên trì & Đáng yêu", gradientColors = listOf(Color(0xFF43E97B), Color(0xFF38F9D7))),
     ChainaAvatar("fox", "Hồ Ly Tiên", "🦊", "小仙狐", "Linh Hồ Núi Tuyết · Nhanh nhẹn & Thông thái", gradientColors = listOf(Color(0xFFFA709A), Color(0xFFFEE140))),
@@ -793,739 +1518,935 @@ fun saveUserAvatar(context: Context, avatarId: String) {
 }
 
 @Composable
-private fun QuickFeatureCard(
-    title: String,
-    subtitle: String,
-    badge: String,
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
-    badgeColor: Color,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    InkCard(
-        modifier = modifier,
-        onClick = onClick,
-        shapeRadius = 18.dp,
-        backgroundColor = PaperPure,
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(14.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Surface(
-                    modifier = Modifier.size(38.dp),
-                    shape = RoundedCornerShape(12.dp),
-                    color = BrandSoft,
-                    border = BorderStroke(1.dp, BrandBorder)
-                ) {
-                    Box(contentAlignment = Alignment.Center) {
-                        Icon(
-                            imageVector = icon,
-                            contentDescription = null,
-                            tint = BrandDark,
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
-                }
-                Surface(
-                    color = badgeColor.copy(alpha = 0.14f),
-                    shape = RoundedCornerShape(6.dp)
-                ) {
-                    Text(
-                        text = badge,
-                        color = badgeColor,
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
-                    )
-                }
-            }
-
-            Column(modifier = Modifier.padding(top = 2.dp)) {
-                Text(
-                    text = title,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = InkBlack,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = subtitle,
-                    fontSize = 11.sp,
-                    color = InkMuted,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun DailyTaskRow(
-    title: String,
-    subtitle: String,
-    done: Boolean,
-    statusText: String,
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
-    onClick: () -> Unit,
-) {
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(14.dp))
-            .clickable(onClick = onClick),
-        color = if (done) PaperMuted.copy(alpha = 0.5f) else PaperPure,
-        border = BorderStroke(1.dp, if (done) InkBorder.copy(alpha = 0.5f) else InkBorder),
-        shape = RoundedCornerShape(14.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 10.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            Surface(
-                modifier = Modifier.size(34.dp),
-                shape = CircleShape,
-                color = if (done) JadeSoft else BrandSoft
-            ) {
-                Box(contentAlignment = Alignment.Center) {
-                    Icon(
-                        imageVector = if (done) Icons.Rounded.CheckCircle else icon,
-                        contentDescription = null,
-                        tint = if (done) JadeGreen else BrandDark,
-                        modifier = Modifier.size(18.dp)
-                    )
-                }
-            }
-
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = title,
-                    fontSize = 13.sp,
-                    fontWeight = if (done) FontWeight.Medium else FontWeight.SemiBold,
-                    color = if (done) InkMuted else InkBlack,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Text(
-                    text = subtitle,
-                    fontSize = 11.sp,
-                    color = InkMuted,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-
-            Surface(
-                color = if (done) JadeSoft else BrandSoft,
-                shape = RoundedCornerShape(6.dp)
-            ) {
-                Text(
-                    text = statusText,
-                    fontSize = 11.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = if (done) JadeGreen else BrandDark,
-                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
-                )
-            }
-        }
-    }
-}
-
-@Composable
 private fun HomeScreen(
+    api: ApiClient,
     user: User,
     stats: Stats?,
     levels: List<LevelProgress>,
     daily: Word?,
+    activity: ActivityData?,
+    leaderboardTop: List<JSONObject>,
     loading: Boolean,
     error: String?,
     onRefresh: () -> Unit,
     onChooseLevel: (Int) -> Unit,
-    onExploreVocab: () -> Unit,
-    onWriting: () -> Unit,
-    onBoss: () -> Unit,
-    onPractice: () -> Unit,
-    onFavorites: () -> Unit,
-    onAccount: () -> Unit,
+    onOpenPath: () -> Unit,
+    onLeaderboard: () -> Unit,
+    onStats: () -> Unit,
 ) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     val tts = remember(context) { TextToSpeech(context) { } }
-    DisposableEffect(tts) {
-        onDispose {
-            tts.stop()
-            tts.shutdown()
-        }
+    DisposableEffect(tts) { onDispose { tts.stop(); tts.shutdown() } }
+
+    var dailyFavorite by remember { mutableStateOf(false) }
+
+    LaunchedEffect(daily?.id) {
+        val wordId = daily?.id ?: return@LaunchedEffect
+        dailyFavorite = runCatching {
+            api.favorites().let { arr ->
+                (0 until arr.length()).any { i ->
+                    val row = arr.optJSONObject(i)
+                    val wId = row?.optJSONObject("word")?.optInt("id") ?: row?.optInt("wordId") ?: row?.optInt("id") ?: 0
+                    wId == wordId
+                }
+            }
+        }.getOrDefault(false)
     }
 
-    val timeGreeting = remember {
-        val cal = java.util.Calendar.getInstance()
-        val hour = cal.get(java.util.Calendar.HOUR_OF_DAY)
+    val headerSubtitle = remember(user.fullName, user.username) {
+        val cal = Calendar.getInstance()
+        val hour = cal.get(Calendar.HOUR_OF_DAY)
         val greeting = when (hour) {
-            in 5..10 -> "Chào buổi sáng ☀️"
-            in 11..13 -> "Chào buổi trưa 🌤️"
-            in 14..17 -> "Chào buổi chiều 🍵"
-            else -> "Chào buổi tối 🌙"
+            in 5..10 -> "Chào buổi sáng"
+            in 11..13 -> "Chào buổi trưa"
+            in 14..17 -> "Chào buổi chiều"
+            else -> "Chào buổi tối"
         }
-        val dayOfWeek = when (cal.get(java.util.Calendar.DAY_OF_WEEK)) {
-            java.util.Calendar.MONDAY -> "Thứ Hai"
-            java.util.Calendar.TUESDAY -> "Thứ Ba"
-            java.util.Calendar.WEDNESDAY -> "Thứ Tư"
-            java.util.Calendar.THURSDAY -> "Thứ Năm"
-            java.util.Calendar.FRIDAY -> "Thứ Sáu"
-            java.util.Calendar.SATURDAY -> "Thứ Bảy"
+        val dayOfWeek = when (cal.get(Calendar.DAY_OF_WEEK)) {
+            Calendar.MONDAY -> "Thứ Hai"
+            Calendar.TUESDAY -> "Thứ Ba"
+            Calendar.WEDNESDAY -> "Thứ Tư"
+            Calendar.THURSDAY -> "Thứ Năm"
+            Calendar.FRIDAY -> "Thứ Sáu"
+            Calendar.SATURDAY -> "Thứ Bảy"
             else -> "Chủ Nhật"
         }
-        val dateStr = "$dayOfWeek, ${cal.get(java.util.Calendar.DAY_OF_MONTH)} thg ${cal.get(java.util.Calendar.MONTH) + 1}"
-        greeting to dateStr
+        val displayName = user.fullName?.trim()?.ifBlank { user.username } ?: user.username
+        val day = cal.get(Calendar.DAY_OF_MONTH)
+        val month = cal.get(Calendar.MONTH) + 1
+        "$greeting, $displayName · $dayOfWeek, $day tháng $month"
     }
 
     val dueCount = stats?.due ?: 0
     val targetLevel = user.targetHskLevel?.coerceIn(1, 3) ?: 1
+    val streakDays = stats?.streak ?: user.streak
+    val myXp = stats?.xp ?: user.xp
     val isStudiedToday = stats?.studiedToday == true
+    val todayReviews = activity?.today ?: 0
+    val dailyGoal = (activity?.goal ?: 20).coerceAtLeast(1)
 
     Column(
         Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = 16.dp, vertical = 14.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+            .padding(horizontal = 16.dp, vertical = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(14.dp),
     ) {
-        // 1. Welcome & Greeting Bar
-        Row(
-            Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(modifier = Modifier.weight(1f)) {
+        // 1. Header Tổng quan & Mục tiêu cá nhân
+        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
                 Text(
-                    text = timeGreeting.first,
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = BrandDark
-                )
-                Text(
-                    text = user.fullName?.substringBefore(' ')?.ifBlank { user.username } ?: user.username,
-                    fontSize = 24.sp,
+                    text = "Dashboard",
+                    fontSize = 28.sp,
                     fontWeight = FontWeight.ExtraBold,
                     color = InkBlack,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    letterSpacing = (-0.6).sp,
                 )
-                Text(
-                    text = "${timeGreeting.second} · Mỗi ngày một chút là đủ để tiến bộ.",
-                    color = InkMuted,
-                    fontSize = 12.sp,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-
-            val homeAvatar = remember(context) { getUserAvatar(context) }
-            Surface(
-                modifier = Modifier
-                    .size(48.dp)
-                    .clip(CircleShape)
-                    .clickable { onAccount() },
-                color = Color.Transparent,
-                border = BorderStroke(1.5.dp, if (homeAvatar.isLimited) AmberGold else BrandBorder),
-                shape = CircleShape
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Brush.linearGradient(homeAvatar.gradientColors)),
-                    contentAlignment = Alignment.Center
+                Surface(
+                    shape = CircleShape,
+                    color = BrandSoft,
+                    border = BorderStroke(1.dp, BrandBorder),
                 ) {
                     Text(
-                        text = homeAvatar.emoji,
-                        fontSize = 24.sp
+                        text = "Mục tiêu HSK $targetLevel",
+                        fontSize = 11.5.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = BrandDark,
+                        modifier = Modifier.padding(horizontal = 11.dp, vertical = 5.dp),
                     )
+                }
+            }
+            Text(
+                text = headerSubtitle,
+                fontSize = 13.5.sp,
+                color = InkMuted,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
+
+        if (loading && stats == null) {
+            ChainaStrokeLoading(
+                mode = ChainaLoadingMode.INLINE,
+                size = ChainaLoadingSize.SM,
+                message = "Đang tải tổng quan…",
+            )
+        }
+        error?.let {
+            InkCard(
+                modifier = Modifier.fillMaxWidth(),
+                shapeRadius = 18.dp,
+                backgroundColor = RedSoft,
+                borderColor = RedBorder,
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(14.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        text = it,
+                        color = RedBad,
+                        fontSize = 12.5.sp,
+                        fontWeight = FontWeight.Medium,
+                        modifier = Modifier.weight(1f).padding(end = 10.dp),
+                    )
+                    OutlinedButton(onClick = onRefresh, shape = CircleShape, border = BorderStroke(1.dp, RedBorder)) {
+                        Icon(Icons.Rounded.Refresh, contentDescription = null, modifier = Modifier.size(15.dp), tint = RedBad)
+                        Spacer(Modifier.width(4.dp))
+                        Text("Thử lại", color = RedBad, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                    }
                 }
             }
         }
 
-        // 2. Hero Action Card (Gradient Brand với hoa văn calligraphy)
-        InkCard(
-            modifier = Modifier.fillMaxWidth(),
-            shapeRadius = 22.dp,
-            backgroundColor = BrandDark,
-            borderColor = Color.Transparent,
+        // 2. Chỉ số nhanh hôm nay (3-Tile Pastel Bento Overview Strip)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(IntrinsicSize.Max),
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
         ) {
+            OverviewKpiTile(
+                label = "Đến hạn",
+                value = "$dueCount",
+                unit = "từ",
+                caption = if (dueCount > 0) "Cần ôn tập" else "Đã dọn sạch",
+                startColor = BentoLavenderStart,
+                endColor = BentoLavenderEnd,
+                borderColor = BrandBorder,
+                onClick = { onChooseLevel(targetLevel) },
+                modifier = Modifier.weight(1f).fillMaxHeight(),
+            )
+
+            val goalReached = todayReviews >= dailyGoal
+            OverviewKpiTile(
+                label = "Hôm nay",
+                value = "$todayReviews",
+                unit = "/$dailyGoal",
+                caption = if (goalReached) "Đạt mục tiêu ✓" else "Lượt ôn",
+                startColor = if (goalReached) BentoMintStart else BentoSkyStart,
+                endColor = if (goalReached) BentoMintEnd else BentoSkyEnd,
+                borderColor = if (goalReached) JadeBorder else Color(0xFFBAD8F7),
+                onClick = onStats,
+                modifier = Modifier.weight(1f).fillMaxHeight(),
+            )
+
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .weight(1f)
+                    .fillMaxHeight()
+                    .clip(RoundedCornerShape(20.dp))
                     .background(
-                        Brush.linearGradient(
-                            colors = listOf(BrandDark, Color(0xFF4C33B8), Color(0xFF3F279E))
-                        )
+                        if (streakDays > 0 || isStudiedToday) {
+                            Brush.linearGradient(listOf(BentoPeachStart, BentoPeachEnd))
+                        } else {
+                            Brush.linearGradient(listOf(PaperPure, PaperPure))
+                        }
                     )
-                    .padding(20.dp)
+                    .border(
+                        1.dp,
+                        if (streakDays > 0 || isStudiedToday) FlameBorder else InkBorder,
+                        RoundedCornerShape(20.dp),
+                    )
+                    .clickable(onClick = onStats)
+                    .padding(horizontal = 12.dp, vertical = 12.dp),
             ) {
-                // Chữ Hán mờ nghệ thuật góc thẻ
-                Text(
-                    text = "学",
-                    color = Color.White.copy(alpha = 0.12f),
-                    fontSize = 88.sp,
-                    fontWeight = FontWeight.Black,
-                    lineHeight = 88.sp,
-                    modifier = Modifier.align(Alignment.TopEnd)
-                )
-
                 Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(14.dp)
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.SpaceBetween,
                 ) {
-                    Column {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(6.dp)
-                        ) {
-                            Box(
-                                Modifier
-                                    .size(7.dp)
-                                    .background(Color(0xFF68D391), CircleShape)
-                            )
-                            Text(
-                                "HÀNH TRÌNH HỌC HSK",
-                                color = BrandSoft,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 11.sp,
-                                letterSpacing = 1.3.sp
-                            )
-                        }
-                        Text(
-                            text = if (isStudiedToday) "Tuyệt vời! Bạn đã học hôm nay 🎉" else "Ôn tập thông minh SM-2 hôm nay",
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 19.sp,
-                            modifier = Modifier.padding(top = 4.dp)
-                        )
-                        Text(
-                            text = if (isStudiedToday) "Tiếp tục ôn luyện để nâng cao phản xạ tự nhiên." else "Thuật toán lặp lại ngắt quãng củng cố trí nhớ dài hạn.",
-                            color = Color.White.copy(alpha = 0.82f),
-                            fontSize = 12.sp,
-                            modifier = Modifier.padding(top = 2.dp)
-                        )
-                    }
-
-                    // Stat pills
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
                     ) {
-                        AnimatedStreakPill(
-                            streakDays = stats?.streak ?: user.streak,
-                            modifier = Modifier.weight(1f)
+                        VectorFlameCanvas(
+                            active = streakDays > 0 || isStudiedToday,
+                            litToday = isStudiedToday,
+                            modifier = Modifier.size(width = 11.dp, height = 14.dp),
                         )
-                        MetricStatPill(
-                            symbol = "✦",
-                            value = "${stats?.xp ?: user.xp}",
-                            label = "XP tích lũy",
-                            symbolColor = AmberGold,
-                            modifier = Modifier.weight(1f)
-                        )
-                        MetricStatPill(
-                            symbol = "⏳",
-                            value = "$dueCount",
-                            label = "từ đến hạn",
-                            symbolColor = BrandSoft,
-                            modifier = Modifier.weight(1f)
+                        Text(
+                            text = "Chuỗi",
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = InkMuted,
                         )
                     }
-
-                    // CTA Button
-                    Button(
-                        onClick = { onChooseLevel(targetLevel) },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(48.dp),
-                        shape = RoundedCornerShape(14.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color.White,
-                            contentColor = BrandDark
-                        ),
-                        elevation = ButtonDefaults.buttonElevation(defaultElevation = 2.dp)
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Icon(
-                                imageVector = Icons.Rounded.PlayArrow,
-                                contentDescription = null,
-                                modifier = Modifier.size(20.dp)
-                            )
-                            Spacer(Modifier.width(6.dp))
+                    Column {
+                        Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(3.dp)) {
                             Text(
-                                text = "Bắt đầu ôn tập HSK $targetLevel ngay",
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 15.sp
+                                text = "$streakDays",
+                                fontSize = 22.sp,
+                                fontWeight = FontWeight.ExtraBold,
+                                color = InkBlack,
+                                lineHeight = 24.sp,
+                            )
+                            Text(
+                                text = "ngày",
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = InkMuted,
+                                modifier = Modifier.padding(bottom = 2.dp),
                             )
                         }
+                        Text(
+                            text = "$myXp XP",
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            color = if (streakDays > 0 || isStudiedToday) FlameOrange else InkMuted,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
                     }
                 }
             }
         }
 
-        // 3. Lối tắt luyện tập thông minh (Quick Action Shortcuts - 4 ô bấm)
-        Row(
-            Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            SectionTitle("Luyện tập & Kỹ năng", "Chế độ game và nhận diện tương tác")
-            TextButton(onClick = onPractice) {
-                Text("Xem tất cả ›", color = Brand, fontSize = 12.sp, fontWeight = FontWeight.Bold)
-            }
-        }
+        // 3. Nhiệm vụ hôm nay (đồng bộ 3 nhiệm vụ thật từ Web Dashboard)
+        val taskGoalDone = todayReviews >= dailyGoal
+        val taskDueDone = stats != null && dueCount == 0
+        val taskStreakDone = isStudiedToday
+        val completedCount = (if (taskGoalDone) 1 else 0) + (if (taskDueDone) 1 else 0) + (if (taskStreakDone) 1 else 0)
+        val remainingTasks = 3 - completedCount
+        val dueRatio = if (dueCount == 0) 1f else if (todayReviews + dueCount > 0) (todayReviews.toFloat() / (todayReviews + dueCount)).coerceIn(0f, 1f) else 0f
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            QuickFeatureCard(
-                title = "Luyện viết chữ Hán",
-                subtitle = "Tập viết theo nét chuẩn",
-                badge = "AI Canvas",
-                icon = Icons.Rounded.Edit,
-                badgeColor = Color(0xFF16875D),
-                onClick = onWriting,
-                modifier = Modifier.weight(1f)
-            )
-            QuickFeatureCard(
-                title = "Pinyin Boss",
-                subtitle = "Gõ phiên âm tốc độ",
-                badge = "Game tốc độ",
-                icon = Icons.Rounded.Bolt,
-                badgeColor = AmberGold,
-                onClick = onBoss,
-                modifier = Modifier.weight(1f)
-            )
-        }
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            QuickFeatureCard(
-                title = "Phòng game",
-                subtitle = "Ghép từ, sắp xếp câu",
-                badge = "6 dạng game",
-                icon = Icons.Rounded.SportsEsports,
-                badgeColor = Brand,
-                onClick = onPractice,
-                modifier = Modifier.weight(1f)
-            )
-            QuickFeatureCard(
-                title = "Sổ từ vựng",
-                subtitle = "Từ đánh dấu yêu thích",
-                badge = "Sổ tay",
-                icon = Icons.Rounded.Bookmark,
-                badgeColor = Color(0xFF3182CE),
-                onClick = onFavorites,
-                modifier = Modifier.weight(1f)
-            )
-        }
-
-        // 4. Nhiệm vụ hàng ngày (Daily Learning Tasks)
         InkCard(
             modifier = Modifier.fillMaxWidth(),
-            shapeRadius = 20.dp,
-            backgroundColor = PaperPure
+            shapeRadius = 24.dp,
+            backgroundColor = PaperPure,
         ) {
             Column(
-                modifier = Modifier.padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
+                modifier = Modifier.padding(18.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                val tasksCompleted = (if (dueCount == 0) 1 else 0) + (if (isStudiedToday) 1 else 0)
                 Row(
-                    Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Column {
+                    Column(Modifier.weight(1f)) {
+                        Text("Nhiệm vụ hôm nay", fontSize = 17.sp, fontWeight = FontWeight.Bold, color = InkBlack)
                         Text(
-                            "Nhiệm vụ hôm nay",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = InkBlack
-                        )
-                        Text(
-                            text = "Duy trì thói quen để tiến bộ mỗi ngày",
+                            text = if (remainingTasks > 0) "Còn $remainingTasks nhiệm vụ · Hết hạn tối nay" else "Bạn đã hoàn thành tất cả",
                             fontSize = 12.sp,
-                            color = InkMuted
+                            color = InkMuted,
                         )
                     }
                     Surface(
-                        color = if (tasksCompleted == 2) JadeSoft else BrandSoft,
-                        shape = RoundedCornerShape(8.dp)
+                        shape = CircleShape,
+                        color = if (completedCount == 3) JadeSoft else PaperMuted,
+                        border = BorderStroke(1.dp, if (completedCount == 3) JadeBorder else InkBorder),
                     ) {
                         Text(
-                            text = "$tasksCompleted / 2 hoàn thành",
-                            fontSize = 11.sp,
+                            text = "$completedCount/3 xong",
+                            fontSize = 11.5.sp,
                             fontWeight = FontWeight.Bold,
-                            color = if (tasksCompleted == 2) JadeGreen else BrandDark,
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                            color = if (completedCount == 3) JadeGreen else InkBlack,
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
                         )
                     }
                 }
 
-                Box(Modifier.fillMaxWidth().height(1.dp).background(InkBorder))
-
-                DailyTaskRow(
-                    title = if (dueCount > 0) "Ôn $dueCount từ vựng đã đến hạn" else "Không có từ nào trễ hạn",
-                    subtitle = if (dueCount > 0) "Thuật toán SM-2 nhắc nhở đúng thời điểm" else "Tất cả từ vựng đều được ôn đúng hạn",
-                    done = dueCount == 0,
-                    statusText = if (dueCount == 0) "Đạt 100%" else "$dueCount từ",
+                DashboardTaskItem(
                     icon = Icons.Rounded.TaskAlt,
-                    onClick = { onChooseLevel(targetLevel) }
+                    title = "Đạt mục tiêu $dailyGoal lượt ôn",
+                    progressLabel = "$todayReviews/$dailyGoal",
+                    progress = (todayReviews.toFloat() / dailyGoal).coerceIn(0f, 1f),
+                    done = taskGoalDone,
+                    onClick = { onChooseLevel(targetLevel) },
                 )
 
-                DailyTaskRow(
-                    title = if (isStudiedToday) "Đã duy trì chuỗi học hôm nay" else "Học ít nhất 1 bài để giữ chuỗi 🔥",
-                    subtitle = if (isStudiedToday) "Chuỗi học hiện tại: ${stats?.streak ?: user.streak} ngày" else "Học đều đặn để không đứt chuỗi",
-                    done = isStudiedToday,
-                    statusText = if (isStudiedToday) "Đã xong" else "Cần học",
+                DashboardTaskItem(
                     icon = Icons.Rounded.CheckCircle,
-                    onClick = { onChooseLevel(targetLevel) }
+                    title = if (dueCount > 0) "Ôn $dueCount từ đã đến hạn" else "Ôn các từ đã đến hạn",
+                    progressLabel = if (taskDueDone) "Xong" else "Còn $dueCount",
+                    progress = dueRatio,
+                    done = taskDueDone,
+                    onClick = { onChooseLevel(targetLevel) },
+                )
+
+                DashboardTaskItem(
+                    icon = Icons.Rounded.LocalFireDepartment,
+                    title = if (streakDays > 0) "Giữ chuỗi $streakDays ngày học" else "Bắt đầu chuỗi ngày học",
+                    progressLabel = if (taskStreakDone) "Đã giữ" else "Chưa ôn",
+                    progress = if (taskStreakDone) 1f else 0f,
+                    done = taskStreakDone,
+                    onClick = { onChooseLevel(targetLevel) },
                 )
             }
         }
 
-        // 5. HSK Levels Section
-        Row(
-            Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+        // 4. Tiến độ khóa học HSK 1–3 (thuần xem tiến độ, không kèm thanh tìm kiếm thừa)
+        InkCard(
+            modifier = Modifier.fillMaxWidth(),
+            shapeRadius = 24.dp,
+            backgroundColor = PaperPure,
         ) {
-            SectionTitle("Lộ trình cấp độ", "Chọn cấp để ôn theo thuật toán SM-2")
-            TextButton(onClick = onExploreVocab) {
-                Text("Kho từ vựng ›", color = Brand, fontSize = 12.sp, fontWeight = FontWeight.Bold)
-            }
-        }
-
-        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            (1..3).forEach { level ->
-                val progress = levels.find { it.level == level }
-                val totalWords = progress?.total ?: when (level) { 1 -> 506; 2 -> 750; else -> 953 }
-                val startedWords = progress?.started ?: 0
-                val masteredWords = progress?.mastered ?: 0
-                val progressPercent = if (totalWords > 0) (masteredWords.toFloat() / totalWords.toFloat()).coerceIn(0f, 1f) else 0f
-                val animatedProgress by animateFloatAsState(
-                    targetValue = progressPercent,
-                    animationSpec = tween(600, easing = FastOutSlowInEasing),
-                    label = "level-progress"
-                )
-
-                InkCard(
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(18.dp),
+                verticalArrangement = Arrangement.spacedBy(14.dp),
+            ) {
+                Row(
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = { onChooseLevel(level) },
-                    shapeRadius = 18.dp,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Top,
                 ) {
-                    Column(
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                    Column(Modifier.weight(1f)) {
+                        Text(
+                            text = "Khóa học của tôi",
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = InkBlack,
+                        )
+                        Text(
+                            text = "Tiến độ từ vựng theo cấp độ HSK",
+                            fontSize = 12.5.sp,
+                            color = InkMuted,
+                            modifier = Modifier.padding(top = 2.dp),
+                        )
+                    }
+                    Surface(
+                        modifier = Modifier
+                            .size(34.dp)
+                            .clip(CircleShape)
+                            .clickable(onClick = onOpenPath),
+                        shape = CircleShape,
+                        color = PaperMuted,
                     ) {
-                        Row(
-                            Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
+                        Box(contentAlignment = Alignment.Center) {
+                            ArrowUpRightIcon(tint = InkBlack, modifier = Modifier.size(16.dp))
+                        }
+                    }
+                }
+
+                val numerals = mapOf(1 to "一级", 2 to "二级", 3 to "三级")
+                Column(verticalArrangement = Arrangement.spacedBy(13.dp)) {
+                    (1..3).forEach { level ->
+                        val progress = levels.find { it.level == level }
+                        val totalWords = progress?.total ?: when (level) { 1 -> 520; 2 -> 856; else -> 1203 }
+                        val startedWords = progress?.started ?: 0
+                        val masteredWords = progress?.mastered ?: 0
+                        val rawRatio = if (totalWords > 0) (startedWords.toFloat() / totalWords.toFloat()).coerceIn(0f, 1f) else 0f
+                        val visualRatio = if (startedWords > 0 && rawRatio < 0.015f) 0.015f else rawRatio
+                        val animatedProgress by animateFloatAsState(
+                            targetValue = visualRatio,
+                            animationSpec = tween(550, easing = FastOutSlowInEasing),
+                            label = "course-hsk-$level",
+                        )
+
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(10.dp))
+                                .clickable { onChooseLevel(level) }
+                                .padding(vertical = 2.dp),
+                            verticalArrangement = Arrangement.spacedBy(6.dp),
                         ) {
-                            LevelBadge(
-                                text = "HSK $level",
-                                size = 44.dp,
-                                fontSize = 12.sp,
-                                solid = (level == targetLevel)
-                            )
-                            Column(Modifier.weight(1f).padding(start = 12.dp)) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
                                 Row(
                                     verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                                 ) {
-                                    Text("Cấp độ HSK $level", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = InkBlack)
+                                    Text(
+                                        text = numerals[level] ?: "一",
+                                        fontSize = 15.sp,
+                                        color = InkMuted,
+                                    )
+                                    Text(
+                                        text = "HSK $level",
+                                        fontSize = 15.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = InkBlack,
+                                    )
                                     if (level == targetLevel) {
                                         Surface(
+                                            shape = CircleShape,
                                             color = BrandSoft,
-                                            shape = RoundedCornerShape(6.dp),
-                                            border = BorderStroke(0.8.dp, BrandBorder)
+                                            border = BorderStroke(0.8.dp, BrandBorder),
                                         ) {
                                             Text(
-                                                "Mục tiêu",
+                                                text = "Mục tiêu",
                                                 color = BrandDark,
-                                                fontSize = 10.sp,
+                                                fontSize = 9.5.sp,
                                                 fontWeight = FontWeight.Bold,
-                                                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                                modifier = Modifier.padding(horizontal = 7.dp, vertical = 2.dp),
                                             )
                                         }
                                     }
                                 }
                                 Text(
-                                    if (progress == null) "Đang tải tiến độ…"
-                                    else "$startedWords đã học · $masteredWords thuộc (${(progressPercent * 100).toInt()}%)",
+                                    text = "$startedWords/$totalWords từ",
                                     fontSize = 12.sp,
-                                    color = InkMuted
+                                    color = InkBlack,
+                                    fontWeight = FontWeight.SemiBold,
                                 )
                             }
-                            Text("›", color = Brand, fontSize = 26.sp, fontWeight = FontWeight.Bold)
-                        }
 
-                        LinearProgressIndicator(
-                            progress = { animatedProgress },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(6.dp)
-                                .clip(RoundedCornerShape(3.dp)),
-                            color = Brand,
-                            trackColor = PaperMuted,
-                        )
+                            CapsuleProgressBar(
+                                progress = animatedProgress,
+                                color = if (level == targetLevel) Brand else InkBlack,
+                                trackColor = PaperMuted,
+                            )
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                            ) {
+                                Text(
+                                    text = "$masteredWords từ đã thuộc vững",
+                                    fontSize = 11.sp,
+                                    color = InkMuted,
+                                )
+                                Text(
+                                    text = "${(rawRatio * 100).toInt()}%",
+                                    fontSize = 11.sp,
+                                    color = InkMuted,
+                                    fontWeight = FontWeight.SemiBold,
+                                )
+                            }
+                        }
                     }
                 }
             }
         }
 
-        // 6. Interactive Daily Word Card với Audio TTS
-        daily?.let { word ->
-            Row(
-                Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+        // 5. Hiệu suất học tập 7 ngày gần nhất (Weekly Chart)
+        InkCard(
+            modifier = Modifier.fillMaxWidth(),
+            shapeRadius = 24.dp,
+            backgroundColor = PaperPure,
+        ) {
+            Column(
+                modifier = Modifier.padding(18.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                SectionTitle("Chữ Hán hôm nay", "Chạm loa để nghe phát âm chuẩn")
-                Surface(
-                    color = BrandSoft,
-                    shape = RoundedCornerShape(8.dp),
-                    border = BorderStroke(1.dp, BrandBorder)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Text(
-                        "HSK ${word.hskLevel}",
-                        color = BrandDark,
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
-                    )
+                    Column(Modifier.weight(1f)) {
+                        Text("Hiệu suất học tập", fontSize = 17.sp, fontWeight = FontWeight.Bold, color = InkBlack)
+                        Text(
+                            text = if (streakDays > 0) "Chuỗi $streakDays ngày · 7 ngày gần nhất" else "7 ngày gần nhất · Mục tiêu $dailyGoal lượt/ngày",
+                            fontSize = 12.sp,
+                            color = InkMuted,
+                        )
+                    }
+                    Surface(
+                        modifier = Modifier.clip(CircleShape).clickable(onClick = onStats),
+                        shape = CircleShape,
+                        color = PaperMuted,
+                        border = BorderStroke(1.dp, InkBorder),
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        ) {
+                            Text("Chi tiết", fontSize = 11.5.sp, fontWeight = FontWeight.SemiBold, color = InkBlack)
+                            ArrowUpRightIcon(tint = InkBlack, modifier = Modifier.size(12.dp))
+                        }
+                    }
                 }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        Box(Modifier.size(8.dp).clip(CircleShape).background(BrandDark))
+                        Text("Lượt ôn mỗi ngày", fontSize = 11.5.sp, color = InkMuted)
+                    }
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        Box(Modifier.width(12.dp).height(1.5.dp).background(BrandDark.copy(alpha = 0.55f)))
+                        Text("Mục tiêu $dailyGoal lượt", fontSize = 11.5.sp, color = InkMuted)
+                    }
+                }
+
+                WebWeeklyChart(
+                    days = activity?.days ?: emptyList(),
+                    goal = dailyGoal,
+                )
             }
+        }
+
+        // 6. Bảng xếp hạng Top 3 & Khoảng cách XP của bạn
+        if (leaderboardTop.isNotEmpty()) {
+            val podiumColors = listOf(ToneLavenderStart, ToneSkyStart, ToneLimeStart)
+            val thirdXp = leaderboardTop.getOrNull(2)?.optInt("xp")
+            val gap = if (thirdXp != null && myXp < thirdXp) thirdXp - myXp else 0
 
             InkCard(
                 modifier = Modifier.fillMaxWidth(),
+                shapeRadius = 24.dp,
                 backgroundColor = PaperPure,
-                shapeRadius = 20.dp,
             ) {
                 Column(
                     modifier = Modifier.padding(18.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     Row(
-                        Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Column(Modifier.weight(1f)) {
+                            Text("Bảng xếp hạng", fontSize = 17.sp, fontWeight = FontWeight.Bold, color = InkBlack)
+                            Text(
+                                text = if (gap > 0) "Bạn có $myXp XP · còn $gap XP để vào top 3" else "Bạn đang có $myXp XP",
+                                fontSize = 12.sp,
+                                color = InkMuted,
+                            )
+                        }
+                        Surface(
+                            modifier = Modifier.clip(CircleShape).clickable(onClick = onLeaderboard),
+                            shape = CircleShape,
+                            color = PaperMuted,
+                            border = BorderStroke(1.dp, InkBorder),
+                        ) {
                             Row(
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
                                 verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                                horizontalArrangement = Arrangement.spacedBy(4.dp),
                             ) {
-                                Text(
-                                    text = word.hanzi,
-                                    fontSize = 38.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = InkBlack
-                                )
-                                IconButton(
-                                    onClick = {
-                                        tts.language = Locale.SIMPLIFIED_CHINESE
-                                        tts.speak(word.hanzi, TextToSpeech.QUEUE_FLUSH, null, "daily-tts")
-                                    },
-                                    modifier = Modifier
-                                        .size(36.dp)
-                                        .clip(CircleShape)
-                                        .background(BrandSoft)
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Rounded.VolumeUp,
-                                        contentDescription = "Nghe phát âm",
-                                        tint = BrandDark,
-                                        modifier = Modifier.size(19.dp)
+                                Text("Tất cả", fontSize = 11.5.sp, fontWeight = FontWeight.SemiBold, color = InkBlack)
+                                ArrowUpRightIcon(tint = InkBlack, modifier = Modifier.size(12.dp))
+                            }
+                        }
+                    }
+
+                    leaderboardTop.forEachIndexed { idx, row ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(14.dp))
+                                .clickable(onClick = onLeaderboard)
+                                .padding(vertical = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        ) {
+                            Surface(
+                                shape = CircleShape,
+                                color = podiumColors.getOrElse(idx) { PaperMuted },
+                                modifier = Modifier.size(34.dp),
+                            ) {
+                                Box(contentAlignment = Alignment.Center) {
+                                    Text(
+                                        text = "${row.optInt("rank", idx + 1)}",
+                                        fontWeight = FontWeight.ExtraBold,
+                                        fontSize = 13.sp,
+                                        color = InkBlack,
                                     )
                                 }
                             }
+                            Column(Modifier.weight(1f)) {
+                                Text(
+                                    text = row.optString("name", "Học viên"),
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = InkBlack,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                )
+                                Text(
+                                    text = "Chuỗi ${row.optInt("streak")} ngày",
+                                    fontSize = 11.5.sp,
+                                    color = InkMuted,
+                                )
+                            }
                             Text(
-                                text = word.pinyin,
-                                color = Brand,
+                                text = "${row.optInt("xp")} XP",
+                                fontSize = 13.sp,
                                 fontWeight = FontWeight.Bold,
-                                fontSize = 15.sp,
-                                modifier = Modifier.padding(top = 2.dp)
+                                color = BrandDark,
                             )
                         }
+                    }
+                }
+            }
+        }
 
+        // 7. Chữ Hán hôm nay (1 từ nổi bật trong ngày để xem nhanh)
+        daily?.let { word ->
+            InkCard(
+                modifier = Modifier.fillMaxWidth(),
+                shapeRadius = 24.dp,
+                backgroundColor = PaperPure,
+            ) {
+                Column(
+                    modifier = Modifier.padding(18.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Text("Chữ Hán hôm nay", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = InkBlack)
+                            Surface(
+                                color = BrandSoft,
+                                shape = CircleShape,
+                                border = BorderStroke(0.8.dp, BrandBorder),
+                            ) {
+                                Text(
+                                    text = "HSK ${word.hskLevel}",
+                                    color = BrandDark,
+                                    fontSize = 10.5.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
+                                )
+                            }
+                        }
+
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(10.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            CircleActionButton(
+                                onClick = {
+                                    tts.language = Locale.SIMPLIFIED_CHINESE
+                                    tts.speak(word.hanzi, TextToSpeech.QUEUE_FLUSH, null, "home-daily-tts")
+                                },
+                                size = 38.dp,
+                                containerColor = BrandSoft,
+                                borderColor = BrandBorder,
+                            ) {
+                                Icon(Icons.AutoMirrored.Rounded.VolumeUp, contentDescription = "Nghe phát âm", tint = BrandDark, modifier = Modifier.size(19.dp))
+                            }
+                            CircleActionButton(
+                                onClick = {
+                                    scope.launch {
+                                        val next = !dailyFavorite
+                                        runCatching { api.setFavorite(word.id, next) }.onSuccess { dailyFavorite = next }
+                                    }
+                                },
+                                size = 38.dp,
+                                containerColor = if (dailyFavorite) AmberSoft else PaperMuted,
+                                borderColor = if (dailyFavorite) AmberBorder else InkBorder,
+                            ) {
+                                Icon(
+                                    imageVector = if (dailyFavorite) Icons.Rounded.Bookmark else Icons.Rounded.BookmarkBorder,
+                                    contentDescription = if (dailyFavorite) "Bỏ lưu" else "Lưu sổ từ",
+                                    tint = if (dailyFavorite) AmberGold else InkMuted,
+                                    modifier = Modifier.size(19.dp),
+                                )
+                            }
+                        }
+                    }
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.Bottom,
+                    ) {
+                        Column(Modifier.weight(1f)) {
+                            Text(word.hanzi, fontSize = 36.sp, fontWeight = FontWeight.Bold, color = InkBlack)
+                            Text(word.pinyin, fontSize = 15.sp, fontWeight = FontWeight.Bold, color = BrandDark)
+                        }
                         word.hanviet?.let { hv ->
                             Surface(
                                 color = PaperMuted,
                                 shape = RoundedCornerShape(10.dp),
-                                border = BorderStroke(1.dp, InkBorder)
+                                border = BorderStroke(1.dp, InkBorder),
                             ) {
                                 Text(
                                     text = hv.uppercase(),
                                     color = InkBlack,
                                     fontSize = 11.sp,
                                     fontWeight = FontWeight.SemiBold,
-                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
+                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
                                 )
                             }
                         }
                     }
 
-                    Box(
-                        Modifier
-                            .fillMaxWidth()
-                            .height(1.dp)
-                            .background(InkBorder)
-                    )
+                    HorizontalDivider(color = InkBorder.copy(alpha = 0.7f))
 
                     Text(
                         text = word.meaningVi.ifBlank { "Chưa có nghĩa tiếng Việt" },
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = InkBlack,
-                        lineHeight = 20.sp
+                        lineHeight = 20.sp,
                     )
                 }
             }
         }
 
-        if (loading) LinearLoading()
-        error?.let { ErrorMessage(it) }
-        Spacer(Modifier.height(12.dp))
+        Spacer(Modifier.height(10.dp))
     }
 }
 
 @Composable
-private fun WordsScreen(api: ApiClient) {
-    var query by remember { mutableStateOf("") }
-    var submitted by remember { mutableStateOf("") }
+private fun OverviewKpiTile(
+    label: String,
+    value: String,
+    unit: String,
+    caption: String,
+    startColor: Color,
+    endColor: Color,
+    borderColor: Color,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier
+            .clip(RoundedCornerShape(20.dp))
+            .background(Brush.linearGradient(listOf(startColor, endColor)))
+            .border(1.dp, borderColor, RoundedCornerShape(20.dp))
+            .clickable(onClick = onClick)
+            .padding(horizontal = 12.dp, vertical = 12.dp),
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Text(
+                text = label,
+                fontSize = 11.sp,
+                fontWeight = FontWeight.Bold,
+                color = InkBlack.copy(alpha = 0.68f),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            Column {
+                Row(
+                    verticalAlignment = Alignment.Bottom,
+                    horizontalArrangement = Arrangement.spacedBy(3.dp),
+                ) {
+                    Text(
+                        text = value,
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = InkBlack,
+                        lineHeight = 24.sp,
+                    )
+                    Text(
+                        text = unit,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = InkBlack.copy(alpha = 0.65f),
+                        modifier = Modifier.padding(bottom = 2.dp),
+                    )
+                }
+                Text(
+                    text = caption,
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = InkBlack.copy(alpha = 0.72f),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun DashboardTaskItem(
+    icon: ImageVector,
+    title: String,
+    progressLabel: String,
+    progress: Float,
+    done: Boolean,
+    onClick: () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(14.dp))
+            .clickable(onClick = onClick)
+            .padding(vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+    ) {
+        Surface(
+            modifier = Modifier.size(36.dp),
+            shape = RoundedCornerShape(10.dp),
+            color = if (done) JadeSoft else InkBlack,
+        ) {
+            Box(contentAlignment = Alignment.Center) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = if (done) JadeGreen else Color.White,
+                    modifier = Modifier.size(18.dp),
+                )
+            }
+        }
+        Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = title,
+                    fontSize = 13.5.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = InkBlack,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f),
+                )
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    text = progressLabel,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = if (done) JadeGreen else InkMuted,
+                )
+            }
+            CapsuleProgressBar(
+                progress = progress,
+                color = if (done) EmeraldDot else InkBlack,
+                trackColor = PaperMuted,
+            )
+        }
+    }
+}
+
+@Composable
+private fun CapsuleProgressBar(
+    progress: Float,
+    color: Color,
+    trackColor: Color = PaperMuted,
+) {
+    val ratio = progress.coerceIn(0f, 1f)
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(5.dp)
+            .clip(CircleShape)
+            .background(trackColor),
+    ) {
+        if (ratio > 0f) {
+            Box(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .fillMaxWidth(ratio)
+                    .clip(CircleShape)
+                    .background(color),
+            )
+        }
+    }
+}
+
+@Composable
+private fun WordsScreen(
+    api: ApiClient,
+    externalQuery: String = "",
+    searchTrigger: Int = 0,
+    onOpenCamera: () -> Unit = {},
+) {
+    var query by remember { mutableStateOf(externalQuery) }
+    var submitted by remember { mutableStateOf(externalQuery) }
     var level by remember { mutableIntStateOf(0) }
     var words by remember { mutableStateOf<List<Word>>(emptyList()) }
+    var favoriteIds by remember { mutableStateOf<Set<Int>>(emptySet()) }
     var loading by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
     var selected by remember { mutableStateOf<Word?>(null) }
+
+    LaunchedEffect(searchTrigger) {
+        if (searchTrigger > 0) {
+            query = externalQuery
+            submitted = externalQuery
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        favoriteIds = runCatching {
+            val arr = api.favorites()
+            buildSet {
+                for (i in 0 until arr.length()) {
+                    val row = arr.optJSONObject(i) ?: continue
+                    val wId = row.optJSONObject("word")?.optInt("id") ?: row.optInt("wordId").takeIf { it > 0 } ?: row.optInt("id")
+                    if (wId > 0) add(wId)
+                }
+            }
+        }.getOrDefault(emptySet())
+    }
 
     LaunchedEffect(level, submitted) {
         loading = true
         error = null
         try {
             words = api.words(level, submitted)
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             error = e.message ?: "Không tải được từ vựng."
         }
@@ -1537,63 +2458,61 @@ private fun WordsScreen(api: ApiClient) {
             .fillMaxSize()
             .padding(horizontal = 16.dp, vertical = 12.dp)
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            OutlinedTextField(
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            PillSearchInput(
                 value = query,
-                onValueChange = { query = it },
+                onValueChange = {
+                    query = it
+                    if (it.isBlank()) submitted = ""
+                },
+                placeholder = "Tìm chữ Hán, pinyin, nghĩa...",
+                onSubmit = { submitted = query },
                 modifier = Modifier.weight(1f),
-                singleLine = true,
-                shape = RoundedCornerShape(14.dp),
-                placeholder = { Text("Tìm chữ Hán, pinyin, nghĩa…", fontSize = 13.sp, color = InkLight) },
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Brand,
-                    unfocusedBorderColor = InkBorder,
-                    focusedContainerColor = PaperPure,
-                    unfocusedContainerColor = PaperPure,
-                ),
-                trailingIcon = {
-                    if (query.isNotEmpty()) {
-                        IconButton(onClick = { query = ""; submitted = "" }) {
-                            Icon(Icons.Rounded.Close, contentDescription = "Xóa", tint = InkMuted, modifier = Modifier.size(18.dp))
-                        }
-                    }
-                }
             )
-            Spacer(Modifier.width(8.dp))
-            Button(
-                onClick = { submitted = query },
-                contentPadding = PaddingValues(0.dp),
-                modifier = Modifier.size(50.dp),
-                shape = RoundedCornerShape(14.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Brand)
+            CircleActionButton(
+                onClick = onOpenCamera,
+                size = 44.dp,
+                containerColor = BrandSoft,
+                borderColor = BrandBorder,
             ) {
-                Icon(Icons.Rounded.Search, contentDescription = "Tìm", tint = Color.White)
+                Icon(
+                    imageVector = Icons.Outlined.PhotoCamera,
+                    contentDescription = "Dịch bằng máy ảnh",
+                    tint = BrandDark,
+                    modifier = Modifier.size(21.dp),
+                )
             }
         }
 
         Row(
-            Modifier.padding(top = 10.dp, bottom = 8.dp),
+            Modifier
+                .fillMaxWidth()
+                .horizontalScroll(rememberScrollState())
+                .padding(top = 10.dp, bottom = 10.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             listOf(0 to "Tất cả", 1 to "HSK 1", 2 to "HSK 2", 3 to "HSK 3").forEach { (valLevel, label) ->
                 val isSelected = level == valLevel
-                FilterChip(
-                    selected = isSelected,
-                    onClick = { level = valLevel },
-                    label = { Text(label, fontSize = 12.sp, fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium) },
-                    colors = FilterChipDefaults.filterChipColors(
-                        selectedContainerColor = BrandSoft,
-                        selectedLabelColor = BrandDark,
-                        containerColor = PaperPure,
-                        labelColor = InkMuted,
-                    ),
-                    border = FilterChipDefaults.filterChipBorder(
-                        enabled = true,
-                        selected = isSelected,
-                        borderColor = if (isSelected) BrandBorder else InkBorder,
-                    ),
-                    shape = RoundedCornerShape(12.dp)
-                )
+                Surface(
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .clickable { level = valLevel },
+                    shape = CircleShape,
+                    color = if (isSelected) InkBlack else PaperPure,
+                    border = BorderStroke(1.dp, if (isSelected) InkBlack else InkBorder),
+                ) {
+                    Text(
+                        text = label,
+                        fontSize = 12.5.sp,
+                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                        color = if (isSelected) Color.White else InkMuted,
+                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 7.dp),
+                    )
+                }
             }
         }
 
@@ -1601,7 +2520,12 @@ private fun WordsScreen(api: ApiClient) {
 
         if (loading && words.isEmpty()) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator(color = Brand, strokeWidth = 2.5.dp)
+                ChainaStrokeLoading(
+                    mode = ChainaLoadingMode.INLINE,
+                    size = ChainaLoadingSize.MD,
+                    delayMs = 120L,
+                    message = "Đang tải kho từ vựng…",
+                )
             }
         } else if (!loading && words.isEmpty() && error == null) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -1613,48 +2537,43 @@ private fun WordsScreen(api: ApiClient) {
                 contentPadding = PaddingValues(top = 4.dp, bottom = 20.dp)
             ) {
                 items(words, key = { it.id }) { word ->
-                    WordRow(word, Modifier.fillMaxWidth().clickable { selected = word })
+                    FeatureWordRow(word = word) { selected = word }
                 }
                 if (loading) {
-                    item { LinearLoading() }
+                    item {
+                        ChainaStrokeLoading(
+                            mode = ChainaLoadingMode.INLINE,
+                            size = ChainaLoadingSize.SM,
+                        )
+                    }
                 }
             }
         }
     }
 
     selected?.let { word ->
-        AlertDialog(
-            onDismissRequest = { selected = null },
-            title = {
-                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text(word.hanzi, fontSize = 40.sp, fontWeight = FontWeight.Bold, color = InkBlack)
-                    LevelBadge("HSK ${word.hskLevel}", size = 32.dp, fontSize = 10.sp)
-                }
+        FeatureWordDialog(
+            word = word,
+            api = api,
+            isFavorite = word.id in favoriteIds,
+            onFavoriteToggled = { isFav ->
+                favoriteIds = if (isFav) favoriteIds + word.id else favoriteIds - word.id
             },
-            text = {
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text(word.pinyin, color = Brand, fontSize = 19.sp, fontWeight = FontWeight.Bold)
-                    Text(word.meaningVi.ifBlank { "Chưa có nghĩa tiếng Việt." }, fontSize = 15.sp, color = InkBlack)
-                    word.hanviet?.let {
-                        Text("Âm Hán Việt: $it", color = InkMuted, fontSize = 13.sp)
-                    }
-                    Text("Cấp độ: HSK ${word.hskLevel}", color = InkMuted, fontSize = 12.sp)
-                }
-            },
-            confirmButton = {
-                TextButton(onClick = { selected = null }) {
-                    Text("Đóng", color = Brand, fontWeight = FontWeight.Bold)
-                }
-            },
-            containerColor = PaperPure,
-            shape = RoundedCornerShape(20.dp),
+            onDismiss = { selected = null },
         )
     }
 }
 
 @Composable
 private fun StudyScreen(api: ApiClient, initialLevel: Int, onStatsChanged: () -> Unit) {
+    val context = LocalContext.current
+    val tts = remember(context) { TextToSpeech(context) { } }
+    DisposableEffect(tts) { onDispose { tts.stop(); tts.shutdown() } }
+
     var level by remember { mutableIntStateOf(initialLevel.coerceIn(1, 3)) }
+    LaunchedEffect(initialLevel) {
+        level = initialLevel.coerceIn(1, 3)
+    }
     var key by remember { mutableIntStateOf(0) }
     var deck by remember { mutableStateOf<List<StudyCard>>(emptyList()) }
     var loading by remember { mutableStateOf(true) }
@@ -1676,6 +2595,8 @@ private fun StudyScreen(api: ApiClient, initialLevel: Int, onStatsChanged: () ->
         completed = 0
         try {
             deck = api.studySession(level)
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             error = e.message ?: "Không tải được phiên ôn tập."
         }
@@ -1699,37 +2620,41 @@ private fun StudyScreen(api: ApiClient, initialLevel: Int, onStatsChanged: () ->
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 (1..3).forEach { lvl ->
                     val isSelected = level == lvl
-                    FilterChip(
-                        selected = isSelected,
-                        onClick = { level = lvl },
-                        label = { Text("HSK $lvl", fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium) },
-                        colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = BrandSoft,
-                            selectedLabelColor = BrandDark,
-                        ),
-                        border = FilterChipDefaults.filterChipBorder(
-                            enabled = true,
-                            selected = isSelected,
-                            borderColor = if (isSelected) BrandBorder else InkBorder,
-                        ),
-                        shape = RoundedCornerShape(12.dp)
-                    )
+                    Surface(
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .clickable { level = lvl },
+                        shape = CircleShape,
+                        color = if (isSelected) BrandSoft else PaperPure,
+                        border = BorderStroke(1.dp, if (isSelected) BrandBorder else InkBorder),
+                    ) {
+                        Text(
+                            text = "HSK $lvl",
+                            fontSize = 12.5.sp,
+                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                            color = if (isSelected) BrandDark else InkMuted,
+                            modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
+                        )
+                    }
                 }
             }
-            IconButton(
+            CircleActionButton(
                 onClick = { key++ },
-                modifier = Modifier
-                    .size(38.dp)
-                    .clip(CircleShape)
-                    .background(PaperMuted)
+                size = 38.dp,
+                containerColor = PaperPure,
+                borderColor = InkBorder,
             ) {
-                Icon(Icons.Rounded.Refresh, contentDescription = "Làm mới", tint = InkBlack, modifier = Modifier.size(19.dp))
+                Icon(Icons.Rounded.Refresh, contentDescription = "Làm mới", tint = InkBlack, modifier = Modifier.size(18.dp))
             }
         }
 
         if (loading) {
             Box(Modifier.fillMaxWidth().height(280.dp), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator(color = Brand, strokeWidth = 2.5.dp)
+                ChainaStrokeLoading(
+                    mode = ChainaLoadingMode.INLINE,
+                    size = ChainaLoadingSize.MD,
+                    message = "Đang chuẩn bị thẻ flashcard…",
+                )
             }
         } else if (error != null) {
             ErrorMessage(error!!)
@@ -1737,7 +2662,7 @@ private fun StudyScreen(api: ApiClient, initialLevel: Int, onStatsChanged: () ->
         } else if (card == null) {
             InkCard(
                 modifier = Modifier.fillMaxWidth(),
-                shapeRadius = 22.dp
+                shapeRadius = 24.dp
             ) {
                 Column(
                     Modifier
@@ -1746,7 +2671,7 @@ private fun StudyScreen(api: ApiClient, initialLevel: Int, onStatsChanged: () ->
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    Text("🎉", fontSize = 42.sp)
+                    LevelBadge("完", size = 56.dp, fontSize = 24.sp, solid = true)
                     Text(
                         if (completed > 0) "Hoàn thành phiên học!" else "Hôm nay đã ôn hết rồi",
                         fontSize = 20.sp,
@@ -1754,7 +2679,7 @@ private fun StudyScreen(api: ApiClient, initialLevel: Int, onStatsChanged: () ->
                         color = InkBlack
                     )
                     Text(
-                        if (completed > 0) "Bạn đã hoàn thành $completed thẻ. Lịch lặp lại ngắt quãng đã được cập nhật." else "Tất cả các từ đến hạn đã được ôn tập. Hãy nghỉ ngơi hoặc luyện tập thêm các minigame.",
+                        if (completed > 0) "Bạn đã hoàn thành $completed thẻ. Lịch lặp lại ngắt quãng đã được cập nhật." else "Tất cả các từ đến hạn đã được ôn tập. Bạn có thể chuyển sang tab Luyện tập hoặc tải phiên mới.",
                         color = InkMuted,
                         fontSize = 13.sp,
                         textAlign = TextAlign.Center
@@ -1784,7 +2709,7 @@ private fun StudyScreen(api: ApiClient, initialLevel: Int, onStatsChanged: () ->
                     ) {
                         Surface(
                             color = BrandSoft,
-                            shape = RoundedCornerShape(8.dp),
+                            shape = CircleShape,
                             border = BorderStroke(0.8.dp, BrandBorder)
                         ) {
                             Text(
@@ -1792,24 +2717,42 @@ private fun StudyScreen(api: ApiClient, initialLevel: Int, onStatsChanged: () ->
                                 color = BrandDark,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 10.sp,
-                                letterSpacing = 1.1.sp,
-                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                                letterSpacing = 1.sp,
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp)
                             )
                         }
-                        LevelBadge("HSK $level", size = 28.dp, fontSize = 9.sp, solid = false)
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                            CircleActionButton(
+                                onClick = {
+                                    tts.language = Locale.SIMPLIFIED_CHINESE
+                                    tts.speak(card.word.hanzi, TextToSpeech.QUEUE_FLUSH, null, "study-tts-${card.word.id}")
+                                },
+                                size = 38.dp,
+                                containerColor = BrandSoft,
+                                borderColor = BrandBorder,
+                            ) {
+                                Icon(Icons.AutoMirrored.Rounded.VolumeUp, contentDescription = "Nghe phát âm", tint = BrandDark, modifier = Modifier.size(19.dp))
+                            }
+                            LevelBadge("HSK$level", size = 34.dp, fontSize = 10.sp, solid = false)
+                        }
                     }
 
                     Text(
                         card.word.hanzi,
-                        fontSize = 64.sp,
+                        fontSize = 60.sp,
                         fontWeight = FontWeight.Medium,
                         color = InkBlack,
-                        modifier = Modifier.padding(top = 16.dp, bottom = 4.dp)
+                        modifier = Modifier
+                            .padding(top = 14.dp, bottom = 4.dp)
+                            .clickable {
+                                tts.language = Locale.SIMPLIFIED_CHINESE
+                                tts.speak(card.word.hanzi, TextToSpeech.QUEUE_FLUSH, null, "study-tap-${card.word.id}")
+                            }
                     )
                     Text(
                         card.word.pinyin,
-                        color = Brand,
-                        fontSize = 20.sp,
+                        color = BrandDark,
+                        fontSize = 19.sp,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
@@ -1821,8 +2764,8 @@ private fun StudyScreen(api: ApiClient, initialLevel: Int, onStatsChanged: () ->
 
                     val options = card.options.ifEmpty {
                         listOf(
-                            com.chaina.hsk.data.StudyOption("Tôi nhớ từ này", true),
-                            com.chaina.hsk.data.StudyOption("Tôi chưa nhớ", false)
+                            StudyOption("Tôi nhớ từ này", true),
+                            StudyOption("Tôi chưa nhớ", false)
                         )
                     }
 
@@ -1860,6 +2803,8 @@ private fun StudyScreen(api: ApiClient, initialLevel: Int, onStatsChanged: () ->
                                             if (!correct) retryCard = card.copy(retry = true)
                                             if (correct) completed++
                                             onStatsChanged()
+                                        } catch (e: CancellationException) {
+                                            throw e
                                         } catch (e: Exception) {
                                             error = e.message ?: "Không lưu được lượt ôn."
                                             selected = -1
@@ -1904,11 +2849,18 @@ private fun StudyScreen(api: ApiClient, initialLevel: Int, onStatsChanged: () ->
                     }
 
                     if (busy) {
-                        CircularProgressIndicator(
-                            Modifier.padding(top = 10.dp).size(22.dp),
-                            strokeWidth = 2.2.dp,
-                            color = Brand
-                        )
+                        Row(
+                            modifier = Modifier.padding(top = 10.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            ChainaStrokeLoading(
+                                mode = ChainaLoadingMode.COMPACT,
+                                widthDp = 56.dp,
+                                background = ChainaLoadingBackground.TRANSPARENT,
+                            )
+                            Text("Đang lưu kết quả…", color = InkMuted, fontSize = 12.sp, fontWeight = FontWeight.Medium)
+                        }
                     }
 
                     if (answeredCorrect != null) {
@@ -1957,7 +2909,7 @@ private fun AccountSectionCard(
         )
         InkCard(
             modifier = Modifier.fillMaxWidth(),
-            shapeRadius = 20.dp,
+            shapeRadius = 22.dp,
             backgroundColor = PaperPure
         ) {
             Column(
@@ -1972,7 +2924,7 @@ private fun AccountSectionCard(
 
 @Composable
 private fun AccountMenuItem(
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    icon: ImageVector,
     iconBg: Color = BrandSoft,
     iconTint: Color = BrandDark,
     title: String,
@@ -2046,12 +2998,7 @@ private fun AccountMenuItem(
                 }
             }
 
-            Text(
-                text = "›",
-                color = InkMuted,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
-            )
+            ArrowUpRightIcon(tint = InkMuted, modifier = Modifier.size(14.dp))
         }
     }
 }
@@ -2082,7 +3029,7 @@ private fun AvatarPickerDialog(
                 ) {
                     Text("Bộ sưu tập Avatar", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = InkBlack)
                     Surface(color = AmberGold.copy(alpha = 0.15f), shape = RoundedCornerShape(8.dp)) {
-                        Text("LIMITED ✨", color = AmberGold, fontSize = 10.sp, fontWeight = FontWeight.ExtraBold, modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp))
+                        Text("LIMITED", color = AmberGold, fontSize = 10.sp, fontWeight = FontWeight.ExtraBold, modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp))
                     }
                 }
                 Text("Chọn ảnh đại diện thể hiện cá tính của bạn.", color = InkMuted, fontSize = 12.sp)
@@ -2095,12 +3042,11 @@ private fun AvatarPickerDialog(
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                // Filter tabs
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
                     horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    listOf("Tất cả (12)", "⭐ Giới hạn (6)", "🎋 Linh vật (6)").forEachIndexed { index, title ->
+                    listOf("Tất cả (12)", "Giới hạn (6)", "Linh vật (6)").forEachIndexed { index, title ->
                         val isSelected = selectedTab == index
                         FilterChip(
                             selected = isSelected,
@@ -2115,7 +3061,6 @@ private fun AvatarPickerDialog(
                     }
                 }
 
-                // Avatar Cards Grid (2 columns)
                 val chunked = filteredAvatars.chunked(2)
                 chunked.forEach { pair ->
                     Row(
@@ -2152,23 +3097,18 @@ private fun AvatarPickerDialog(
                                     }
 
                                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                        Row(
-                                            verticalAlignment = Alignment.CenterVertically,
-                                            horizontalArrangement = Arrangement.spacedBy(4.dp)
-                                        ) {
-                                            Text(
-                                                avatar.name,
-                                                fontSize = 12.sp,
-                                                fontWeight = FontWeight.Bold,
-                                                color = InkBlack,
-                                                maxLines = 1,
-                                                overflow = TextOverflow.Ellipsis
-                                            )
-                                        }
+                                        Text(
+                                            avatar.name,
+                                            fontSize = 12.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            color = InkBlack,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
                                         Text(
                                             avatar.chineseName,
                                             fontSize = 10.sp,
-                                            color = Brand,
+                                            color = BrandDark,
                                             fontWeight = FontWeight.Bold
                                         )
                                         if (avatar.isLimited) {
@@ -2190,16 +3130,14 @@ private fun AvatarPickerDialog(
                                 }
                             }
                         }
-                        if (pair.size == 1) {
-                            Spacer(Modifier.weight(1f))
-                        }
+                        if (pair.size == 1) Spacer(Modifier.weight(1f))
                     }
                 }
             }
         },
         confirmButton = {
             TextButton(onClick = onDismiss) {
-                Text("Đóng", fontWeight = FontWeight.Bold, color = Brand)
+                Text("Đóng", fontWeight = FontWeight.Bold, color = BrandDark)
             }
         }
     )
@@ -2259,6 +3197,8 @@ private fun ChangePasswordDialog(
                             successMessage = "Đổi mật khẩu thành công!"
                             kotlinx.coroutines.delay(900)
                             onDismiss()
+                        } catch (e: CancellationException) {
+                            throw e
                         } catch (e: Exception) {
                             error = e.message ?: "Không thể đổi mật khẩu. Hãy kiểm tra lại mật khẩu cũ."
                         }
@@ -2268,7 +3208,14 @@ private fun ChangePasswordDialog(
                 enabled = !busy,
                 colors = ButtonDefaults.buttonColors(containerColor = Brand)
             ) {
-                Text(if (busy) "Đang lưu…" else "Cập nhật", fontWeight = FontWeight.Bold)
+                if (busy) {
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        ChainaStrokeLoading(mode = ChainaLoadingMode.COMPACT, widthDp = 46.dp, background = ChainaLoadingBackground.DARK)
+                        Text("Đang lưu…", fontWeight = FontWeight.Bold)
+                    }
+                } else {
+                    Text("Cập nhật", fontWeight = FontWeight.Bold)
+                }
             }
         },
         dismissButton = {
@@ -2344,6 +3291,8 @@ private fun EditProfileDialog(
                             val updated = api.updateProfile(body)
                             onSaved(updated)
                             onDismiss()
+                        } catch (e: CancellationException) {
+                            throw e
                         } catch (e: Exception) {
                             error = e.message ?: "Không lưu được hồ sơ."
                         }
@@ -2353,7 +3302,14 @@ private fun EditProfileDialog(
                 enabled = !busy,
                 colors = ButtonDefaults.buttonColors(containerColor = Brand)
             ) {
-                Text(if (busy) "Đang lưu…" else "Lưu thay đổi", fontWeight = FontWeight.Bold)
+                if (busy) {
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        ChainaStrokeLoading(mode = ChainaLoadingMode.COMPACT, widthDp = 46.dp, background = ChainaLoadingBackground.DARK)
+                        Text("Đang lưu…", fontWeight = FontWeight.Bold)
+                    }
+                } else {
+                    Text("Lưu thay đổi", fontWeight = FontWeight.Bold)
+                }
             }
         },
         dismissButton = {
@@ -2366,132 +3322,50 @@ private fun EditProfileDialog(
 
 @Composable
 private fun LegalInfoDialog(
-    type: String, // "privacy" | "terms" | "credits" | "about"
+    type: String,
     onDismiss: () -> Unit,
 ) {
     val title = when (type) {
-        "privacy" -> "Chính sách quyền riêng tư"
         "terms" -> "Bản quyền & Điều khoản dịch vụ"
-        "credits" -> "Nguồn dữ liệu từ vựng HSK"
         else -> "Về nền tảng Chaina HSK"
     }
 
     val content = when (type) {
-        "privacy" -> """
-            1. Thu thập dữ liệu tối thiểu
-            Chaina HSK chỉ lưu trữ thông tin cần thiết: email đăng nhập, tên hiển thị và dữ liệu tiến độ học tập (chuỗi học, từ vựng đã nhớ theo thuật toán SM-2).
-            
-            2. Bảo mật phần cứng Android
-            Mọi phiên đăng nhập và token xác thực được mã hóa bằng chip bảo mật phần cứng AndroidKeyStore (AES-GCM 128-bit).
-            
-            3. Không chia sẻ dữ liệu
-            Chúng tôi cam kết không bán, không chia sẻ dữ liệu học tập cá nhân cho bất kỳ bên thứ ba nào. Mọi kết nối mạng đều được mã hóa chuẩn HTTPS / TLS.
-        """.trimIndent()
         "terms" -> """
             1. Quyền sở hữu trí tuệ
-            Toàn bộ giao diện, thiết kế Modern Ink Editorial, mã nguồn ứng dụng Android và hệ thống nhận diện thương hiệu Chaina thuộc bản quyền của dự án Chaina HSK.
+            Toàn bộ giao diện, mã nguồn ứng dụng Android và hệ thống nhận diện thương hiệu Chaina thuộc bản quyền của dự án Chaina HSK.
             
-            2. Mục đích phi thương mại & Giáo dục
-            Nền tảng được phát triển nhằm mục đích phục vụ cộng đồng người học tiếng Trung tại Việt Nam học tập hiệu quả, ghi nhớ từ vựng sâu sắc.
+            2. Mục đích Giáo dục
+            Nền tảng được phát triển nhằm phục vụ cộng đồng người học tiếng Trung học tập hiệu quả và bền bỉ.
             
             3. Trách nhiệm người dùng
-            Người dùng cam kết không sử dụng ứng dụng vào các hành vi can thiệp trái phép, tấn công hệ thống hoặc khai thác dịch vụ ngoài mục đích học tập.
-        """.trimIndent()
-        "credits" -> """
-            Chaina HSK trân trọng ghi nhận và tri ân các dự án nguồn mở và dữ liệu chuẩn mực:
-            
-            • CC-CEDICT: Cơ sở dữ liệu từ điển Hán - Anh toàn diện nhất.
-            • CVDICT (ph0ngp): Dự án từ điển Hán - Việt mã nguồn mở.
-            • Hanzi Writer: Thuật toán và dữ liệu nét bút chữ Hán chuẩn nét.
-            • Tatoeba Project: Ngân hàng câu ví dụ song ngữ ngữ cảnh thực tế.
-            • Complete HSK Vocabulary: Bộ từ vựng HSK 1–3 chuẩn hóa.
+            Người dùng cam kết không can thiệp trái phép hoặc khai thác dịch vụ ngoài mục đích học tập.
         """.trimIndent()
         else -> """
-            Chaina HSK — Ứng dụng học tiếng Trung theo phong cách Modern Ink Editorial.
+            Chaina HSK — Ứng dụng học tiếng Trung & ôn tập SM-2.
             
-            • Phiên bản: 1.0.0 (Release)
-            • Ngôn ngữ: Kotlin, Jetpack Compose, Material 3
+            • Phiên bản: 1.0.0
+            • Nền tảng: Kotlin, Jetpack Compose
             • Thuật toán ôn tập: SM-2 Spaced Repetition
-            • AI Canvas: Nhận diện nét viết thư pháp
+            • AI Canvas: Nhận diện nét viết chữ Hán trên ô Mễ
             
-            Chúc bạn có một hành trình chinh phục tiếng Trung tràn đầy cảm hứng và hiệu quả!
+            Học từng chút, tiến bộ mỗi ngày.
         """.trimIndent()
     }
 
     AlertDialog(
         onDismissRequest = onDismiss,
+        containerColor = PaperPure,
+        shape = RoundedCornerShape(24.dp),
         title = { Text(title, fontWeight = FontWeight.Bold, fontSize = 17.sp, color = InkBlack) },
         text = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .verticalScroll(rememberScrollState())
-            ) {
+            Column(Modifier.fillMaxWidth().verticalScroll(rememberScrollState())) {
                 Text(content, fontSize = 13.sp, color = InkBlack, lineHeight = 20.sp)
             }
         },
         confirmButton = {
             TextButton(onClick = onDismiss) {
-                Text("Đã hiểu", fontWeight = FontWeight.Bold, color = Brand)
-            }
-        }
-    )
-}
-
-@Composable
-private fun FeedbackDialog(onDismiss: () -> Unit) {
-    var content by remember { mutableStateOf("") }
-    var sent by remember { mutableStateOf(false) }
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = {
-            Column {
-                Text("Đóng góp ý kiến & Báo lỗi", fontWeight = FontWeight.Bold, fontSize = 18.sp, color = InkBlack)
-                Text("Ý kiến của bạn giúp Chaina HSK ngày càng tốt hơn", color = InkMuted, fontSize = 12.sp)
-            }
-        },
-        text = {
-            if (sent) {
-                Column(
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 10.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Text("🎉", fontSize = 42.sp)
-                    Text("Cảm ơn đóng góp của bạn!", fontWeight = FontWeight.Bold, fontSize = 16.sp, color = InkBlack)
-                    Text("Đội ngũ phát triển đã nhận được phản hồi và sẽ xử lý sớm nhất.", fontSize = 12.sp, color = InkMuted, textAlign = TextAlign.Center)
-                }
-            } else {
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    OutlinedTextField(
-                        value = content,
-                        onValueChange = { content = it },
-                        placeholder = { Text("Nhập phản hồi, góp ý tính năng hoặc lỗi bạn gặp phải…", fontSize = 13.sp) },
-                        modifier = Modifier.fillMaxWidth().height(140.dp),
-                        shape = RoundedCornerShape(12.dp)
-                    )
-                }
-            }
-        },
-        confirmButton = {
-            if (sent) {
-                Button(onClick = onDismiss, colors = ButtonDefaults.buttonColors(containerColor = Brand)) {
-                    Text("Đóng")
-                }
-            } else {
-                Button(
-                    onClick = { if (content.isNotBlank()) sent = true },
-                    enabled = content.isNotBlank(),
-                    colors = ButtonDefaults.buttonColors(containerColor = Brand)
-                ) {
-                    Text("Gửi phản hồi")
-                }
-            }
-        },
-        dismissButton = {
-            if (!sent) {
-                TextButton(onClick = onDismiss) { Text("Hủy", color = InkMuted) }
+                Text("Đã hiểu", fontWeight = FontWeight.Bold, color = BrandDark)
             }
         }
     )
@@ -2500,8 +3374,10 @@ private fun FeedbackDialog(onDismiss: () -> Unit) {
 @Composable
 private fun AccountScreen(
     user: User,
+    stats: Stats?,
     api: ApiClient,
     onSaved: (User) -> Unit,
+    onFeedback: () -> Unit,
     onPrivacy: () -> Unit,
     onCredits: () -> Unit,
     onLogout: () -> Unit,
@@ -2514,8 +3390,9 @@ private fun AccountScreen(
     var showChangePassword by remember { mutableStateOf(false) }
     var showEditProfile by remember { mutableStateOf(false) }
     var showLegalDialog by remember { mutableStateOf<String?>(null) }
-    var showFeedbackDialog by remember { mutableStateOf(false) }
     var showLogoutConfirm by remember { mutableStateOf(false) }
+
+    val streakDays = stats?.streak ?: user.streak
 
     Column(
         Modifier
@@ -2524,10 +3401,9 @@ private fun AccountScreen(
             .padding(horizontal = 16.dp, vertical = 14.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // 1. Thẻ thông tin người dùng với Avatar lớn & Huy hiệu
         InkCard(
             modifier = Modifier.fillMaxWidth(),
-            shapeRadius = 22.dp,
+            shapeRadius = 24.dp,
             backgroundColor = PaperPure
         ) {
             Column(
@@ -2541,10 +3417,9 @@ private fun AccountScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(14.dp)
                 ) {
-                    // Avatar tương tác bấm để đổi
                     Box(
                         modifier = Modifier
-                            .size(68.dp)
+                            .size(66.dp)
                             .clip(CircleShape)
                             .clickable { showAvatarPicker = true }
                     ) {
@@ -2554,13 +3429,9 @@ private fun AccountScreen(
                                 .background(Brush.linearGradient(currentAvatar.gradientColors)),
                             contentAlignment = Alignment.Center
                         ) {
-                            Text(
-                                text = currentAvatar.emoji,
-                                fontSize = 34.sp
-                            )
+                            Text(text = currentAvatar.emoji, fontSize = 32.sp)
                         }
 
-                        // Edit icon badge
                         Box(
                             modifier = Modifier
                                 .size(22.dp)
@@ -2592,7 +3463,21 @@ private fun AccountScreen(
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
                             )
-                            if (currentAvatar.isLimited) {
+                            if (user.isAdmin) {
+                                Surface(
+                                    color = BrandSoft,
+                                    shape = RoundedCornerShape(6.dp),
+                                    border = BorderStroke(0.8.dp, BrandBorder)
+                                ) {
+                                    Text(
+                                        text = "ADMIN",
+                                        color = BrandDark,
+                                        fontSize = 9.sp,
+                                        fontWeight = FontWeight.ExtraBold,
+                                        modifier = Modifier.padding(horizontal = 5.dp, vertical = 2.dp)
+                                    )
+                                }
+                            } else if (currentAvatar.isLimited) {
                                 Surface(
                                     color = AmberGold.copy(alpha = 0.15f),
                                     shape = RoundedCornerShape(6.dp),
@@ -2618,34 +3503,44 @@ private fun AccountScreen(
                         )
 
                         Row(
-                            modifier = Modifier.padding(top = 4.dp),
+                            modifier = Modifier.padding(top = 6.dp),
                             horizontalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
                             Surface(
                                 color = BrandSoft,
-                                shape = RoundedCornerShape(6.dp),
+                                shape = CircleShape,
                                 border = BorderStroke(0.8.dp, BrandBorder)
                             ) {
                                 Text(
-                                    text = "Mục tiêu HSK ${user.targetHskLevel ?: 1}",
+                                    text = "HSK ${user.targetHskLevel ?: 1}",
                                     color = BrandDark,
-                                    fontSize = 10.sp,
+                                    fontSize = 10.5.sp,
                                     fontWeight = FontWeight.Bold,
-                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
                                 )
                             }
                             Surface(
-                                color = JadeSoft,
-                                shape = RoundedCornerShape(6.dp),
-                                border = BorderStroke(0.8.dp, JadeBorder)
+                                color = if (streakDays > 0) FlameBg else PaperMuted,
+                                shape = CircleShape,
+                                border = BorderStroke(0.8.dp, if (streakDays > 0) FlameBorder else InkBorder)
                             ) {
-                                Text(
-                                    text = "${user.streak} ngày streak 🔥",
-                                    color = JadeGreen,
-                                    fontSize = 10.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
-                                )
+                                Row(
+                                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                ) {
+                                    VectorFlameCanvas(
+                                        active = streakDays > 0,
+                                        litToday = stats?.studiedToday == true,
+                                        modifier = Modifier.size(width = 11.dp, height = 14.dp),
+                                    )
+                                    Text(
+                                        text = "$streakDays ngày",
+                                        color = if (streakDays > 0) FlameOrange else InkMuted,
+                                        fontSize = 10.5.sp,
+                                        fontWeight = FontWeight.Bold,
+                                    )
+                                }
                             }
                         }
                     }
@@ -2654,18 +3549,17 @@ private fun AccountScreen(
                 OutlinedButton(
                     onClick = { showAvatarPicker = true },
                     modifier = Modifier.fillMaxWidth().height(42.dp),
-                    shape = RoundedCornerShape(12.dp),
+                    shape = CircleShape,
                     border = BorderStroke(1.dp, BrandBorder),
                     colors = ButtonDefaults.outlinedButtonColors(containerColor = BrandSoft.copy(alpha = 0.5f))
                 ) {
                     Icon(Icons.Rounded.Face, contentDescription = null, tint = BrandDark, modifier = Modifier.size(16.dp))
                     Spacer(Modifier.width(6.dp))
-                    Text("Đổi Avatar & Xem Avatar Giới Hạn", color = BrandDark, fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                    Text("Đổi Avatar & Bộ sưu tập", color = BrandDark, fontSize = 13.sp, fontWeight = FontWeight.Bold)
                 }
             }
         }
 
-        // 2. Nhóm: Cá nhân hóa & Học tập
         AccountSectionCard(title = "Cá nhân hóa & Lộ trình học") {
             AccountMenuItem(
                 icon = Icons.Rounded.Face,
@@ -2677,21 +3571,21 @@ private fun AccountScreen(
                 trailingBadgeColor = AmberGold,
                 onClick = { showAvatarPicker = true }
             )
-            Box(Modifier.fillMaxWidth().height(0.8.dp).background(InkBorder.copy(alpha = 0.6f)))
+            HorizontalDivider(color = InkBorder.copy(alpha = 0.6f))
             AccountMenuItem(
                 icon = Icons.Rounded.Person,
                 title = "Chỉnh sửa hồ sơ học viên",
                 subtitle = "Tên, tuổi, cấp độ HSK mục tiêu",
                 onClick = { showEditProfile = true }
             )
-            Box(Modifier.fillMaxWidth().height(0.8.dp).background(InkBorder.copy(alpha = 0.6f)))
+            HorizontalDivider(color = InkBorder.copy(alpha = 0.6f))
             AccountMenuItem(
                 icon = Icons.Rounded.Schedule,
                 title = "Thời gian học mỗi ngày",
                 subtitle = "${user.dailyStudyMinutes ?: 20} phút mỗi ngày",
                 onClick = { showEditProfile = true }
             )
-            Box(Modifier.fillMaxWidth().height(0.8.dp).background(InkBorder.copy(alpha = 0.6f)))
+            HorizontalDivider(color = InkBorder.copy(alpha = 0.6f))
             AccountMenuItem(
                 icon = Icons.Rounded.School,
                 title = "Mục đích & Kinh nghiệm học",
@@ -2700,7 +3594,6 @@ private fun AccountScreen(
             )
         }
 
-        // 3. Nhóm: Bảo mật tài khoản
         AccountSectionCard(title = "Bảo mật & Đăng nhập") {
             AccountMenuItem(
                 icon = Icons.Rounded.Lock,
@@ -2710,14 +3603,14 @@ private fun AccountScreen(
                 trailingBadgeColor = Brand,
                 onClick = { showChangePassword = true }
             )
-            Box(Modifier.fillMaxWidth().height(0.8.dp).background(InkBorder.copy(alpha = 0.6f)))
+            HorizontalDivider(color = InkBorder.copy(alpha = 0.6f))
             AccountMenuItem(
                 icon = Icons.Rounded.Email,
                 title = "Email đăng nhập",
                 subtitle = user.email,
                 onClick = { }
             )
-            Box(Modifier.fillMaxWidth().height(0.8.dp).background(InkBorder.copy(alpha = 0.6f)))
+            HorizontalDivider(color = InkBorder.copy(alpha = 0.6f))
             AccountMenuItem(
                 icon = Icons.Rounded.Security,
                 iconBg = JadeSoft,
@@ -2730,59 +3623,45 @@ private fun AccountScreen(
             )
         }
 
-        // 4. Nhóm: Bản quyền & Pháp lý
+        AccountSectionCard(title = "Cộng đồng & Đóng góp") {
+            AccountMenuItem(
+                icon = Icons.Rounded.Feedback,
+                title = "Khung ghi chú góp ý",
+                subtitle = "Dán ghi chú bảo mật gửi tới quản trị viên",
+                onClick = onFeedback,
+            )
+        }
+
         AccountSectionCard(title = "Bản quyền, Pháp lý & Dữ liệu") {
             AccountMenuItem(
                 icon = Icons.Rounded.Shield,
                 title = "Chính sách quyền riêng tư",
                 subtitle = "Cam kết bảo mật dữ liệu học tập cá nhân",
-                onClick = { showLegalDialog = "privacy" }
+                onClick = onPrivacy,
             )
-            Box(Modifier.fillMaxWidth().height(0.8.dp).background(InkBorder.copy(alpha = 0.6f)))
+            HorizontalDivider(color = InkBorder.copy(alpha = 0.6f))
+            AccountMenuItem(
+                icon = Icons.AutoMirrored.Rounded.MenuBook,
+                title = "Nguồn dữ liệu từ vựng HSK",
+                subtitle = "CC-CEDICT, CVDICT, HanziWriter, Tatoeba",
+                onClick = onCredits,
+            )
+            HorizontalDivider(color = InkBorder.copy(alpha = 0.6f))
             AccountMenuItem(
                 icon = Icons.Rounded.Gavel,
                 title = "Bản quyền & Điều khoản dịch vụ",
-                subtitle = "Bản quyền nội dung & thiết kế Chaina HSK",
+                subtitle = "Bản quyền nội dung & thiết kế Chaina",
                 onClick = { showLegalDialog = "terms" }
             )
-            Box(Modifier.fillMaxWidth().height(0.8.dp).background(InkBorder.copy(alpha = 0.6f)))
-            AccountMenuItem(
-                icon = Icons.Rounded.MenuBook,
-                title = "Nguồn dữ liệu từ vựng HSK",
-                subtitle = "CC-CEDICT, CVDICT, HanziWriter, Tatoeba",
-                onClick = { showLegalDialog = "credits" }
-            )
-            Box(Modifier.fillMaxWidth().height(0.8.dp).background(InkBorder.copy(alpha = 0.6f)))
+            HorizontalDivider(color = InkBorder.copy(alpha = 0.6f))
             AccountMenuItem(
                 icon = Icons.Rounded.Info,
                 title = "Giới thiệu nền tảng Chaina HSK",
-                subtitle = "Phiên bản v1.0.0 (Modern Ink Editorial)",
+                subtitle = "Phiên bản v1.0.0",
                 onClick = { showLegalDialog = "about" }
             )
         }
 
-        // 5. Nhóm: Hỗ trợ & Đóng góp
-        AccountSectionCard(title = "Hỗ trợ & Cộng đồng") {
-            AccountMenuItem(
-                icon = Icons.Rounded.Feedback,
-                title = "Góp ý & Báo lỗi ứng dụng",
-                subtitle = "Gửi ý kiến để chúng tôi cải thiện tốt hơn",
-                onClick = { showFeedbackDialog = true }
-            )
-            Box(Modifier.fillMaxWidth().height(0.8.dp).background(InkBorder.copy(alpha = 0.6f)))
-            AccountMenuItem(
-                icon = Icons.Rounded.ThumbUp,
-                iconBg = AmberSoft,
-                iconTint = AmberGold,
-                title = "Đánh giá ứng dụng Chaina HSK",
-                subtitle = "Tặng 5 sao trên cửa hàng ứng dụng",
-                trailingBadge = "5.0 ★",
-                trailingBadgeColor = AmberGold,
-                onClick = { showFeedbackDialog = true }
-            )
-        }
-
-        // 6. Đăng xuất tài khoản
         OutlinedButton(
             onClick = { showLogoutConfirm = true },
             modifier = Modifier.fillMaxWidth().height(48.dp),
@@ -2790,7 +3669,7 @@ private fun AccountScreen(
             border = BorderStroke(1.dp, RedBorder),
             colors = ButtonDefaults.outlinedButtonColors(containerColor = RedSoft)
         ) {
-            Icon(Icons.Rounded.Logout, contentDescription = null, tint = RedBad, modifier = Modifier.size(18.dp))
+            Icon(Icons.AutoMirrored.Rounded.Logout, contentDescription = null, tint = RedBad, modifier = Modifier.size(18.dp))
             Spacer(Modifier.width(8.dp))
             Text("Đăng xuất tài khoản", color = RedBad, fontWeight = FontWeight.Bold)
         }
@@ -2798,7 +3677,6 @@ private fun AccountScreen(
         Spacer(Modifier.height(10.dp))
     }
 
-    // Modal Dialogs
     if (showAvatarPicker) {
         AvatarPickerDialog(
             currentAvatarId = currentAvatar.id,
@@ -2813,10 +3691,7 @@ private fun AccountScreen(
     }
 
     if (showChangePassword) {
-        ChangePasswordDialog(
-            api = api,
-            onDismiss = { showChangePassword = false }
-        )
+        ChangePasswordDialog(api = api, onDismiss = { showChangePassword = false })
     }
 
     if (showEditProfile) {
@@ -2829,19 +3704,14 @@ private fun AccountScreen(
     }
 
     showLegalDialog?.let { type ->
-        LegalInfoDialog(
-            type = type,
-            onDismiss = { showLegalDialog = null }
-        )
-    }
-
-    if (showFeedbackDialog) {
-        FeedbackDialog(onDismiss = { showFeedbackDialog = false })
+        LegalInfoDialog(type = type, onDismiss = { showLegalDialog = null })
     }
 
     if (showLogoutConfirm) {
         AlertDialog(
             onDismissRequest = { showLogoutConfirm = false },
+            containerColor = PaperPure,
+            shape = RoundedCornerShape(24.dp),
             title = { Text("Xác nhận đăng xuất", fontWeight = FontWeight.Bold, color = InkBlack) },
             text = { Text("Bạn có chắc chắn muốn đăng xuất khỏi tài khoản ${user.email}?", fontSize = 14.sp) },
             confirmButton = {
@@ -2876,9 +3746,7 @@ private fun OnboardingDialog(api: ApiClient, onDone: (User?) -> Unit) {
 
     AlertDialog(
         onDismissRequest = { if (!busy) onDone(null) },
-        title = {
-            Text("Thiết lập hành trình HSK", fontWeight = FontWeight.Bold, color = InkBlack)
-        },
+        title = { Text("Thiết lập hành trình HSK", fontWeight = FontWeight.Bold, color = InkBlack) },
         text = {
             Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text("Cho Chaina biết mục tiêu học tập để gợi ý lộ trình phù hợp với bạn.", color = InkMuted, fontSize = 13.sp)
@@ -2897,6 +3765,8 @@ private fun OnboardingDialog(api: ApiClient, onDone: (User?) -> Unit) {
                         error = null
                         try {
                             onDone(api.updateProfile(JSONObject().put("learningExperience", experience).put("studyPurpose", purpose).put("targetHskLevel", target.toInt()).put("dailyStudyMinutes", minutes.toInt())))
+                        } catch (e: CancellationException) {
+                            throw e
                         } catch (e: Exception) {
                             error = e.message ?: "Không lưu được lựa chọn."
                         }
@@ -2907,16 +3777,21 @@ private fun OnboardingDialog(api: ApiClient, onDone: (User?) -> Unit) {
                 colors = ButtonDefaults.buttonColors(containerColor = Brand),
                 shape = RoundedCornerShape(12.dp)
             ) {
-                Text(if (busy) "Đang lưu…" else "Lưu & Bắt đầu", fontWeight = FontWeight.Bold)
+                if (busy) {
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        ChainaStrokeLoading(mode = ChainaLoadingMode.COMPACT, widthDp = 46.dp, background = ChainaLoadingBackground.DARK)
+                        Text("Đang lưu…", fontWeight = FontWeight.Bold)
+                    }
+                } else {
+                    Text("Lưu & Bắt đầu", fontWeight = FontWeight.Bold)
+                }
             }
         },
         dismissButton = {
-            TextButton(onClick = { if (!busy) onDone(null) }) {
-                Text("Để sau", color = InkMuted)
-            }
+            TextButton(onClick = { if (!busy) onDone(null) }) { Text("Để sau", color = InkMuted) }
         },
         containerColor = PaperPure,
-        shape = RoundedCornerShape(20.dp)
+        shape = RoundedCornerShape(24.dp)
     )
 }
 
@@ -2943,52 +3818,12 @@ private fun SelectField(label: String, value: String, options: List<Pair<String,
             ) {
                 options.forEach { (key, title) ->
                     DropdownMenuItem(
-                        text = { Text(title, fontSize = 13.sp, color = if (key == value) Brand else InkBlack, fontWeight = if (key == value) FontWeight.Bold else FontWeight.Normal) },
+                        text = { Text(title, fontSize = 13.sp, color = if (key == value) BrandDark else InkBlack, fontWeight = if (key == value) FontWeight.Bold else FontWeight.Normal) },
                         onClick = { onSelect(key); expanded = false }
                     )
                 }
             }
         }
-    }
-}
-
-@Composable
-internal fun WordRow(word: Word, modifier: Modifier = Modifier) {
-    InkCard(
-        modifier = modifier,
-        shapeRadius = 16.dp,
-    ) {
-        Row(
-            Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 13.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(Modifier.widthIn(min = 86.dp, max = 116.dp)) {
-                Text(word.hanzi, fontSize = 28.sp, fontWeight = FontWeight.Medium, lineHeight = 32.sp, color = InkBlack)
-                Text(word.pinyin, color = Brand, fontWeight = FontWeight.Bold, fontSize = 12.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
-            }
-            Spacer(Modifier.width(12.dp))
-            Box(
-                Modifier
-                    .height(36.dp)
-                    .width(1.dp)
-                    .background(InkBorder)
-            )
-            Column(Modifier.weight(1f).padding(start = 12.dp)) {
-                Text(word.meaningVi.ifBlank { "Chưa có nghĩa" }, fontSize = 13.sp, fontWeight = FontWeight.Medium, maxLines = 2, overflow = TextOverflow.Ellipsis, color = InkBlack)
-                Text("HSK ${word.hskLevel}", color = InkMuted, fontSize = 10.sp, modifier = Modifier.padding(top = 2.dp))
-            }
-            Text("›", color = Brand, fontSize = 24.sp, fontWeight = FontWeight.Bold)
-        }
-    }
-}
-
-@Composable
-private fun SectionTitle(title: String, subtitle: String) {
-    Column {
-        Text(title, fontSize = 18.sp, fontWeight = FontWeight.Bold, color = InkBlack)
-        Text(subtitle, fontSize = 12.sp, color = InkMuted)
     }
 }
 
@@ -3000,6 +3835,7 @@ private fun ModernFormField(
     password: Boolean = false,
     keyboard: KeyboardType = KeyboardType.Text
 ) {
+    var passwordVisible by remember { mutableStateOf(false) }
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
@@ -3008,7 +3844,19 @@ private fun ModernFormField(
         singleLine = true,
         shape = RoundedCornerShape(14.dp),
         keyboardOptions = KeyboardOptions(keyboardType = if (password) KeyboardType.Password else keyboard),
-        visualTransformation = if (password) PasswordVisualTransformation() else androidx.compose.ui.text.input.VisualTransformation.None,
+        visualTransformation = if (password && !passwordVisible) PasswordVisualTransformation() else VisualTransformation.None,
+        trailingIcon = if (password) {
+            {
+                IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                    Icon(
+                        imageVector = if (passwordVisible) Icons.Rounded.VisibilityOff else Icons.Rounded.Visibility,
+                        contentDescription = if (passwordVisible) "Ẩn mật khẩu" else "Hiện mật khẩu",
+                        tint = InkMuted,
+                        modifier = Modifier.size(19.dp),
+                    )
+                }
+            }
+        } else null,
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = Brand,
             unfocusedBorderColor = InkBorder,
@@ -3032,12 +3880,5 @@ private fun ErrorMessage(text: String) {
             fontWeight = FontWeight.Medium,
             modifier = Modifier.fillMaxWidth().padding(12.dp)
         )
-    }
-}
-
-@Composable
-private fun LinearLoading() {
-    Box(Modifier.fillMaxWidth().padding(vertical = 8.dp), contentAlignment = Alignment.Center) {
-        CircularProgressIndicator(Modifier.size(22.dp), color = Brand, strokeWidth = 2.5.dp)
     }
 }

@@ -19,7 +19,8 @@ model User {
   learningExperience String? @map("learning_experience") @db.VarChar(24)
   studyPurpose String? @map("study_purpose") @db.VarChar(24)
   dailyStudyMinutes Int? @map("daily_study_minutes") @db.UnsignedSmallInt
-  passwordHash String     @map("password_hash") @db.VarChar(255)
+  passwordHash String?    @map("password_hash") @db.VarChar(255)
+  avatarUrl    String?    @map("avatar_url") @db.VarChar(500)
   streak       Int        @default(0)
   xp           Int        @default(0)
   lastStudy    String?    @map("last_study") @db.VarChar(10) // YYYY-MM-DD
@@ -31,6 +32,7 @@ model User {
   grammarProgress GrammarProgress[]
   grammarAttempts GrammarAttempt[]
   feedbacks    Feedback[]
+  authAccounts AuthAccount[]
 
   @@map("users")
 }
@@ -272,4 +274,19 @@ model Feedback {
   @@index([status])
   @@index([createdAt])
   @@map("feedbacks")
+}
+
+model AuthAccount {
+  id             Int      @id @default(autoincrement())
+  userId         Int      @map("user_id")
+  provider       String   @db.VarChar(32) // google
+  providerUserId String   @map("provider_user_id") @db.VarChar(191) // Google 'sub'
+  email          String?  @db.VarChar(191)
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @default(now()) @updatedAt @map("updated_at")
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerUserId])
+  @@index([userId])
+  @@map("auth_accounts")
 }

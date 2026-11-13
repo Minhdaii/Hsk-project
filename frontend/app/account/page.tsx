@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { api, clearToken } from '@/lib/api';
 import { useUser } from '@/lib/useUser';
 import { useStats } from '@/lib/useStats';
-import Skeleton from '@/components/Skeleton';
+import ChainaStrokeLoading from '@/components/ChainaStrokeLoading';
 
 export default function AccountPage() {
   const router = useRouter();
@@ -16,7 +16,7 @@ export default function AccountPage() {
   const [current, setCurrent] = useState(''); const [next, setNext] = useState(''); const [confirm, setConfirm] = useState('');
   const [message, setMessage] = useState(''); const [busy, setBusy] = useState(false);
   useEffect(() => { if (user) { setName(user.fullName || ''); setUsername(user.username); setChineseName(user.chineseName || ''); setAge(user.age == null ? '' : String(user.age)); setTargetHskLevel(user.targetHskLevel == null ? '' : String(user.targetHskLevel)); setLearningExperience(user.learningExperience || ''); setStudyPurpose(user.studyPurpose || ''); setDailyStudyMinutes(user.dailyStudyMinutes == null ? '' : String(user.dailyStudyMinutes)); } }, [user]);
-  if (loading) return <div className="space-y-4"><Skeleton className="h-12 w-1/3"/><Skeleton className="h-56"/></div>;
+  if (loading) return <ChainaStrokeLoading mode="PAGE" message="Đang tải thông tin HSK ID…" />;
   if (!user) return <section className="editorial-card mx-auto max-w-lg p-8 text-center"><h1 className="text-xl font-bold">Đăng nhập để quản lý HSK ID</h1><Link className="btn-editorial-primary mt-5" href="/login">Đăng nhập</Link></section>;
   async function saveProfile() { setBusy(true);setMessage('');try { await api('/auth/me',{method:'PATCH',body:{fullName:name,username,chineseName,age:age?Number(age):null,targetHskLevel:targetHskLevel?Number(targetHskLevel):null,learningExperience:learningExperience||null,studyPurpose:studyPurpose||null,dailyStudyMinutes:dailyStudyMinutes?Number(dailyStudyMinutes):null}});setMessage('Đã lưu hồ sơ.'); window.dispatchEvent(new Event('auth-changed')); } catch(e) { setMessage(e instanceof Error?e.message:'Không thể lưu hồ sơ'); } finally { setBusy(false); } }
   async function changePassword() { setBusy(true);setMessage('');try { await api('/auth/change-password',{body:{currentPassword:current,newPassword:next}});setCurrent('');setNext('');setConfirm('');setMessage('Đã đổi mật khẩu.'); } catch(e) { setMessage(e instanceof Error?e.message:'Không thể đổi mật khẩu'); } finally { setBusy(false); } }

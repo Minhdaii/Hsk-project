@@ -7,8 +7,7 @@ import { api } from '@/lib/api';
 import { useUser } from '@/lib/useUser';
 import { useStats } from '@/lib/useStats';
 import type { Activity, LeaderRow, LevelProgress } from '@/lib/types';
-import Skeleton from '@/components/Skeleton';
-import ChineseCatLoading from '@/components/ChineseCatLoading';
+import ChainaStrokeLoading from '@/components/ChainaStrokeLoading';
 import WeeklyChart from '@/components/dashboard/WeeklyChart';
 import Anim from '@/components/motion/Anim';
 
@@ -77,7 +76,11 @@ export default function Dashboard() {
   }, [user, load]);
 
   if (loading) {
-    return <main className="cat-loading-page"><ChineseCatLoading state="auth" /></main>;
+    return (
+      <main className="min-h-[60svh] bg-paper grid place-items-center">
+        <ChainaStrokeLoading mode="FULL_SCREEN" message="Đang tải không gian học tập…" />
+      </main>
+    );
   }
   if (!user) return <GuestHome />;
 
@@ -159,7 +162,15 @@ export default function Dashboard() {
               <li className="flex items-center gap-2"><span aria-hidden className="h-2.5 w-2.5 rounded-full bg-brand-ink" />Lượt ôn mỗi ngày</li>
               <li className="flex items-center gap-2"><span aria-hidden className="h-0 w-4 border-t border-dashed border-brand-ink" />Mục tiêu {goal} lượt</li>
             </ul>
-            <div className="mt-5">{activity ? <WeeklyChart days={activity.days} goal={activity.goal} /> : <Skeleton className="h-[260px]" />}</div>
+            <div className="mt-5">
+              {activity ? (
+                <WeeklyChart days={activity.days} goal={activity.goal} />
+              ) : (
+                <div className="flex h-[260px] items-center justify-center">
+                  <ChainaStrokeLoading mode="INLINE" size="sm" message="Đang tải hiệu suất tuần…" />
+                </div>
+              )}
+            </div>
           </section>
 
           <div className="grid gap-6 md:grid-cols-2">
@@ -193,7 +204,9 @@ export default function Dashboard() {
                 <Link href="/leaderboard" className="shrink-0 whitespace-nowrap rounded-full border border-line px-3.5 py-1.5 text-sm text-stone-600 transition-colors hover:border-stone-400 hover:text-ink">Tất cả</Link>
               </div>
               {board === null ? (
-                <div className="mt-5 space-y-3"><Skeleton className="h-12" /><Skeleton className="h-12" /><Skeleton className="h-12" /></div>
+                <div className="mt-5 flex min-h-[176px] items-center justify-center">
+                  <ChainaStrokeLoading mode="INLINE" size="sm" message="Đang tải bảng xếp hạng…" />
+                </div>
               ) : board.length === 0 ? (
                 <p className="mt-5 text-sm text-stone-600">Chưa có học viên nào trên bảng. Hoàn thành một lượt ôn để lên bảng đầu tiên.</p>
               ) : (

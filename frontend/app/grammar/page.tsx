@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { api } from '@/lib/api';
 import type { GrammarPoint } from '@/lib/types';
 import SpeakButton from '@/components/SpeakButton';
-import Skeleton from '@/components/Skeleton';
+import ChainaStrokeLoading from '@/components/ChainaStrokeLoading';
 import PageHeader from '@/components/PageHeader';
 import Anim from '@/components/motion/Anim';
 import { ArrowRight } from 'lucide-react';
@@ -70,10 +70,8 @@ export default function GrammarPage() {
       )}
 
       {loading && items.length === 0 && (
-        <div className="space-y-3">
-          {[0, 1, 2, 3].map((i) => (
-            <Skeleton key={i} className="h-16" />
-          ))}
+        <div className="editorial-card flex min-h-[16rem] items-center justify-center p-6">
+          <ChainaStrokeLoading mode="INLINE" size="md" message="Đang tải dữ liệu ngữ pháp…" />
         </div>
       )}
 

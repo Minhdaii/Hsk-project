@@ -3,6 +3,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { api } from '@/lib/api';
 import type { AdminFeedbackItem } from '@/lib/types';
 import { CATEGORY_CONFIG } from './StickyNote';
+import ChainaStrokeLoading from '@/components/ChainaStrokeLoading';
 
 interface FeedbackAdminModalProps {
   isOpen: boolean;
@@ -137,7 +138,9 @@ export default function FeedbackAdminModal({
         {/* List items */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-3">
           {loading ? (
-            <div className="py-12 text-center text-xs text-stone-500">Đang tải dữ liệu...</div>
+            <div className="flex min-h-[14rem] items-center justify-center py-8">
+              <ChainaStrokeLoading mode="INLINE" size="sm" message="Đang tải danh sách góp ý…" />
+            </div>
           ) : items.length === 0 ? (
             <div className="py-12 text-center text-xs text-stone-500">
               Không tìm thấy ghi chú nào phù hợp bộ lọc.

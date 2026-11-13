@@ -6,6 +6,7 @@ import type { Word } from '@/lib/types';
 import { speak } from '@/lib/speak';
 import CountPicker from '@/components/CountPicker';
 import PageHeader from '@/components/PageHeader';
+import ChainaStrokeLoading from '@/components/ChainaStrokeLoading';
 import Anim from '@/components/motion/Anim';
 import { AnswerPanel, GameHeader, GameResult, useCombo } from '@/components/game/GameBits';
 import { ArrowRight } from 'lucide-react';
@@ -176,7 +177,12 @@ function QuizInner() {
           disabled={busy}
           onClick={start}
         >
-          {busy ? 'Đang chuẩn bị câu hỏi…' : `Bắt đầu trắc nghiệm (${count} câu)`}
+          {busy ? (
+            <span className="inline-flex items-center justify-center gap-2">
+              <ChainaStrokeLoading mode="COMPACT" background="transparent" />
+              <span>Đang chuẩn bị câu hỏi…</span>
+            </span>
+          ) : `Bắt đầu trắc nghiệm (${count} câu)`}
         </button>
       </div>
     );
@@ -295,7 +301,7 @@ function QuizInner() {
 
 export default function QuizPage() {
   return (
-    <Suspense fallback={<p className="text-xs text-stone-500">Đang chuẩn bị giao diện quiz…</p>}>
+    <Suspense fallback={<ChainaStrokeLoading mode="PAGE" message="Đang chuẩn bị giao diện quiz…" />}>
       <QuizInner />
     </Suspense>
   );

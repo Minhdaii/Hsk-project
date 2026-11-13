@@ -25,3 +25,13 @@ export class ChangePasswordDto {
   @IsString() @MinLength(6) @MaxLength(72) currentPassword: string;
   @IsString() @MinLength(8) @MaxLength(72) newPassword: string;
 }
+
+export class GoogleAuthDto {
+  @IsOptional()
+  @IsString()
+  idToken?: string;
+
+  @IsOptional()
+  @IsString()
+  accessToken?: string;
+}

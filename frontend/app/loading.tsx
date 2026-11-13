@@ -1,5 +1,9 @@
-import ChineseCatLoading from '@/components/ChineseCatLoading';
+import ChainaStrokeLoading from '@/components/ChainaStrokeLoading';
 
 export default function Loading() {
-  return <main className="cat-loading-page"><ChineseCatLoading state="page" /></main>;
+  return (
+    <main className="min-h-[60svh] bg-paper grid place-items-center">
+      <ChainaStrokeLoading mode="PAGE" />
+    </main>
+  );
 }

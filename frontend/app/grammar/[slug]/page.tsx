@@ -6,7 +6,7 @@ import { api, ApiError } from '@/lib/api';
 import { useUser } from '@/lib/useUser';
 import type { GrammarDetail } from '@/lib/types';
 import SpeakButton from '@/components/SpeakButton';
-import Skeleton from '@/components/Skeleton';
+import ChainaStrokeLoading from '@/components/ChainaStrokeLoading';
 import ZhMix from '@/components/ZhMix';
 import Anim from '@/components/motion/Anim';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
@@ -38,7 +38,7 @@ export default function GrammarDetailPage() {
   };
 
   if (error) return <div className="space-y-4"><p role="alert" className="rounded-lg border border-red-300 bg-red-50 p-4 text-sm text-red-800">{error}</p><Link href="/grammar" className="btn-back"><ArrowLeft className="h-3.5 w-3.5" /><span>Danh sách ngữ pháp</span></Link></div>;
-  if (!g) return <div className="space-y-4"><Skeleton className="h-16 w-2/3" /><Skeleton className="h-40" /><Skeleton className="h-64" /></div>;
+  if (!g) return <ChainaStrokeLoading mode="PAGE" message="Đang tải cấu trúc ngữ pháp…" />;
 
   return (
     <Anim as="article" each={45} y={8} className="mx-auto max-w-3xl space-y-8">

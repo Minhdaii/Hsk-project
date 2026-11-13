@@ -6,7 +6,7 @@ import { api } from '@/lib/api';
 import type { CategoryDetail, WordPage } from '@/lib/types';
 import FavoriteButton from '@/components/FavoriteButton';
 import SpeakButton from '@/components/SpeakButton';
-import Skeleton from '@/components/Skeleton';
+import ChainaStrokeLoading from '@/components/ChainaStrokeLoading';
 import Anim from '@/components/motion/Anim';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 
@@ -53,7 +53,11 @@ export default function CategoryPage() {
             <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">{cat.name}</h1>
             <p className="mt-1 text-stone-600">{cat.wordCount} từ vựng{cat.description ? ` · ${cat.description}` : ''}</p>
           </>
-        ) : <Skeleton className="h-14 w-1/2" />}
+        ) : (
+          <div className="min-h-[3.5rem] flex items-center">
+            <span className="text-xs font-medium text-stone-500">Đang tải chủ đề…</span>
+          </div>
+        )}
       </header>
 
       {cat && cat.children.length > 0 && (
@@ -85,7 +89,11 @@ export default function CategoryPage() {
         </div>
       </div>
 
-      {loading && !words && <Skeleton className="h-64" />}
+      {loading && !words && (
+        <div className="editorial-card flex min-h-[16rem] items-center justify-center p-6">
+          <ChainaStrokeLoading mode="INLINE" size="md" message="Đang tải từ vựng chủ đề…" />
+        </div>
+      )}
       {words && (
         <>
           <ul className={`divide-y divide-line overflow-hidden rounded-xl border border-line bg-white transition-opacity ${loading ? 'opacity-60' : ''}`}>

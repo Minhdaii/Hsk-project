@@ -6,7 +6,7 @@ import { useUser } from '@/lib/useUser';
 import { useStats } from '@/lib/useStats';
 import type { Activity, LevelProgress } from '@/lib/types';
 import PageHeader from '@/components/PageHeader';
-import Skeleton from '@/components/Skeleton';
+import ChainaStrokeLoading from '@/components/ChainaStrokeLoading';
 import Anim from '@/components/motion/Anim';
 import CountUp from '@/components/motion/CountUp';
 import { ArrowRight } from 'lucide-react';
@@ -32,13 +32,7 @@ export default function LearningStatsPage() {
   }, [user]);
 
   if (loading || fetching) {
-    return (
-      <div className="space-y-4">
-        <Skeleton className="h-14 w-1/3" />
-        <Skeleton className="h-48" />
-        <Skeleton className="h-64" />
-      </div>
-    );
+    return <ChainaStrokeLoading mode="PAGE" message="Đang tổng hợp thống kê học tập…" />;
   }
 
   if (!user) {

@@ -7,6 +7,7 @@ import type { Word } from '@/lib/types';
 import { Candidate, ensureEngine, recognizeChar } from '@/lib/writing/recognizer';
 import { Group, Pt, Stroke, segmentStrokes } from '@/lib/writing/segment';
 import styles from './WritingPad.module.css';
+import ChainaStrokeLoading from '@/components/ChainaStrokeLoading';
 
 const INK = '#292833';
 const ERASE_R = 16; // bán kính tẩy (px)
@@ -201,7 +202,8 @@ export default function WritingPad() {
         <div className="lab-surface p-4 sm:p-5">
           <div className="flex items-center justify-between gap-2">
             <h2 className="font-bold">Kết quả nhận diện</h2>
-            <span role="status" aria-live="polite" className="text-sm text-stone-600">
+            <span role="status" aria-live="polite" className="inline-flex items-center gap-2 text-sm text-stone-600">
+              {busy && <ChainaStrokeLoading mode="COMPACT" background="transparent" size={56} />}
               {status === 'idle' && 'Chưa có nét viết'}
               {status === 'loading' && 'Đang tải bộ nhận diện…'}
               {status === 'recognizing' && 'Đang nhận diện…'}

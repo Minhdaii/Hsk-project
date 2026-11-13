@@ -5,6 +5,7 @@ import { useUser } from '@/lib/useUser';
 import type { FeedbackCategory, FeedbackNote } from '@/lib/types';
 import { CATEGORY_LABELS, PAPER_PALETTES } from './StickyNote';
 import { playPinSound } from './PinningAudio';
+import ChainaStrokeLoading from '@/components/ChainaStrokeLoading';
 
 interface FeedbackDraftModalProps {
   isOpen: boolean;
@@ -275,7 +276,12 @@ export default function FeedbackDraftModal({
               disabled={loading || content.trim().length < 5}
               className="btn-primary !px-5 !py-2 text-xs font-semibold transition disabled:opacity-50"
             >
-              {loading ? 'Đang dán...' : 'Dán vào khung'}
+              {loading ? (
+                <span className="inline-flex items-center justify-center gap-2">
+                  <ChainaStrokeLoading mode="COMPACT" background="transparent" />
+                  <span>Đang dán...</span>
+                </span>
+              ) : 'Dán vào khung'}
             </button>
           </div>
         </form>

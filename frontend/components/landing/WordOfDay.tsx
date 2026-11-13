@@ -8,6 +8,7 @@ import { posLabels, splitMeaning } from '@/lib/pos';
 import type { DailyWord } from '@/lib/types';
 import SpeakButton from '../SpeakButton';
 import HeroGlyph from './HeroGlyph';
+import ChainaStrokeLoading from '../ChainaStrokeLoading';
 
 const CACHE_KEY = 'hsk_daily_word';
 const TZ = 'Asia/Ho_Chi_Minh';
@@ -122,7 +123,9 @@ export default function WordOfDay() {
             style={{ backgroundImage: `url("${INK_GRID}")`, backgroundSize: '100% 100%' }}
           >
             {state.kind === 'loading' ? (
-              <div aria-hidden className="aspect-square w-full" />
+              <div className="aspect-square w-full flex items-center justify-center">
+                <ChainaStrokeLoading mode="INLINE" size="sm" showSignature={false} background="transparent" />
+              </div>
             ) : (
               <HeroGlyph key={char} char={char} />
             )}

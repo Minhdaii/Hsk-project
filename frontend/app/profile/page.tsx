@@ -6,7 +6,7 @@ import { clearToken } from '@/lib/api';
 import { useUser } from '@/lib/useUser';
 import { useStats } from '@/lib/useStats';
 import PageHeader from '@/components/PageHeader';
-import Skeleton from '@/components/Skeleton';
+import ChainaStrokeLoading from '@/components/ChainaStrokeLoading';
 import Anim from '@/components/motion/Anim';
 
 export default function ProfilePage() {
@@ -43,12 +43,7 @@ export default function ProfilePage() {
   };
 
   if (loading) {
-    return (
-      <div className="space-y-4">
-        <Skeleton className="h-14 w-1/3" />
-        <Skeleton className="h-48" />
-      </div>
-    );
+    return <ChainaStrokeLoading mode="PAGE" message="Đang tải hồ sơ học tập…" />;
   }
 
   if (!user) {

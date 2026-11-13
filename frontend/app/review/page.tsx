@@ -7,7 +7,7 @@ import { useStats } from '@/lib/useStats';
 import type { Card, LevelProgress, Word } from '@/lib/types';
 import SpeakButton from '@/components/SpeakButton';
 import PageHeader from '@/components/PageHeader';
-import Skeleton from '@/components/Skeleton';
+import ChainaStrokeLoading from '@/components/ChainaStrokeLoading';
 import Anim from '@/components/motion/Anim';
 import CountUp from '@/components/motion/CountUp';
 import { ArrowRight } from 'lucide-react';
@@ -37,12 +37,7 @@ export default function ReviewCenterPage() {
   }, [user, level]);
 
   if (loading) {
-    return (
-      <div className="space-y-4">
-        <Skeleton className="h-14 w-1/3" />
-        <Skeleton className="h-48" />
-      </div>
-    );
+    return <ChainaStrokeLoading mode="PAGE" message="Đang tải trung tâm ôn tập…" />;
   }
 
   if (!user) {
@@ -148,7 +143,9 @@ export default function ReviewCenterPage() {
         </div>
 
         {fetching ? (
-          <div className="p-6 text-center text-xs text-stone-600">Đang kiểm tra dữ liệu lịch ôn…</div>
+          <div className="flex min-h-[12rem] items-center justify-center p-6">
+            <ChainaStrokeLoading mode="INLINE" size="sm" message="Đang kiểm tra dữ liệu lịch ôn…" />
+          </div>
         ) : dueCards.length === 0 ? (
           <div className="p-8 text-center text-xs text-stone-600">
             Hiện tại không có từ nào ở HSK {level} bị quá hạn ôn tập. Tuyệt vời!

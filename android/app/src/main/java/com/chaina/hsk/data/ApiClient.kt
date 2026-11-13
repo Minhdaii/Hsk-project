@@ -1,6 +1,9 @@
 package com.chaina.hsk.data
 
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
@@ -26,15 +29,34 @@ class ApiClient(baseUrl: String, private val tokens: TokenStore) {
         return result.getString("accessToken") to User.from(result.getJSONObject("user"))
     }
 
+    suspend fun googleAuth(idToken: String): Triple<String, User, Boolean> {
+        val result = request(
+            "/auth/google",
+            "POST",
+            JSONObject().put("idToken", idToken),
+            authenticated = false
+        )
+        val token = result.getString("accessToken")
+        val user = User.from(result.getJSONObject("user"))
+        val isNew = result.optBoolean("isNew", false)
+        return Triple(token, user, isNew)
+    }
+
     suspend fun me(): User = User.from(request("/auth/me").getJSONObjectOrSelf())
 
     suspend fun updateProfile(body: JSONObject): User = User.from(request("/auth/me", "PATCH", body).getJSONObjectOrSelf())
 
     suspend fun stats(): Stats = Stats.from(request("/study/stats"))
 
+    suspend fun activityData(): ActivityData = ActivityData.from(request("/study/activity"))
+
     suspend fun levels(): List<LevelProgress> {
         val rows = request("/study/levels").optJSONArray("levels") ?: JSONArray()
-        return (0 until rows.length()).map { index -> rows.getJSONObject(index).let { LevelProgress(it.optInt("level"), it.optInt("total"), it.optInt("started"), it.optInt("mastered")) } }
+        return (0 until rows.length()).map { index ->
+            rows.getJSONObject(index).let {
+                LevelProgress(it.optInt("level"), it.optInt("total"), it.optInt("started"), it.optInt("mastered"))
+            }
+        }
     }
 
     suspend fun words(level: Int, query: String): List<Word> {
@@ -68,7 +90,8 @@ class ApiClient(baseUrl: String, private val tokens: TokenStore) {
     )
 
     suspend fun grammarExercises(type: String, level: Int, grammarId: Int = 0, count: Int = 10): JSONArray {
-        val path = "/grammar/exercises?type=$type&level=$level&grammarId=$grammarId&count=$count"
+        val levelParam = if (level > 0) "&level=$level" else ""
+        val path = "/grammar/exercises?type=$type$levelParam&grammarId=$grammarId&count=$count"
         return request(path).optJSONArray("questions") ?: JSONArray()
     }
 
@@ -125,7 +148,70 @@ class ApiClient(baseUrl: String, private val tokens: TokenStore) {
         "/auth/change-password", "POST", JSONObject().put("currentPassword", currentPassword).put("newPassword", newPassword),
     )
 
-    private suspend fun request(path: String, method: String = "GET", body: JSONObject? = null, authenticated: Boolean = true): JSONObject = withContext(Dispatchers.IO) {
+    // ---------- Feedback Notice Board ----------
+
+    suspend fun feedbackBoard(): FeedbackBoardData = FeedbackBoardData.from(request("/feedback"))
+
+    suspend fun createFeedback(
+        category: String,
+        content: String,
+        name: String?,
+        color: String,
+        pinType: String,
+    ): FeedbackNote {
+        val body = JSONObject()
+            .put("category", category)
+            .put("content", content)
+            .put("color", color)
+            .put("pinType", pinType)
+        name?.takeIf { it.isNotBlank() }?.let { body.put("name", it.trim()) }
+        val res = request("/feedback", "POST", body)
+        return FeedbackNote(
+            id = res.optInt("id"),
+            category = res.optString("category", category),
+            color = res.optString("color", color),
+            rotation = res.optDouble("rotation", 0.0).toFloat(),
+            posX = res.optDouble("posX", 50.0).toFloat(),
+            posY = res.optDouble("posY", 50.0).toFloat(),
+            pinType = res.optString("pinType", pinType),
+            status = "pending",
+            createdAt = res.optString("createdAt", ""),
+            isMine = true,
+            author = name?.takeIf { it.isNotBlank() } ?: "Bạn",
+            content = content,
+        )
+    }
+
+    suspend fun adminFeedback(status: String = "", category: String = "", search: String = ""): List<AdminFeedbackItem> {
+        val params = buildList {
+            if (status.isNotBlank()) add("status=${URLEncoder.encode(status, "UTF-8")}")
+            if (category.isNotBlank()) add("category=${URLEncoder.encode(category, "UTF-8")}")
+            if (search.isNotBlank()) add("search=${URLEncoder.encode(search.trim(), "UTF-8")}")
+        }
+        val query = if (params.isEmpty()) "" else "?" + params.joinToString("&")
+        val raw = requestRaw("/feedback/admin$query", "GET", null, true)
+        val arr = runCatching { JSONArray(raw) }.getOrNull()
+            ?: runCatching { JSONObject(raw).optJSONArray("items") }.getOrNull()
+            ?: JSONArray()
+        return (0 until arr.length()).mapNotNull { arr.optJSONObject(it)?.let(AdminFeedbackItem::from) }
+    }
+
+    suspend fun updateAdminFeedback(id: Int, status: String, adminNote: String?) {
+        val body = JSONObject().put("status", status)
+        if (adminNote != null) body.put("adminNote", adminNote)
+        request("/feedback/admin/$id", "PATCH", body)
+    }
+
+    suspend fun deleteAdminFeedback(id: Int) {
+        request("/feedback/admin/$id", "DELETE")
+    }
+
+    private suspend fun request(path: String, method: String = "GET", body: JSONObject? = null, authenticated: Boolean = true): JSONObject {
+        val text = requestRaw(path, method, body, authenticated)
+        return runCatching { JSONObject(text) }.getOrElse { JSONObject() }
+    }
+
+    private suspend fun requestRaw(path: String, method: String = "GET", body: JSONObject? = null, authenticated: Boolean = true): String = withContext(Dispatchers.IO) {
         val connection = (URL(base + path).openConnection() as HttpURLConnection).apply {
             requestMethod = method
             connectTimeout = 12_000
@@ -137,23 +223,30 @@ class ApiClient(baseUrl: String, private val tokens: TokenStore) {
                 setRequestProperty("Content-Type", "application/json; charset=utf-8")
             }
         }
+        val completionHandle = coroutineContext[Job]?.invokeOnCompletion { cause ->
+            if (cause != null) runCatching { connection.disconnect() }
+        }
         try {
             if (body != null) connection.outputStream.use { it.write(body.toString().toByteArray(Charsets.UTF_8)) }
             val code = connection.responseCode
             val stream = if (code in 200..299) connection.inputStream else connection.errorStream
             val text = stream?.bufferedReader(Charsets.UTF_8)?.use { it.readText() }.orEmpty()
-            val json = runCatching { JSONObject(text) }.getOrElse { JSONObject() }
             if (code !in 200..299) {
+                val json = runCatching { JSONObject(text) }.getOrElse { JSONObject() }
                 val error = json.opt("message")
                 val message = if (error is JSONArray) (0 until error.length()).joinToString(", ") { error.optString(it) } else error?.toString()
                 throw ApiException(message?.takeIf(String::isNotBlank) ?: "Máy chủ trả lỗi $code", code)
             }
-            json
+            text
+        } catch (error: CancellationException) {
+            throw error
         } catch (error: ApiException) {
             throw error
         } catch (error: Exception) {
+            coroutineContext.ensureActive()
             throw ApiException(error.message?.takeIf(String::isNotBlank) ?: "Không kết nối được máy chủ. Hãy kiểm tra mạng và backend.", 0)
         } finally {
+            completionHandle?.dispose()
             connection.disconnect()
         }
     }

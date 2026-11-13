@@ -7,7 +7,7 @@ import type { Word } from '@/lib/types';
 import SpeakButton from '@/components/SpeakButton';
 import FavoriteButton from '@/components/FavoriteButton';
 import PageHeader from '@/components/PageHeader';
-import Skeleton from '@/components/Skeleton';
+import ChainaStrokeLoading from '@/components/ChainaStrokeLoading';
 import Anim from '@/components/motion/Anim';
 
 export default function FavoritesPage() {
@@ -23,12 +23,7 @@ export default function FavoritesPage() {
   }, [user]);
 
   if (loading) {
-    return (
-      <div className="space-y-4">
-        <Skeleton className="h-14 w-1/3" />
-        <Skeleton className="h-48" />
-      </div>
-    );
+    return <ChainaStrokeLoading mode="PAGE" message="Đang tải sổ tay cá nhân…" />;
   }
 
   if (!user) {
@@ -66,6 +61,12 @@ export default function FavoritesPage() {
         <p role="alert" className="rounded-xl border border-rose-200 bg-rose-50 p-4 text-xs text-rose-800">
           {error}
         </p>
+      )}
+
+      {!words && !error && (
+        <div className="editorial-card flex min-h-[16rem] items-center justify-center p-6">
+          <ChainaStrokeLoading mode="INLINE" size="md" message="Đang tải danh sách từ đã lưu…" />
+        </div>
       )}
 
       {words && words.length === 0 && (

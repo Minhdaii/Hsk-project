@@ -5,6 +5,7 @@ import { api } from '@/lib/api';
 import type { Word } from '@/lib/types';
 import { BOSS_HP, damageFor, isPinyinMatch, isPlayableWord } from '@/lib/boss/pinyin';
 import { BOSSES, Mood } from './BossArt';
+import ChainaStrokeLoading from '@/components/ChainaStrokeLoading';
 import styles from './Boss.module.css';
 
 const POOL_SIZE = 40;
@@ -202,7 +203,14 @@ export default function BossGame() {
             <li>Boss HSK {level} có {maxHp} HP; trả lời đúng liên tiếp để gây thêm sát thương.</li>
           </ul>
           {error && <p role="alert" className="rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-800">{error}</p>}
-          <button className="btn-primary mt-auto !min-h-[52px] w-full shrink-0 text-base" onClick={start} disabled={phase === 'loading'}>{phase === 'loading' ? 'Đang tải từ vựng…' : `Đấu với ${bossName}`}</button>
+          <button className="btn-primary mt-auto !min-h-[52px] w-full shrink-0 text-base" onClick={start} disabled={phase === 'loading'}>
+            {phase === 'loading' ? (
+              <span className="inline-flex items-center justify-center gap-2">
+                <ChainaStrokeLoading mode="COMPACT" background="transparent" />
+                <span>Đang tải từ vựng…</span>
+              </span>
+            ) : `Đấu với ${bossName}`}
+          </button>
         </div>
       </div>
     );

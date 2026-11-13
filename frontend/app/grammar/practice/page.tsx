@@ -6,7 +6,7 @@ import { api, ApiError } from '@/lib/api';
 import { useUser } from '@/lib/useUser';
 import type { GExType, GGraded, GQuestion } from '@/lib/types';
 import SpeakButton from '@/components/SpeakButton';
-import Skeleton from '@/components/Skeleton';
+import ChainaStrokeLoading from '@/components/ChainaStrokeLoading';
 import ZhMix from '@/components/ZhMix';
 import Anim from '@/components/motion/Anim';
 import { ArrowLeft } from 'lucide-react';
@@ -116,7 +116,14 @@ function Practice() {
       </div>
 
       {error && <p role="alert" className="rounded-lg border border-red-300 bg-red-50 p-4 text-sm text-red-800">{error}</p>}
-      <button className="btn-primary !min-h-[52px] w-full text-base" onClick={start} disabled={loading}>{loading ? 'Đang tạo bài…' : 'Bắt đầu'}</button>
+      <button className="btn-primary !min-h-[52px] w-full text-base" onClick={start} disabled={loading}>
+        {loading ? (
+          <span className="inline-flex items-center justify-center gap-2">
+            <ChainaStrokeLoading mode="COMPACT" background="transparent" />
+            <span>Đang tạo bài…</span>
+          </span>
+        ) : 'Bắt đầu'}
+      </button>
       {!user && <p className="text-center text-sm text-stone-600">Bạn vẫn làm bài được khi chưa đăng nhập, nhưng kết quả sẽ không được lưu.</p>}
     </div>
   );
@@ -245,5 +252,5 @@ function Question({ q, onDone, last }: { q: GQuestion; onDone: (ok: boolean) => 
 }
 
 export default function GrammarPracticePage() {
-  return <Suspense fallback={<Skeleton className="mx-auto h-72 max-w-2xl" />}><Practice /></Suspense>;
+  return <Suspense fallback={<ChainaStrokeLoading mode="PAGE" message="Đang chuẩn bị bài luyện tập ngữ pháp…" />}><Practice /></Suspense>;
 }

@@ -8,7 +8,7 @@ import { posLabels, splitMeaning } from '@/lib/pos';
 import SpeakButton from '@/components/SpeakButton';
 import { ArrowLeft } from 'lucide-react';
 import FavoriteButton from '@/components/FavoriteButton';
-import Skeleton from '@/components/Skeleton';
+import ChainaStrokeLoading from '@/components/ChainaStrokeLoading';
 import HanziWriterBox from '@/components/HanziWriterBox';
 import Anim from '@/components/motion/Anim';
 
@@ -36,12 +36,7 @@ export default function WordDetailPage() {
   }
 
   if (!word) {
-    return (
-      <div className="mx-auto max-w-2xl space-y-5">
-        <Skeleton className="h-64" />
-        <Skeleton className="h-40" />
-      </div>
-    );
+    return <ChainaStrokeLoading mode="PAGE" message="Đang tải chi tiết từ vựng…" />;
   }
 
   const chars = Array.from(word.hanzi).filter((c) => /[\u3400-\u9fff]/.test(c));

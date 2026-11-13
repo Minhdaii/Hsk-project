@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { api } from '@/lib/api';
 import type { CategoryNode } from '@/lib/types';
-import Skeleton from '@/components/Skeleton';
+import ChainaStrokeLoading from '@/components/ChainaStrokeLoading';
 import Anim from '@/components/motion/Anim';
 
 /** Danh mục từ vựng theo chủ đề: nhóm > chủ đề > chủ đề con. Số từ lấy từ database, một từ có thể thuộc nhiều danh mục. */
@@ -34,7 +34,11 @@ export default function CategoriesPage() {
       </header>
 
       {error && <p role="alert" className="rounded-lg border border-red-300 bg-red-50 p-4 text-sm text-red-800">{error}</p>}
-      {!groups && !error && <div className="space-y-4"><Skeleton className="h-40" /><Skeleton className="h-40" /></div>}
+      {!groups && !error && (
+        <div className="lab-surface flex min-h-[18rem] items-center justify-center p-6">
+          <ChainaStrokeLoading mode="INLINE" size="lg" message="Đang tải danh mục chủ đề…" />
+        </div>
+      )}
       {groups && total === 0 && (
         <p className="lab-surface p-5 text-stone-600">Chưa có từ nào được gán vào danh mục. Quản trị viên cần chạy <code className="rounded bg-stone-100 px-1.5 py-0.5 text-sm">npm run import:categories</code> để nhập dữ liệu.</p>
       )}

@@ -2,38 +2,30 @@ package com.chaina.hsk.ui
 
 import android.graphics.Bitmap
 import android.graphics.Paint as AndroidPaint
-import android.graphics.RectF
 import android.speech.tts.TextToSpeech
 import android.util.Base64
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.LinearOutSlowInEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -42,34 +34,36 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.VolumeUp
+import androidx.compose.material.icons.rounded.Bookmark
+import androidx.compose.material.icons.rounded.BookmarkBorder
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Close
-import androidx.compose.material.icons.rounded.Delete
-import androidx.compose.material.icons.rounded.EmojiEvents
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material.icons.rounded.VolumeUp
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -84,57 +78,72 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.chaina.hsk.data.ActivityData
 import com.chaina.hsk.data.ApiClient
 import com.chaina.hsk.data.LevelProgress
 import com.chaina.hsk.data.Stats
 import com.chaina.hsk.data.Word
+import com.chaina.hsk.ui.components.ArrowUpRightIcon
+import com.chaina.hsk.ui.components.ChainaLoadingMode
+import com.chaina.hsk.ui.components.ChainaLoadingSize
+import com.chaina.hsk.ui.components.ChainaStrokeLoading
+import com.chaina.hsk.ui.components.CircleActionButton
 import com.chaina.hsk.ui.components.InkCard
 import com.chaina.hsk.ui.components.InkPrimaryButton
 import com.chaina.hsk.ui.components.LevelBadge
-import com.chaina.hsk.ui.components.RedSeal
+import com.chaina.hsk.ui.components.VectorFlameCanvas
+import com.chaina.hsk.ui.components.WebWeeklyChart
+import com.chaina.hsk.ui.theme.AmberBorder
 import com.chaina.hsk.ui.theme.AmberGold
 import com.chaina.hsk.ui.theme.AmberSoft
+import com.chaina.hsk.ui.theme.BentoButterEnd
+import com.chaina.hsk.ui.theme.BentoButterStart
+import com.chaina.hsk.ui.theme.BentoIndigoEnd
+import com.chaina.hsk.ui.theme.BentoIndigoStart
+import com.chaina.hsk.ui.theme.BentoLavenderEnd
+import com.chaina.hsk.ui.theme.BentoLavenderStart
+import com.chaina.hsk.ui.theme.BentoLimeEnd
+import com.chaina.hsk.ui.theme.BentoLimeStart
+import com.chaina.hsk.ui.theme.BentoMintEnd
+import com.chaina.hsk.ui.theme.BentoMintStart
+import com.chaina.hsk.ui.theme.BentoPeachEnd
+import com.chaina.hsk.ui.theme.BentoPeachStart
+import com.chaina.hsk.ui.theme.BentoRoseEnd
+import com.chaina.hsk.ui.theme.BentoRoseStart
+import com.chaina.hsk.ui.theme.BentoSkyEnd
+import com.chaina.hsk.ui.theme.BentoSkyStart
 import com.chaina.hsk.ui.theme.Brand
 import com.chaina.hsk.ui.theme.BrandBorder
 import com.chaina.hsk.ui.theme.BrandDark
 import com.chaina.hsk.ui.theme.BrandSoft
 import com.chaina.hsk.ui.theme.InkBlack
 import com.chaina.hsk.ui.theme.InkBorder
-import com.chaina.hsk.ui.theme.InkBorderDark
-import com.chaina.hsk.ui.theme.InkCharcoal
-import com.chaina.hsk.ui.theme.InkGray
 import com.chaina.hsk.ui.theme.InkLight
 import com.chaina.hsk.ui.theme.InkMuted
 import com.chaina.hsk.ui.theme.JadeBorder
 import com.chaina.hsk.ui.theme.JadeGreen
 import com.chaina.hsk.ui.theme.JadeSoft
 import com.chaina.hsk.ui.theme.Paper
-import com.chaina.hsk.ui.theme.PaperCard
 import com.chaina.hsk.ui.theme.PaperMuted
 import com.chaina.hsk.ui.theme.PaperPure
 import com.chaina.hsk.ui.theme.RedBad
 import com.chaina.hsk.ui.theme.RedBorder
 import com.chaina.hsk.ui.theme.RedSoft
-import com.chaina.hsk.ui.theme.Vermilion
-import com.chaina.hsk.ui.theme.VermilionBorder
-import com.chaina.hsk.ui.theme.VermilionDark
-import com.chaina.hsk.ui.theme.VermilionSoft
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -145,9 +154,24 @@ import java.text.Normalizer
 import java.util.Locale
 
 internal enum class AppDestination(val label: String) {
-    Home("Tổng quan"), Categories("Chủ đề"), Words("Từ vựng"), Practice("Luyện tập"), Path("Lộ trình"),
-    Grammar("Ngữ pháp"), GrammarPractice("Luyện ngữ pháp"), Favorites("Sổ từ"), Review("Ôn tập"), Stats("Thống kê"), Leaderboard("Xếp hạng"),
-    Writing("Luyện viết"), PinyinBoss("Pinyin Boss"), Account("Tài khoản"), Privacy("Quyền riêng tư"), Credits("Nguồn dữ liệu"),
+    Home("Tổng quan"),
+    Categories("Chủ đề"),
+    Words("Từ vựng"),
+    Practice("Luyện tập"),
+    Path("Lộ trình"),
+    Grammar("Ngữ pháp"),
+    GrammarPractice("Luyện ngữ pháp"),
+    Favorites("Sổ từ"),
+    Review("Ôn tập"),
+    Stats("Thống kê"),
+    Leaderboard("Xếp hạng"),
+    Writing("Luyện viết"),
+    PinyinBoss("Pinyin Boss"),
+    CameraTranslate("Dịch Camera"),
+    Feedback("Góp ý"),
+    Account("Tài khoản"),
+    Privacy("Quyền riêng tư"),
+    Credits("Nguồn dữ liệu"),
 }
 
 @Composable
@@ -175,13 +199,13 @@ internal fun InformationFeature(destination: AppDestination) {
                 "Bảng xếp hạng chỉ hiển thị tên rút gọn, điểm XP và chuỗi ngày học; email được bảo mật tuyệt đối." to "Bảng xếp hạng minh bạch",
                 "Đăng xuất sẽ xóa sạch phiên làm việc trên thiết bị. Yêu cầu xóa vĩnh viễn tài khoản được hỗ trợ bất cứ lúc nào." to "Quyền kiểm soát",
             ).forEachIndexed { index, (copy, title) ->
-                InkCard(modifier = Modifier.fillMaxWidth(), shapeRadius = 18.dp) {
+                InkCard(modifier = Modifier.fillMaxWidth(), shapeRadius = 20.dp) {
                     Row(
                         Modifier.padding(16.dp),
                         verticalAlignment = Alignment.Top,
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-                        RedSeal("${index + 1}", size = 32.dp, fontSize = 14.sp)
+                        LevelBadge("${index + 1}", size = 32.dp, fontSize = 14.sp)
                         Column(Modifier.weight(1f)) {
                             Text(title, fontWeight = FontWeight.Bold, fontSize = 15.sp, color = InkBlack)
                             Text(copy, fontSize = 13.sp, color = InkMuted, modifier = Modifier.padding(top = 4.dp))
@@ -193,12 +217,12 @@ internal fun InformationFeature(destination: AppDestination) {
             sources.forEach { (title, url) ->
                 InkCard(
                     modifier = Modifier.fillMaxWidth(),
-                    shapeRadius = 18.dp,
+                    shapeRadius = 20.dp,
                     onClick = { runCatching { context.startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(url))) } }
                 ) {
                     Column(Modifier.padding(16.dp)) {
                         Text(title, fontWeight = FontWeight.Bold, fontSize = 15.sp, color = InkBlack)
-                        Text(url, color = Vermilion, fontSize = 12.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(top = 4.dp))
+                        Text(url, color = BrandDark, fontSize = 12.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(top = 4.dp))
                     }
                 }
             }
@@ -207,6 +231,7 @@ internal fun InformationFeature(destination: AppDestination) {
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun CategoriesFeature(api: ApiClient) {
     var groups by remember { mutableStateOf<List<JSONObject>?>(null) }
@@ -215,6 +240,7 @@ internal fun CategoriesFeature(api: ApiClient) {
     var category by remember { mutableStateOf<JSONObject?>(null) }
     var words by remember { mutableStateOf<List<Word>>(emptyList()) }
     var selectedWord by remember { mutableStateOf<Word?>(null) }
+    var favoriteIds by remember { mutableStateOf<Set<Int>>(emptySet()) }
     var loading by remember { mutableStateOf(true) }
     var error by remember { mutableStateOf<String?>(null) }
 
@@ -222,6 +248,14 @@ internal fun CategoriesFeature(api: ApiClient) {
         loading = true
         try {
             groups = api.categoryTree().objects()
+            favoriteIds = runCatching {
+                api.favorites().objects().mapNotNull { row ->
+                    val w = row.optJSONObject("word") ?: row
+                    w.optInt("id").takeIf { it > 0 }
+                }.toSet()
+            }.getOrDefault(emptySet())
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             error = e.message ?: "Không tải được chủ đề."
         }
@@ -236,8 +270,11 @@ internal fun CategoriesFeature(api: ApiClient) {
         }
         loading = true
         try {
-            category = api.category(slug!!)
+            val res = api.category(slug!!)
+            category = res.optJSONObject("category") ?: res
             words = api.categoryWords(slug!!).objects().mapNotNull { runCatching { Word.from(it) }.getOrNull() }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             error = e.message ?: "Không tải được từ trong chủ đề."
         }
@@ -258,9 +295,9 @@ internal fun CategoriesFeature(api: ApiClient) {
                     shape = CircleShape,
                     border = BorderStroke(1.dp, InkBorder)
                 ) {
-                    Icon(Icons.Rounded.ArrowBack, contentDescription = null, tint = InkBlack, modifier = Modifier.size(18.dp))
+                    Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = null, tint = InkBlack, modifier = Modifier.size(17.dp))
                     Spacer(Modifier.width(6.dp))
-                    Text("Tất cả chủ đề", color = InkBlack, fontSize = 13.sp)
+                    Text("Tất cả chủ đề", color = InkBlack, fontSize = 12.5.sp, fontWeight = FontWeight.SemiBold)
                 }
                 Spacer(Modifier.width(12.dp))
                 category?.let { cat ->
@@ -277,59 +314,139 @@ internal fun CategoriesFeature(api: ApiClient) {
         }
 
         if (slug == null) {
-            error?.let { FeatureError(it) }
-            if (loading) FeatureLoading()
+            // Web-style pill search input for filtering topics
+            OutlinedTextField(
+                value = query,
+                onValueChange = { query = it },
+                singleLine = true,
+                shape = CircleShape,
+                placeholder = { Text("Tìm chủ đề đời sống…", fontSize = 13.sp, color = InkLight) },
+                leadingIcon = { Icon(Icons.Rounded.Search, contentDescription = null, tint = InkMuted, modifier = Modifier.size(19.dp)) },
+                trailingIcon = {
+                    if (query.isNotEmpty()) {
+                        IconButton(onClick = { query = "" }) {
+                            Icon(Icons.Rounded.Close, contentDescription = "Xóa", tint = InkMuted, modifier = Modifier.size(17.dp))
+                        }
+                    }
+                },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = BrandBorder,
+                    unfocusedBorderColor = InkBorder,
+                    focusedContainerColor = PaperPure,
+                    unfocusedContainerColor = PaperPure,
+                ),
+                modifier = Modifier.fillMaxWidth()
+            )
 
+            error?.let { FeatureError(it) }
+            if (loading) FeatureLoading("Đang tải chủ đề từ vựng…")
+
+            val needle = query.trim().lowercase()
             groups?.forEach { group ->
-                val categories = group.optJSONArray("categories").objects()
-                Text(
-                    group.optString("nameVi", group.optString("name")),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 17.sp,
-                    color = InkBlack,
-                    modifier = Modifier.padding(top = 8.dp)
-                )
-                categories.forEach { cat ->
-                    InkCard(
-                        modifier = Modifier.fillMaxWidth(),
-                        shapeRadius = 18.dp,
-                        onClick = { slug = cat.optString("slug") }
+                val rawChildren = group.optJSONArray("children") ?: group.optJSONArray("categories")
+                val topics = rawChildren.objects().filter { topic ->
+                    if (needle.isBlank()) true
+                    else {
+                        val nameMatch = topic.optString("nameVi", topic.optString("name")).lowercase().contains(needle)
+                        val subChildren = (topic.optJSONArray("children") ?: topic.optJSONArray("categories")).objects()
+                        nameMatch || subChildren.any { it.optString("nameVi", it.optString("name")).lowercase().contains(needle) }
+                    }
+                }
+                if (topics.isNotEmpty()) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(top = 6.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.Bottom,
                     ) {
-                        Row(
-                            Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(14.dp)
+                        Text(
+                            group.optString("nameVi", group.optString("name")),
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp,
+                            color = InkBlack,
+                        )
+                        val groupCount = group.optInt("wordCount", 0)
+                        if (groupCount > 0) {
+                            Text("$groupCount từ", fontSize = 12.sp, color = InkMuted)
+                        }
+                    }
+
+                    topics.forEach { cat ->
+                        val catSlug = cat.optString("slug")
+                        val catName = cat.optString("nameVi", cat.optString("name"))
+                        val count = cat.optInt("wordCount")
+                        val subTopics = (cat.optJSONArray("children") ?: cat.optJSONArray("categories"))
+                            .objects()
+                            .filter { it.optInt("wordCount", 0) > 0 }
+                            .take(6)
+
+                        InkCard(
+                            modifier = Modifier.fillMaxWidth(),
+                            shapeRadius = 20.dp,
+                            onClick = { slug = catSlug }
                         ) {
-                            RedSeal(
-                                text = cat.optString("icon", cat.optString("name").take(1)),
-                                size = 42.dp,
-                                fontSize = 18.sp,
-                                solid = false
-                            )
-                            Column(Modifier.weight(1f)) {
-                                Text(
-                                    cat.optString("nameVi", cat.optString("name")),
-                                    fontSize = 15.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = InkBlack
-                                )
-                                Text(
-                                    "${cat.optInt("wordCount")} từ vựng chuẩn HSK",
-                                    color = InkMuted,
-                                    fontSize = 12.sp,
-                                    modifier = Modifier.padding(top = 2.dp)
-                                )
+                            Column(
+                                Modifier.fillMaxWidth().padding(16.dp),
+                                verticalArrangement = Arrangement.spacedBy(10.dp),
+                            ) {
+                                Row(
+                                    Modifier.fillMaxWidth(),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                                ) {
+                                    LevelBadge(
+                                        text = cat.optString("icon").takeIf { it.isNotBlank() } ?: catName.take(1),
+                                        size = 42.dp,
+                                        fontSize = 17.sp,
+                                        solid = false
+                                    )
+                                    Column(Modifier.weight(1f)) {
+                                        Text(
+                                            catName,
+                                            fontSize = 15.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            color = InkBlack
+                                        )
+                                        Text(
+                                            if (count > 0) "$count từ vựng" else "Chạm để xem chi tiết",
+                                            color = InkMuted,
+                                            fontSize = 12.sp,
+                                            modifier = Modifier.padding(top = 2.dp)
+                                        )
+                                    }
+                                    ArrowUpRightIcon(tint = BrandDark, modifier = Modifier.size(16.dp))
+                                }
+
+                                if (subTopics.isNotEmpty()) {
+                                    FlowRow(
+                                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                                        verticalArrangement = Arrangement.spacedBy(6.dp),
+                                    ) {
+                                        subTopics.forEach { sub ->
+                                            Surface(
+                                                modifier = Modifier.clip(CircleShape).clickable { slug = sub.optString("slug") },
+                                                shape = CircleShape,
+                                                color = PaperMuted,
+                                                border = BorderStroke(1.dp, InkBorder),
+                                            ) {
+                                                Text(
+                                                    text = "${sub.optString("nameVi", sub.optString("name"))} · ${sub.optInt("wordCount")}",
+                                                    fontSize = 11.sp,
+                                                    color = InkMuted,
+                                                    fontWeight = FontWeight.Medium,
+                                                    modifier = Modifier.padding(horizontal = 9.dp, vertical = 5.dp),
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
                             }
-                            Text("›", color = Vermilion, fontSize = 24.sp, fontWeight = FontWeight.Bold)
                         }
                     }
                 }
             }
         } else {
             error?.let { FeatureError(it) }
-            if (loading) FeatureLoading()
+            if (loading) FeatureLoading("Đang tải từ vựng chủ đề…")
             words.forEach { word ->
                 FeatureWordRow(word) { selectedWord = word }
             }
@@ -338,7 +455,17 @@ internal fun CategoriesFeature(api: ApiClient) {
             }
         }
     }
-    selectedWord?.let { FeatureWordDialog(it) { selectedWord = null } }
+    selectedWord?.let { w ->
+        FeatureWordDialog(
+            word = w,
+            api = api,
+            isFavorite = w.id in favoriteIds,
+            onFavoriteToggled = { fav ->
+                favoriteIds = if (fav) favoriteIds + w.id else favoriteIds - w.id
+            },
+            onDismiss = { selectedWord = null }
+        )
+    }
 }
 
 @Composable
@@ -357,6 +484,8 @@ internal fun GrammarFeature(api: ApiClient) {
         error = null
         try {
             items = api.grammar(level).objects()
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             error = e.message ?: "Không tải được ngữ pháp."
         }
@@ -370,50 +499,54 @@ internal fun GrammarFeature(api: ApiClient) {
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        Row(
+            Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
             (0..3).forEach { l ->
                 val isSelected = level == l
-                FilterChip(
-                    selected = isSelected,
-                    onClick = { level = l },
-                    label = { Text(if (l == 0) "Tất cả" else "HSK $l", fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium) },
-                    colors = FilterChipDefaults.filterChipColors(
-                        selectedContainerColor = VermilionSoft,
-                        selectedLabelColor = VermilionDark,
-                    ),
-                    border = FilterChipDefaults.filterChipBorder(
-                        enabled = true,
-                        selected = isSelected,
-                        borderColor = if (isSelected) VermilionBorder else InkBorder,
-                    ),
-                    shape = RoundedCornerShape(12.dp)
-                )
+                Surface(
+                    modifier = Modifier.clip(CircleShape).clickable { level = l },
+                    shape = CircleShape,
+                    color = if (isSelected) BrandSoft else PaperPure,
+                    border = BorderStroke(1.dp, if (isSelected) BrandBorder else InkBorder),
+                ) {
+                    Text(
+                        text = if (l == 0) "Tất cả" else "HSK $l",
+                        fontSize = 12.sp,
+                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                        color = if (isSelected) BrandDark else InkMuted,
+                        modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
+                    )
+                }
             }
         }
 
         notice?.let { Text(it, color = JadeGreen, fontSize = 12.sp, fontWeight = FontWeight.SemiBold) }
         error?.let { FeatureError(it) }
-        if (loading) FeatureLoading()
+        if (loading) FeatureLoading("Đang tải ngữ pháp HSK…")
 
         items.groupBy { it.optInt("level") }.toSortedMap().forEach { (lv, points) ->
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.padding(top = 8.dp)
             ) {
-                RedSeal("HSK$lv", size = 26.dp, fontSize = 10.sp)
+                LevelBadge("HSK$lv", size = 28.dp, fontSize = 10.sp)
                 Text("Cấp độ HSK $lv", fontWeight = FontWeight.Bold, color = InkBlack, fontSize = 15.sp)
             }
 
             points.forEach { grammar ->
                 InkCard(
                     modifier = Modifier.fillMaxWidth(),
-                    shapeRadius = 18.dp,
+                    shapeRadius = 20.dp,
                     onClick = {
                         selected = grammar
                         scope.launch {
                             try {
                                 detail = api.grammarDetail(grammar.optString("slug").ifBlank { grammar.optString("id") })
+                            } catch (e: CancellationException) {
+                                throw e
                             } catch (e: Exception) {
                                 error = e.message
                             }
@@ -423,14 +556,15 @@ internal fun GrammarFeature(api: ApiClient) {
                     Column(Modifier.padding(16.dp)) {
                         Text(grammar.optString("title"), fontSize = 16.sp, fontWeight = FontWeight.Bold, color = InkBlack)
                         Surface(
-                            color = PaperMuted,
+                            color = BrandSoft,
                             shape = RoundedCornerShape(8.dp),
+                            border = BorderStroke(0.8.dp, BrandBorder),
                             modifier = Modifier.padding(top = 6.dp)
                         ) {
                             Text(
                                 grammar.optString("pattern"),
                                 fontSize = 13.sp,
-                                color = VermilionDark,
+                                color = BrandDark,
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                             )
@@ -469,13 +603,13 @@ internal fun GrammarFeature(api: ApiClient) {
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     Surface(
-                        color = VermilionSoft,
+                        color = BrandSoft,
                         shape = RoundedCornerShape(8.dp),
-                        border = BorderStroke(0.8.dp, VermilionBorder)
+                        border = BorderStroke(0.8.dp, BrandBorder)
                     ) {
                         Text(
                             data.optString("pattern"),
-                            color = VermilionDark,
+                            color = BrandDark,
                             fontWeight = FontWeight.Bold,
                             fontSize = 14.sp,
                             modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
@@ -495,7 +629,7 @@ internal fun GrammarFeature(api: ApiClient) {
                             Column(Modifier.fillMaxWidth().padding(12.dp)) {
                                 Text(ex.optString("hanzi"), fontSize = 18.sp, fontWeight = FontWeight.SemiBold, color = InkBlack)
                                 ex.optString("pinyin").takeIf(String::isNotBlank)?.let {
-                                    Text(it, color = Vermilion, fontSize = 12.sp, fontWeight = FontWeight.Medium)
+                                    Text(it, color = BrandDark, fontSize = 12.sp, fontWeight = FontWeight.Medium)
                                 }
                                 ex.optString("meaningVi").takeIf(String::isNotBlank)?.let {
                                     Text(it, color = InkMuted, fontSize = 12.sp, modifier = Modifier.padding(top = 2.dp))
@@ -512,12 +646,14 @@ internal fun GrammarFeature(api: ApiClient) {
                             api.setGrammarProgress(data.optInt("id"), "learned", !learned)
                             learned = !learned
                             notice = if (learned) "Đã đánh dấu đã học." else "Đã bỏ trạng thái đã học."
+                        } catch (e: CancellationException) {
+                            throw e
                         } catch (e: Exception) {
                             notice = e.message ?: "Không lưu được tiến độ."
                         }
                     }
                 }) {
-                    Text(if (learned) "Đã học ✓" else "Đánh dấu đã học", color = if (learned) JadeGreen else Vermilion, fontWeight = FontWeight.Bold)
+                    Text(if (learned) "Đã học ✓" else "Đánh dấu đã học", color = if (learned) JadeGreen else BrandDark, fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
@@ -537,45 +673,62 @@ internal fun GrammarFeature(api: ApiClient) {
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-internal fun GrammarPracticeFeature(api: ApiClient, initialLevel: Int) {
+internal fun GrammarPracticeFeature(
+    api: ApiClient,
+    initialLevel: Int,
+    initialCount: Int = 10,
+    autoStart: Boolean = false,
+) {
     val kinds = listOf(
         "order" to "Sắp xếp câu",
         "cloze" to "Điền chỗ trống",
         "choose" to "Chọn câu đúng",
         "fix" to "Sửa lỗi sai",
-        "match" to "Ghép cấu trúc",
         "translate" to "Dịch câu"
     )
     var kind by remember { mutableStateOf("order") }
     var level by remember { mutableIntStateOf(initialLevel) }
-    var count by remember { mutableIntStateOf(10) }
+    var count by remember { mutableIntStateOf(initialCount) }
     var round by remember { mutableIntStateOf(0) }
     var questions by remember { mutableStateOf<List<JSONObject>>(emptyList()) }
     var index by remember { mutableIntStateOf(0) }
     var tokens by remember { mutableStateOf<List<String>>(emptyList()) }
     var picked by remember { mutableStateOf<List<String>>(emptyList()) }
+    var selectedOption by remember { mutableStateOf<String?>(null) }
     var answer by remember { mutableStateOf<JSONObject?>(null) }
-    var loading by remember { mutableStateOf(false) }
+    var loading by remember { mutableStateOf(autoStart) }
+    var complete by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
     var score by remember { mutableIntStateOf(0) }
     val scope = rememberCoroutineScope()
 
-    fun start() {
-        scope.launch {
-            loading = true
-            error = null
-            answer = null
-            try {
-                questions = api.grammarExercises(kind, level, count = count).objects()
-                if (questions.isEmpty()) error = "Chưa có câu cho dạng bài này ở cấp HSK $level. Hãy thử dạng khác hoặc chọn Tất cả."
-                index = 0
-                score = 0
-                round++
-            } catch (e: Exception) {
-                error = e.message ?: "Không tải được bài ngữ pháp."
-            }
-            loading = false
+    suspend fun loadQuestions(targetKind: String, targetLevel: Int, targetCount: Int) {
+        loading = true
+        error = null
+        answer = null
+        complete = false
+        try {
+            val fetched = api.grammarExercises(targetKind, targetLevel, count = targetCount).objects()
+            questions = fetched
+            if (fetched.isEmpty()) error = "Chưa có câu cho dạng bài này ở cấp HSK $targetLevel. Hãy thử dạng khác hoặc chọn Tất cả."
+            index = 0
+            score = 0
+            round++
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Exception) {
+            error = e.message ?: "Không tải được bài ngữ pháp."
+        }
+        loading = false
+    }
+
+    LaunchedEffect(initialLevel, initialCount, autoStart) {
+        level = initialLevel
+        count = initialCount
+        if (autoStart) {
+            loadQuestions(kind, initialLevel, initialCount)
         }
     }
 
@@ -584,6 +737,7 @@ internal fun GrammarPracticeFeature(api: ApiClient, initialLevel: Int) {
     LaunchedEffect(round, index, q) {
         tokens = q?.optJSONArray("tokens").strings().shuffled()
         picked = emptyList()
+        selectedOption = null
         answer = null
     }
 
@@ -594,161 +748,310 @@ internal fun GrammarPracticeFeature(api: ApiClient, initialLevel: Int) {
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        if (questions.isEmpty()) {
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                (0..3).forEach { lv ->
-                    val isSelected = level == lv
-                    FilterChip(
-                        selected = isSelected,
-                        onClick = { level = lv },
-                        label = { Text(if (lv == 0) "Tất cả" else "HSK $lv") },
-                        colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = VermilionSoft,
-                            selectedLabelColor = VermilionDark,
-                        ),
-                        border = FilterChipDefaults.filterChipBorder(
-                            enabled = true,
-                            selected = isSelected,
-                            borderColor = if (isSelected) VermilionBorder else InkBorder,
-                        ),
-                        shape = RoundedCornerShape(12.dp)
+        Row(
+            Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            kinds.forEach { (id, label) ->
+                val isSelected = kind == id
+                Surface(
+                    modifier = Modifier.clip(CircleShape).clickable {
+                        if (kind != id) {
+                            kind = id
+                            if (autoStart || questions.isNotEmpty() || complete) {
+                                scope.launch { loadQuestions(id, level, count) }
+                            }
+                        }
+                    },
+                    shape = CircleShape,
+                    color = if (isSelected) BrandSoft else PaperPure,
+                    border = BorderStroke(1.dp, if (isSelected) BrandBorder else InkBorder),
+                ) {
+                    Text(
+                        label,
+                        fontSize = 12.sp,
+                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                        color = if (isSelected) BrandDark else InkMuted,
+                        modifier = Modifier.padding(horizontal = 13.dp, vertical = 7.dp),
                     )
                 }
             }
+        }
 
-            Text("Chọn dạng bài tập", fontWeight = FontWeight.Bold, fontSize = 14.sp, color = InkBlack)
-            kinds.forEach { (id, label) ->
-                val isSelected = kind == id
-                InkCard(
-                    modifier = Modifier.fillMaxWidth(),
-                    shapeRadius = 14.dp,
-                    backgroundColor = if (isSelected) VermilionSoft else PaperPure,
-                    borderColor = if (isSelected) VermilionBorder else InkBorder,
-                    onClick = { kind = id }
+        if (loading && questions.isEmpty()) {
+            FeatureLoading("Đang tạo bài tập ngữ pháp…")
+        } else if (complete) {
+            InkCard(modifier = Modifier.fillMaxWidth(), shapeRadius = 24.dp) {
+                Column(
+                    Modifier.padding(26.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    Row(
-                        Modifier.padding(horizontal = 14.dp, vertical = 12.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                    LevelBadge("完", size = 56.dp, fontSize = 24.sp, solid = true)
+                    Text("Hoàn thành bài ngữ pháp!", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = InkBlack)
+                    Text("Đúng $score / ${questions.size.coerceAtLeast(1)} câu", color = BrandDark, fontSize = 17.sp, fontWeight = FontWeight.Bold)
+                    InkPrimaryButton(
+                        text = "Luyện lượt mới",
+                        onClick = { scope.launch { loadQuestions(kind, level, count) } },
+                        modifier = Modifier.fillMaxWidth().padding(top = 6.dp)
+                    )
+                }
+            }
+        } else if (questions.isEmpty()) {
+            Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                (0..3).forEach { lv ->
+                    val isSelected = level == lv
+                    Surface(
+                        modifier = Modifier.clip(CircleShape).clickable { level = lv },
+                        shape = CircleShape,
+                        color = if (isSelected) BrandSoft else PaperPure,
+                        border = BorderStroke(1.dp, if (isSelected) BrandBorder else InkBorder),
                     ) {
-                        Text(label, fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium, color = if (isSelected) VermilionDark else InkBlack)
+                        Text(
+                            if (lv == 0) "Tất cả" else "HSK $lv",
+                            fontSize = 12.sp,
+                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                            color = if (isSelected) BrandDark else InkMuted,
+                            modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
+                        )
                     }
                 }
             }
 
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                listOf(5, 10, 15).forEach { n ->
-                    FilterChip(
-                        selected = count == n,
-                        onClick = { count = n },
-                        label = { Text("$n câu") },
-                        colors = FilterChipDefaults.filterChipColors(selectedContainerColor = VermilionSoft, selectedLabelColor = VermilionDark),
-                        border = FilterChipDefaults.filterChipBorder(enabled = true, selected = count == n, borderColor = if (count == n) VermilionBorder else InkBorder),
-                        shape = RoundedCornerShape(12.dp)
-                    )
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
+                listOf(5, 10, 15, 20).forEach { n ->
+                    val isSelected = count == n
+                    Surface(
+                        modifier = Modifier.weight(1f).clip(RoundedCornerShape(12.dp)).clickable { count = n },
+                        shape = RoundedCornerShape(12.dp),
+                        color = if (isSelected) BrandSoft else PaperPure,
+                        border = BorderStroke(1.dp, if (isSelected) BrandBorder else InkBorder),
+                    ) {
+                        Box(Modifier.padding(vertical = 10.dp), contentAlignment = Alignment.Center) {
+                            Text("$n câu", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = if (isSelected) BrandDark else InkBlack, maxLines = 1)
+                        }
+                    }
                 }
             }
 
             error?.let { FeatureError(it) }
-            InkPrimaryButton(text = if (loading) "Đang tạo bài tập…" else "Bắt đầu làm bài", onClick = ::start, modifier = Modifier.fillMaxWidth())
+            InkPrimaryButton(
+                text = "Bắt đầu làm bài",
+                loading = loading,
+                onClick = { scope.launch { loadQuestions(kind, level, count) } },
+                modifier = Modifier.fillMaxWidth()
+            )
         } else {
             val total = questions.size.coerceAtLeast(1)
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                Text("CÂU ${index + 1} / $total", color = Vermilion, fontWeight = FontWeight.Bold, fontSize = 12.sp, letterSpacing = 1.sp)
+                Text("CÂU ${index + 1} / $total", color = BrandDark, fontWeight = FontWeight.Bold, fontSize = 12.sp, letterSpacing = 1.sp)
                 Text("Đúng $score câu", color = JadeGreen, fontWeight = FontWeight.Bold, fontSize = 12.sp)
             }
             LinearProgressIndicator(
                 progress = { (index + 1).toFloat() / total },
                 modifier = Modifier.fillMaxWidth().height(6.dp).clip(CircleShape),
-                color = Vermilion,
+                color = BrandDark,
                 trackColor = PaperMuted
             )
 
+            error?.let { FeatureError(it) }
+
             q?.let { question ->
+                val qType = question.optString("type", kind)
+                val qOptions = question.optJSONArray("options").strings()
+                val isTokenQuestion = qType in listOf("order", "translate") || qOptions.isEmpty()
+
                 InkCard(modifier = Modifier.fillMaxWidth(), shapeRadius = 22.dp) {
                     Column(Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                        Text(question.optString("prompt", "Sắp xếp các từ thành câu đúng:"), fontSize = 16.sp, fontWeight = FontWeight.Bold, color = InkBlack)
-                        question.optString("meaningVi").takeIf(String::isNotBlank)?.let {
-                            Text(it, color = InkMuted, fontSize = 13.sp)
-                        }
-
-                        // Answer Box
-                        Surface(
-                            Modifier.fillMaxWidth(),
-                            color = PaperMuted,
-                            shape = RoundedCornerShape(14.dp),
-                            border = BorderStroke(1.dp, InkBorder)
-                        ) {
-                            Text(
-                                if (picked.isEmpty()) "Chạm các từ bên dưới để ghép câu…" else picked.joinToString(" "),
-                                fontSize = 18.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                color = if (picked.isEmpty()) InkLight else InkBlack,
-                                modifier = Modifier.padding(14.dp)
-                            )
-                        }
-
-                        // Word Bank
-                        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                            tokens.forEachIndexed { i, token ->
-                                Surface(
-                                    modifier = Modifier.clickable {
-                                        tokens = tokens.filterIndexed { idx, _ -> idx != i }
-                                        picked = picked + token
-                                    },
-                                    color = PaperPure,
-                                    shape = RoundedCornerShape(10.dp),
-                                    border = BorderStroke(1.dp, InkBorder)
-                                ) {
-                                    Text(token, fontSize = 16.sp, modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp), color = InkBlack)
+                        when (qType) {
+                            "cloze" -> {
+                                val sentence = "${question.optString("before")} ＿＿ ${question.optString("after")}".trim()
+                                Text("Chọn từ đúng điền vào chỗ trống:", fontSize = 13.sp, color = InkMuted, fontWeight = FontWeight.SemiBold)
+                                Text(sentence, fontSize = 22.sp, fontWeight = FontWeight.Bold, color = InkBlack)
+                                question.optString("prompt").takeIf { it.isNotBlank() && it != "null" }?.let {
+                                    Text(it, color = InkMuted, fontSize = 13.sp)
+                                }
+                            }
+                            "fix" -> {
+                                Text("Chọn câu đã sửa lỗi sai cho đúng:", fontSize = 13.sp, color = InkMuted, fontWeight = FontWeight.SemiBold)
+                                Surface(color = RedSoft, shape = RoundedCornerShape(12.dp), border = BorderStroke(1.dp, RedBorder)) {
+                                    Text("Câu sai: ${question.optString("wrong")}", color = RedBad, fontSize = 16.sp, fontWeight = FontWeight.SemiBold, modifier = Modifier.fillMaxWidth().padding(12.dp))
+                                }
+                                question.optString("prompt").takeIf { it.isNotBlank() && it != "null" }?.let {
+                                    Text(it, color = InkMuted, fontSize = 13.sp)
+                                }
+                            }
+                            "choose" -> {
+                                Text("Chọn câu dùng đúng cấu trúc \"${question.optString("prompt")}\":", fontSize = 15.sp, fontWeight = FontWeight.Bold, color = InkBlack)
+                            }
+                            else -> {
+                                Text(question.optString("prompt", "Sắp xếp các từ thành câu đúng:"), fontSize = 16.sp, fontWeight = FontWeight.Bold, color = InkBlack)
+                                question.optString("meaningVi").takeIf { it.isNotBlank() && it != "null" }?.let {
+                                    Text(it, color = InkMuted, fontSize = 13.sp)
                                 }
                             }
                         }
 
-                        if (answer == null) {
-                            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                OutlinedButton(
-                                    onClick = { tokens = q.optJSONArray("tokens").strings().shuffled(); picked = emptyList() },
-                                    modifier = Modifier.weight(1f),
-                                    shape = RoundedCornerShape(12.dp),
-                                    border = BorderStroke(1.dp, InkBorder)
-                                ) {
-                                    Text("Làm lại", color = InkMuted)
-                                }
-                                InkPrimaryButton(
-                                    text = "Kiểm tra",
-                                    onClick = {
-                                        scope.launch {
-                                            loading = true
-                                            try {
-                                                val body = JSONObject()
-                                                    .put("type", question.optString("type", "order"))
-                                                    .put("grammarId", question.optInt("grammarId"))
-                                                    .put("answer", picked.joinToString(""))
-                                                val res = api.gradeGrammar(body)
-                                                answer = res
-                                                if (res.optBoolean("correct")) score++
-                                            } catch (e: Exception) {
-                                                error = e.message
+                        if (isTokenQuestion) {
+                            Surface(
+                                Modifier.fillMaxWidth(),
+                                color = PaperMuted,
+                                shape = RoundedCornerShape(14.dp),
+                                border = BorderStroke(1.dp, InkBorder)
+                            ) {
+                                if (picked.isEmpty()) {
+                                    Text(
+                                        "Chạm các từ bên dưới để ghép câu…",
+                                        fontSize = 15.sp,
+                                        color = InkLight,
+                                        modifier = Modifier.padding(14.dp)
+                                    )
+                                } else {
+                                    FlowRow(
+                                        modifier = Modifier.fillMaxWidth().padding(10.dp),
+                                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                                    ) {
+                                        picked.forEachIndexed { pIdx, tok ->
+                                            Surface(
+                                                modifier = Modifier.clickable(enabled = answer == null) {
+                                                    picked = picked.filterIndexed { i, _ -> i != pIdx }
+                                                    tokens = tokens + tok
+                                                },
+                                                color = PaperPure,
+                                                shape = RoundedCornerShape(10.dp),
+                                                border = BorderStroke(1.dp, BrandBorder),
+                                            ) {
+                                                Text(tok, fontSize = 16.sp, fontWeight = FontWeight.SemiBold, color = BrandDark, modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp))
                                             }
-                                            loading = false
                                         }
-                                    },
-                                    enabled = picked.isNotEmpty(),
-                                    modifier = Modifier.weight(1f)
-                                )
+                                    }
+                                }
+                            }
+
+                            FlowRow(
+                                Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                verticalArrangement = Arrangement.spacedBy(8.dp),
+                            ) {
+                                tokens.forEachIndexed { i, token ->
+                                    Surface(
+                                        modifier = Modifier.clickable(enabled = answer == null) {
+                                            tokens = tokens.filterIndexed { idx, _ -> idx != i }
+                                            picked = picked + token
+                                        },
+                                        color = PaperPure,
+                                        shape = RoundedCornerShape(10.dp),
+                                        border = BorderStroke(1.dp, InkBorder)
+                                    ) {
+                                        Text(token, fontSize = 16.sp, modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp), color = InkBlack)
+                                    }
+                                }
+                            }
+
+                            if (answer == null) {
+                                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                    OutlinedButton(
+                                        onClick = { tokens = q.optJSONArray("tokens").strings().shuffled(); picked = emptyList() },
+                                        modifier = Modifier.weight(1f).height(48.dp),
+                                        shape = RoundedCornerShape(14.dp),
+                                        border = BorderStroke(1.dp, InkBorder)
+                                    ) {
+                                        Text("Làm lại", color = InkMuted)
+                                    }
+                                    InkPrimaryButton(
+                                        text = "Kiểm tra",
+                                        loading = loading,
+                                        onClick = {
+                                            scope.launch {
+                                                loading = true
+                                                error = null
+                                                try {
+                                                    val body = JSONObject()
+                                                        .put("type", qType)
+                                                        .put("grammarId", question.optInt("grammarId"))
+                                                        .put("exampleId", question.optInt("exampleId"))
+                                                        .put("answer", JSONArray(picked))
+                                                    val res = api.gradeGrammar(body)
+                                                    answer = res
+                                                    if (res.optBoolean("correct")) score++
+                                                } catch (e: CancellationException) {
+                                                    throw e
+                                                } catch (e: Exception) {
+                                                    error = e.message ?: "Không chấm được bài."
+                                                }
+                                                loading = false
+                                            }
+                                        },
+                                        enabled = picked.isNotEmpty() && !loading,
+                                        modifier = Modifier.weight(1f)
+                                    )
+                                }
                             }
                         } else {
+                            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                                qOptions.forEach { opt ->
+                                    val isPicked = selectedOption == opt
+                                    val isRightAns = answer != null && answer!!.optBoolean("correct") && isPicked
+                                    GameChoice(
+                                        text = opt,
+                                        selected = isPicked,
+                                        correct = isRightAns,
+                                        wrong = answer != null && !answer!!.optBoolean("correct") && isPicked,
+                                        onClick = {
+                                            if (answer == null && !loading) {
+                                                selectedOption = opt
+                                                scope.launch {
+                                                    loading = true
+                                                    error = null
+                                                    try {
+                                                        val body = JSONObject()
+                                                            .put("type", qType)
+                                                            .put("grammarId", question.optInt("grammarId"))
+                                                            .put("exampleId", question.optInt("exampleId"))
+                                                            .put("answer", opt)
+                                                        val res = api.gradeGrammar(body)
+                                                        answer = res
+                                                        if (res.optBoolean("correct")) score++
+                                                    } catch (e: CancellationException) {
+                                                        throw e
+                                                    } catch (e: Exception) {
+                                                        error = e.message ?: "Không chấm được bài."
+                                                    }
+                                                    loading = false
+                                                }
+                                            }
+                                        }
+                                    )
+                                }
+                            }
+                        }
+
+                        if (answer != null) {
                             val correct = answer!!.optBoolean("correct")
-                            Text(
-                                if (correct) "Chính xác! Bạn làm rất tốt." else "Chưa đúng. Đáp án: ${answer!!.optString("correctAnswer", "Xem giải thích")}",
-                                color = if (correct) JadeGreen else Vermilion,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 13.sp
-                            )
+                            val sol = answer!!.optString("solution", answer!!.optString("correctAnswer"))
+                            val exp = answer!!.optString("explanation").takeIf { it.isNotBlank() && it != "null" }
+                            Surface(
+                                shape = RoundedCornerShape(12.dp),
+                                color = if (correct) JadeSoft else RedSoft,
+                                border = BorderStroke(1.dp, if (correct) JadeBorder else RedBorder),
+                            ) {
+                                Column(Modifier.fillMaxWidth().padding(12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                    Text(
+                                        if (correct) "Chính xác! Bạn làm rất tốt." else "Chưa đúng. Đáp án: $sol",
+                                        color = if (correct) JadeGreen else RedBad,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 13.sp
+                                    )
+                                    if (exp != null) {
+                                        Text(exp, fontSize = 12.sp, color = InkBlack)
+                                    }
+                                }
+                            }
                             InkPrimaryButton(
                                 text = if (index + 1 >= questions.size) "Xem tổng kết" else "Câu tiếp theo ›",
                                 onClick = {
-                                    if (index + 1 >= questions.size) questions = emptyList()
+                                    if (index + 1 >= questions.size) complete = true
                                     else index++
                                 },
                                 modifier = Modifier.fillMaxWidth()
@@ -778,6 +1081,8 @@ internal fun FavoritesFeature(api: ApiClient) {
                     val w = row.optJSONObject("word") ?: row
                     runCatching { Word.from(w) }.getOrNull()
                 }
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Exception) {
                 error = e.message ?: "Không tải được sổ từ."
             }
@@ -794,29 +1099,44 @@ internal fun FavoritesFeature(api: ApiClient) {
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         error?.let { FeatureError(it) }
-        if (loading) FeatureLoading()
+        if (loading) FeatureLoading("Đang tải sổ tay từ vựng…")
         else if (words.isEmpty() && error == null) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    RedSeal("藏", size = 42.dp, fontSize = 20.sp, solid = false)
-                    Text("Sổ tay của bạn đang trống.", color = InkMuted, fontSize = 14.sp)
-                    Text("Lưu các từ khó nhớ khi tra cứu để ôn lại sau.", color = InkLight, fontSize = 12.sp)
+                    LevelBadge("藏", size = 44.dp, fontSize = 20.sp, solid = false)
+                    Text("Sổ tay của bạn đang trống.", color = InkBlack, fontSize = 15.sp, fontWeight = FontWeight.Bold)
+                    Text("Chạm biểu tượng đánh dấu khi tra từ để lưu vào sổ tay.", color = InkMuted, fontSize = 12.5.sp, textAlign = TextAlign.Center)
                 }
             }
         } else {
             LazyColumn(verticalArrangement = Arrangement.spacedBy(9.dp)) {
                 items(words, key = { it.id }) { word ->
-                    WordRow(word, Modifier.fillMaxWidth().clickable { selectedWord = word })
+                    FeatureWordRow(word) { selectedWord = word }
                 }
             }
         }
     }
-    selectedWord?.let { FeatureWordDialog(it) { selectedWord = null } }
+    selectedWord?.let { w ->
+        FeatureWordDialog(
+            word = w,
+            api = api,
+            isFavorite = words.any { it.id == w.id },
+            onFavoriteToggled = { fav ->
+                if (!fav) {
+                    words = words.filterNot { it.id == w.id }
+                    selectedWord = null
+                }
+            },
+            onDismiss = { selectedWord = null }
+        )
+    }
 }
 
 @Composable
 internal fun StatisticsFeature(api: ApiClient) {
     var stats by remember { mutableStateOf<Stats?>(null) }
+    var activity by remember { mutableStateOf<ActivityData?>(null) }
+    var levels by remember { mutableStateOf<List<LevelProgress>>(emptyList()) }
     var loading by remember { mutableStateOf(true) }
     var error by remember { mutableStateOf<String?>(null) }
 
@@ -824,6 +1144,10 @@ internal fun StatisticsFeature(api: ApiClient) {
         loading = true
         try {
             stats = api.stats()
+            activity = runCatching { api.activityData() }.getOrNull()
+            levels = runCatching { api.levels() }.getOrDefault(emptyList())
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             error = e.message ?: "Không tải được thống kê."
         }
@@ -837,46 +1161,63 @@ internal fun StatisticsFeature(api: ApiClient) {
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
-        if (loading) FeatureLoading()
+        if (loading) FeatureLoading("Đang tải tiến độ học tập…")
         error?.let { FeatureError(it) }
 
         stats?.let { s ->
-            InkCard(
-                modifier = Modifier.fillMaxWidth(),
-                backgroundColor = InkCharcoal,
-                borderColor = Color.Transparent,
-                shapeRadius = 24.dp,
-            ) {
-                Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
+            val started = levels.sumOf { it.started }
+            val total = levels.sumOf { it.total }.coerceAtLeast(1)
+            val mastered = levels.sumOf { it.mastered }
+
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                FeatureMetric("Từ đã bắt đầu", "$started", "/ $total từ", Modifier.weight(1f))
+                FeatureMetric("Đã thuộc vững", "$mastered", "nhớ sâu SM-2", Modifier.weight(1f))
+            }
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                FeatureMetric("Điểm kinh nghiệm", "${s.xp}", "XP tích lũy", Modifier.weight(1f))
+                FeatureMetric("Chuỗi hiện tại", "${s.streak}", if (s.studiedToday) "Hôm nay đã ôn" else "Cần ôn hôm nay", Modifier.weight(1f))
+            }
+
+            // Real Web WeeklyChart card
+            InkCard(modifier = Modifier.fillMaxWidth(), shapeRadius = 24.dp, backgroundColor = PaperPure) {
+                Column(Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                        Text("TỔNG QUAN THÀNH TÍCH", color = VermilionSoft, fontSize = 10.sp, fontWeight = FontWeight.Bold, letterSpacing = 1.3.sp)
-                        RedSeal("绩", size = 26.dp, fontSize = 12.sp)
-                    }
-                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                        Surface(Modifier.weight(1f), shape = RoundedCornerShape(14.dp), color = Color.White.copy(alpha = 0.12f)) {
-                            Column(Modifier.padding(12.dp)) {
-                                Text("Chuỗi ngày", color = Color.White.copy(alpha = 0.7f), fontSize = 11.sp)
-                                Text("${s.streak} ngày 🔥", color = Color.White, fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                            }
+                        Column {
+                            Text("Hiệu suất học tập", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = InkBlack)
+                            Text("Lượt ôn tập trong 7 ngày gần nhất", fontSize = 12.sp, color = InkMuted)
                         }
-                        Surface(Modifier.weight(1f), shape = RoundedCornerShape(14.dp), color = Color.White.copy(alpha = 0.12f)) {
-                            Column(Modifier.padding(12.dp)) {
-                                Text("Điểm kinh nghiệm", color = Color.White.copy(alpha = 0.7f), fontSize = 11.sp)
-                                Text("${s.xp} XP ✦", color = AmberGold, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                        Surface(shape = CircleShape, color = PaperMuted, border = BorderStroke(1.dp, InkBorder)) {
+                            Text("Mục tiêu ${activity?.goal ?: 20}/ngày", fontSize = 11.sp, fontWeight = FontWeight.Medium, color = InkMuted, modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp))
+                        }
+                    }
+                    WebWeeklyChart(
+                        days = activity?.days ?: emptyList(),
+                        goal = activity?.goal ?: 20,
+                    )
+                }
+            }
+
+            if (levels.isNotEmpty()) {
+                InkCard(modifier = Modifier.fillMaxWidth(), shapeRadius = 22.dp) {
+                    Column(Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        Text("Tiến độ theo cấp độ HSK", fontWeight = FontWeight.Bold, fontSize = 16.sp, color = InkBlack)
+                        levels.forEach { lv ->
+                            val pct = if (lv.total > 0) (lv.started.toFloat() / lv.total).coerceIn(0f, 1f) else 0f
+                            Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                                    Text("HSK ${lv.level}", fontWeight = FontWeight.Bold, fontSize = 13.sp, color = InkBlack)
+                                    Text("${lv.started}/${lv.total} đã học · ${lv.mastered} thuộc", fontSize = 12.sp, color = InkMuted)
+                                }
+                                LinearProgressIndicator(
+                                    progress = { pct },
+                                    modifier = Modifier.fillMaxWidth().height(5.dp).clip(CircleShape),
+                                    color = InkBlack,
+                                    trackColor = PaperMuted,
+                                )
                             }
                         }
                     }
                 }
-            }
-
-            Text("Chi tiết tiến độ học tập", fontWeight = FontWeight.Bold, fontSize = 16.sp, color = InkBlack)
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                FeatureMetric("Đã học", "${s.learned}", "từ", Modifier.weight(1f))
-                FeatureMetric("Đến hạn ôn", "${s.due}", "từ", Modifier.weight(1f))
-            }
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                FeatureMetric("Chuỗi ngày", "${s.streak}", "ngày", Modifier.weight(1f))
-                FeatureMetric("Hôm nay", if (s.studiedToday) "Đã hoàn thành" else "Chưa ôn", "", Modifier.weight(1f))
             }
         }
     }
@@ -892,6 +1233,8 @@ internal fun LeaderboardFeature(api: ApiClient) {
         loading = true
         try {
             rows = api.leaderboard().objects()
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             error = e.message ?: "Không tải được bảng xếp hạng."
         }
@@ -906,23 +1249,18 @@ internal fun LeaderboardFeature(api: ApiClient) {
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         error?.let { FeatureError(it) }
-        if (loading) FeatureLoading()
+        if (loading) FeatureLoading("Đang tải bảng xếp hạng…")
         else {
-            val seals = listOf("冠", "亚", "季")
+            val podiumColors = listOf(Color(0xFFE7E1FF), Color(0xFFDAEEFF), Color(0xFFEAF7C6))
             rows.forEachIndexed { index, row ->
                 val isTop3 = index < 3
-                val medalBg = when (index) {
-                    0 -> AmberSoft
-                    1 -> PaperMuted
-                    2 -> VermilionSoft
-                    else -> PaperPure
-                }
+                val circleColor = podiumColors.getOrElse(index) { PaperMuted }
 
                 InkCard(
                     modifier = Modifier.fillMaxWidth(),
-                    shapeRadius = 18.dp,
-                    backgroundColor = medalBg,
-                    borderColor = if (index == 0) AmberGold else InkBorder,
+                    shapeRadius = 20.dp,
+                    backgroundColor = PaperPure,
+                    borderColor = if (index == 0) BrandBorder else InkBorder,
                 ) {
                     Row(
                         Modifier
@@ -930,36 +1268,45 @@ internal fun LeaderboardFeature(api: ApiClient) {
                             .padding(horizontal = 16.dp, vertical = 14.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        if (isTop3) {
-                            RedSeal(seals[index], size = 36.dp, fontSize = 15.sp, solid = (index == 0))
-                        } else {
-                            Surface(
-                                shape = CircleShape,
-                                color = PaperMuted,
-                                modifier = Modifier.size(36.dp)
-                            ) {
-                                Box(contentAlignment = Alignment.Center) {
-                                    Text("${index + 1}", fontWeight = FontWeight.Bold, color = InkMuted, fontSize = 13.sp)
-                                }
+                        Surface(
+                            shape = CircleShape,
+                            color = circleColor,
+                            modifier = Modifier.size(40.dp)
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Text(
+                                    text = "${row.optInt("rank", index + 1)}",
+                                    fontWeight = FontWeight.ExtraBold,
+                                    color = InkBlack,
+                                    fontSize = 15.sp,
+                                )
                             }
                         }
 
                         Column(Modifier.weight(1f).padding(start = 14.dp)) {
                             Text(row.optString("name", "Người học"), fontWeight = FontWeight.Bold, fontSize = 15.sp, color = InkBlack)
-                            Text("Chuỗi ${row.optInt("streak")} ngày 🔥", color = InkMuted, fontSize = 12.sp)
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                                modifier = Modifier.padding(top = 2.dp),
+                            ) {
+                                val st = row.optInt("streak")
+                                VectorFlameCanvas(active = st > 0, litToday = false, modifier = Modifier.size(width = 11.dp, height = 14.dp))
+                                Text("Chuỗi $st ngày", color = InkMuted, fontSize = 12.sp)
+                            }
                         }
 
                         Surface(
-                            color = PaperPure,
-                            shape = RoundedCornerShape(10.dp),
-                            border = BorderStroke(1.dp, InkBorder)
+                            color = if (isTop3) BrandSoft else PaperMuted,
+                            shape = CircleShape,
+                            border = BorderStroke(1.dp, if (isTop3) BrandBorder else InkBorder)
                         ) {
                             Text(
                                 "${row.optInt("xp")} XP",
-                                color = if (index == 0) AmberGold else InkBlack,
+                                color = if (isTop3) BrandDark else InkBlack,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 13.sp,
-                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
+                                modifier = Modifier.padding(horizontal = 11.dp, vertical = 5.dp)
                             )
                         }
                     }
@@ -995,7 +1342,7 @@ internal fun LearningPathFeature(onPractice: (Int) -> Unit) {
             val level = if (index < 4) 1 else if (index < 7) 2 else 3
             InkCard(
                 modifier = Modifier.fillMaxWidth(),
-                shapeRadius = 20.dp,
+                shapeRadius = 22.dp,
                 onClick = { selected = index }
             ) {
                 Row(
@@ -1005,13 +1352,13 @@ internal fun LearningPathFeature(onPractice: (Int) -> Unit) {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(14.dp)
                 ) {
-                    RedSeal(stage.first, size = 46.dp, fontSize = 20.sp, solid = (index == 0))
+                    LevelBadge(stage.first, size = 46.dp, fontSize = 20.sp, solid = (index == 0))
                     Column(Modifier.weight(1f)) {
-                        Text("CHẶNG ${index + 1} · HSK $level", color = Vermilion, fontSize = 10.sp, fontWeight = FontWeight.Bold, letterSpacing = 1.sp)
+                        Text("CHẶNG ${index + 1} · HSK $level", color = BrandDark, fontSize = 10.sp, fontWeight = FontWeight.Bold, letterSpacing = 1.sp)
                         Text(stage.second, fontSize = 16.sp, fontWeight = FontWeight.Bold, color = InkBlack, modifier = Modifier.padding(top = 2.dp))
                         Text(stage.third, fontSize = 12.sp, color = InkMuted, maxLines = 2, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(top = 2.dp))
                     }
-                    Text("›", color = Vermilion, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                    ArrowUpRightIcon(tint = BrandDark, modifier = Modifier.size(16.dp))
                 }
             }
         }
@@ -1024,7 +1371,7 @@ internal fun LearningPathFeature(onPractice: (Int) -> Unit) {
             onDismissRequest = { selected = null },
             title = {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    RedSeal(stage.first, size = 30.dp, fontSize = 14.sp)
+                    LevelBadge(stage.first, size = 32.dp, fontSize = 15.sp, solid = true)
                     Text(stage.second, fontWeight = FontWeight.Bold, color = InkBlack)
                 }
             },
@@ -1034,7 +1381,7 @@ internal fun LearningPathFeature(onPractice: (Int) -> Unit) {
             confirmButton = {
                 Button(
                     onClick = { selected = null; onPractice(level) },
-                    colors = ButtonDefaults.buttonColors(containerColor = Vermilion),
+                    colors = ButtonDefaults.buttonColors(containerColor = Brand),
                     shape = RoundedCornerShape(12.dp)
                 ) {
                     Text("Mở luyện tập HSK $level", fontWeight = FontWeight.Bold)
@@ -1051,196 +1398,430 @@ internal fun LearningPathFeature(onPractice: (Int) -> Unit) {
     }
 }
 
+private data class BentoPracticeTile(
+    val id: String,
+    val glyph: String,
+    val title: String,
+    val desc: String,
+    val badge: String,
+    val duration: String,
+    val unitLabel: String,
+    val c1: Color,
+    val c2: Color,
+    val borderColor: Color,
+)
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun PracticeHubFeature(
     api: ApiClient,
     initialLevel: Int,
     activeMode: String?,
     onModeChange: (String?) -> Unit,
-    onWriting: () -> Unit,
-    onBoss: () -> Unit,
-    onGrammar: () -> Unit,
+    onLevelCountSelected: (Int, Int) -> Unit,
+    onLaunchWriting: (Int, Int) -> Unit,
+    onLaunchBoss: (Int, Int) -> Unit,
+    onLaunchGrammar: (Int, Int) -> Unit,
 ) {
-    var level by remember { mutableIntStateOf(initialLevel.coerceIn(1, 3)) }
+    var level by remember(initialLevel) { mutableIntStateOf(initialLevel.coerceIn(1, 3)) }
     var count by remember { mutableIntStateOf(10) }
     var round by remember { mutableIntStateOf(0) }
+    var pendingTile by remember { mutableStateOf<BentoPracticeTile?>(null) }
+
+    val tileMap = remember {
+        listOf(
+            BentoPracticeTile(
+                id = "match",
+                glyph = "配",
+                title = "Ghép từ với nghĩa",
+                desc = "Chọn từng cặp chữ Hán và nghĩa tiếng Việt tương ứng nhanh tay.",
+                badge = "Nên bắt đầu",
+                duration = "2–3 phút",
+                unitLabel = "cặp từ",
+                c1 = BentoRoseStart,
+                c2 = BentoRoseEnd,
+                borderColor = Color(0xFFF3C6D0),
+            ),
+            BentoPracticeTile(
+                id = "listen",
+                glyph = "听",
+                title = "Nghe nhận diện",
+                desc = "Nghe phát âm chuẩn và chọn đúng mặt chữ Hán.",
+                badge = "Nghe hiểu",
+                duration = "2–4 phút",
+                unitLabel = "câu",
+                c1 = BentoSkyStart,
+                c2 = BentoSkyEnd,
+                borderColor = Color(0xFFBAD8F7),
+            ),
+            BentoPracticeTile(
+                id = "quiz",
+                glyph = "测",
+                title = "Quiz từ vựng",
+                desc = "Trắc nghiệm phản xạ chọn nghĩa tiếng Việt.",
+                badge = "Siêu tốc",
+                duration = "2 phút",
+                unitLabel = "câu",
+                c1 = BentoMintStart,
+                c2 = BentoMintEnd,
+                borderColor = Color(0xFFB5E3CC),
+            ),
+            BentoPracticeTile(
+                id = "writing",
+                glyph = "写",
+                title = "Viết tay AI",
+                desc = "Tập viết từng nét trên ô kẻ 米字格 và chấm nét tự động.",
+                badge = "Cảm ứng",
+                duration = "Tự chọn",
+                unitLabel = "chữ mẫu",
+                c1 = BentoLimeStart,
+                c2 = BentoLimeEnd,
+                borderColor = Color(0xFFC7E38F),
+            ),
+            BentoPracticeTile(
+                id = "boss",
+                glyph = "拼",
+                title = "Pinyin Boss",
+                desc = "Gõ nhanh phiên âm để hạ boss.",
+                badge = "Tốc độ",
+                duration = "2–3 phút",
+                unitLabel = "từ",
+                c1 = BentoLavenderStart,
+                c2 = BentoLavenderEnd,
+                borderColor = Color(0xFFCBBFF7),
+            ),
+            BentoPracticeTile(
+                id = "dialogue",
+                glyph = "话",
+                title = "Giao tiếp",
+                desc = "Chọn câu đáp tự nhiên theo ngữ cảnh.",
+                badge = "Đời sống",
+                duration = "3–5 phút",
+                unitLabel = "tình huống",
+                c1 = BentoButterStart,
+                c2 = BentoButterEnd,
+                borderColor = Color(0xFFEDE0A6),
+            ),
+            BentoPracticeTile(
+                id = "order",
+                glyph = "排",
+                title = "Sắp xếp từ thành câu",
+                desc = "Chạm các thẻ từ theo đúng trật tự ngữ pháp chuẩn tiếng Trung.",
+                badge = "Tư duy câu",
+                duration = "3–5 phút",
+                unitLabel = "câu",
+                c1 = BentoIndigoStart,
+                c2 = BentoIndigoEnd,
+                borderColor = Color(0xFFC2CEEE),
+            ),
+            BentoPracticeTile(
+                id = "cloze",
+                glyph = "填",
+                title = "Điền từ thiếu",
+                desc = "Hoàn chỉnh câu với từ phù hợp nhất.",
+                badge = "Ngữ cảnh",
+                duration = "3–5 phút",
+                unitLabel = "câu",
+                c1 = BentoPeachStart,
+                c2 = BentoPeachEnd,
+                borderColor = Color(0xFFF6D0AB),
+            ),
+            BentoPracticeTile(
+                id = "grammar",
+                glyph = "语",
+                title = "Ngữ pháp",
+                desc = "Sắp xếp & sửa lỗi cấu trúc HSK.",
+                badge = "Ngữ pháp",
+                duration = "4–6 phút",
+                unitLabel = "câu",
+                c1 = BentoLavenderStart,
+                c2 = BentoRoseStart,
+                borderColor = Color(0xFFD9CFF2),
+            ),
+        ).associateBy { it.id }
+    }
 
     if (activeMode == null) {
         Column(
             Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(14.dp)
+                .padding(horizontal = 16.dp, vertical = 14.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // Bộ tùy chọn luyện tập: Cấp độ HSK & Số câu hỏi (Responsive segmented controls - Không bao giờ bị squish chữ)
-            InkCard(
+            Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                Text(
+                    "Phòng luyện tập",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = InkBlack,
+                    letterSpacing = (-0.4).sp,
+                )
+                Text(
+                    "Chạm vào một ô Bento để chọn cấp độ HSK & số câu luyện",
+                    fontSize = 13.sp,
+                    color = InkMuted,
+                )
+            }
+
+            // Block 1: Full-width Hero Bento Card
+            BentoPracticeCard(
+                tile = tileMap["match"]!!,
+                sizeStyle = BentoCardStyle.WideHero,
+                onClick = { pendingTile = tileMap["match"] },
                 modifier = Modifier.fillMaxWidth(),
-                shapeRadius = 20.dp,
-                backgroundColor = PaperPure
+            )
+
+            // Block 2: Balanced 2-Column Pastel Bento Pair
+            Row(
+                modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Max),
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
             ) {
+                BentoPracticeCard(
+                    tile = tileMap["listen"]!!,
+                    sizeStyle = BentoCardStyle.MediumSquare,
+                    onClick = { pendingTile = tileMap["listen"] },
+                    modifier = Modifier.weight(1f).fillMaxHeight(),
+                )
+                BentoPracticeCard(
+                    tile = tileMap["quiz"]!!,
+                    sizeStyle = BentoCardStyle.MediumSquare,
+                    onClick = { pendingTile = tileMap["quiz"] },
+                    modifier = Modifier.weight(1f).fillMaxHeight(),
+                )
+            }
+
+            // Block 3: Asymmetric Bento Mosaic (Left Tall Card + Right 2 Stacked Compact Cards)
+            Row(
+                modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Max),
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+            ) {
+                BentoPracticeCard(
+                    tile = tileMap["writing"]!!,
+                    sizeStyle = BentoCardStyle.TallVertical,
+                    onClick = { pendingTile = tileMap["writing"] },
+                    modifier = Modifier.weight(0.95f).fillMaxHeight(),
+                )
                 Column(
-                    modifier = Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(14.dp)
+                    modifier = Modifier.weight(1.05f).fillMaxHeight(),
+                    verticalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
-                    // Cấp độ HSK
-                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = "CẤP ĐỘ HSK",
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = InkMuted,
-                                letterSpacing = 0.8.sp
-                            )
-                            Text(
-                                text = "Đang chọn HSK $level",
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                color = Brand
-                            )
-                        }
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            (1..3).forEach { lvl ->
-                                val isSelected = level == lvl
-                                Surface(
-                                    modifier = Modifier
-                                        .weight(1f)
-                                        .height(40.dp)
-                                        .clickable { level = lvl },
-                                    shape = RoundedCornerShape(12.dp),
-                                    color = if (isSelected) BrandSoft else PaperMuted,
-                                    border = BorderStroke(1.dp, if (isSelected) BrandBorder else InkBorder)
-                                ) {
-                                    Box(contentAlignment = Alignment.Center) {
-                                        Text(
-                                            text = "HSK $lvl",
-                                            fontSize = 13.sp,
-                                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                                            color = if (isSelected) BrandDark else InkBlack
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    Box(
-                        Modifier
-                            .fillMaxWidth()
-                            .height(1.dp)
-                            .background(InkBorder.copy(alpha = 0.6f))
+                    BentoPracticeCard(
+                        tile = tileMap["boss"]!!,
+                        sizeStyle = BentoCardStyle.CompactStack,
+                        onClick = { pendingTile = tileMap["boss"] },
+                        modifier = Modifier.fillMaxWidth().weight(1f),
                     )
-
-                    // Số câu hỏi mỗi lượt
-                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = "SỐ LƯỢNG CÂU HỎI",
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = InkMuted,
-                                letterSpacing = 0.8.sp
-                            )
-                            Text(
-                                text = "$count câu / lượt",
-                                fontSize = 11.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                color = Brand
-                            )
-                        }
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            listOf(5, 10, 15).forEach { n ->
-                                val isSelected = count == n
-                                Surface(
-                                    modifier = Modifier
-                                        .weight(1f)
-                                        .height(40.dp)
-                                        .clickable { count = n },
-                                    shape = RoundedCornerShape(12.dp),
-                                    color = if (isSelected) BrandSoft else PaperMuted,
-                                    border = BorderStroke(1.dp, if (isSelected) BrandBorder else InkBorder)
-                                ) {
-                                    Box(contentAlignment = Alignment.Center) {
-                                        Text(
-                                            text = "$n câu",
-                                            fontSize = 13.sp,
-                                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                                            color = if (isSelected) BrandDark else InkBlack
-                                        )
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    BentoPracticeCard(
+                        tile = tileMap["dialogue"]!!,
+                        sizeStyle = BentoCardStyle.CompactStack,
+                        onClick = { pendingTile = tileMap["dialogue"] },
+                        modifier = Modifier.fillMaxWidth().weight(1f),
+                    )
                 }
             }
 
-            val games = listOf(
-                "writing" to ("Giấy luyện viết chữ Hán" to "Tự viết nét bút và thử nhận diện."),
-                "boss" to ("Pinyin Boss" to "Gõ pinyin thần tốc trước khi boss trốn thoát."),
-                "match" to ("Ghép từ với nghĩa" to "Luyện phản xạ nhớ mặt chữ và nghĩa."),
-                "order" to ("Sắp xếp câu" to "Ghép các từ thành câu đúng ngữ pháp."),
-                "cloze" to ("Điền từ còn thiếu" to "Chọn từ chuẩn xác để hoàn chỉnh câu."),
-                "listen" to ("Nghe và nhận diện" to "Nghe phát âm chuẩn rồi chọn chữ Hán."),
-                "dialogue" to ("Tình huống giao tiếp" to "Chọn câu đáp phù hợp với ngữ cảnh thực tế."),
-                "quiz" to ("Quiz từ vựng" to "Trắc nghiệm nhanh chọn nghĩa tiếng Việt."),
-                "grammar" to ("Luyện ngữ pháp" to "Sáu dạng bài tập củng cố cấu trúc câu."),
+            // Block 4: Full-width Bento Strip
+            BentoPracticeCard(
+                tile = tileMap["order"]!!,
+                sizeStyle = BentoCardStyle.WideHero,
+                onClick = { pendingTile = tileMap["order"] },
+                modifier = Modifier.fillMaxWidth(),
             )
 
-            val badges = listOf("写", "拼", "配", "排", "填", "听", "话", "测", "语")
+            // Block 5: Bottom 2-Column Bento Pair
+            Row(
+                modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Max),
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+            ) {
+                BentoPracticeCard(
+                    tile = tileMap["cloze"]!!,
+                    sizeStyle = BentoCardStyle.MediumSquare,
+                    onClick = { pendingTile = tileMap["cloze"] },
+                    modifier = Modifier.weight(1f).fillMaxHeight(),
+                )
+                BentoPracticeCard(
+                    tile = tileMap["grammar"]!!,
+                    sizeStyle = BentoCardStyle.MediumSquare,
+                    onClick = { pendingTile = tileMap["grammar"] },
+                    modifier = Modifier.weight(1f).fillMaxHeight(),
+                )
+            }
 
-            games.forEachIndexed { index, (gameId, info) ->
-                InkCard(
-                    modifier = Modifier.fillMaxWidth(),
-                    shapeRadius = 20.dp,
-                    onClick = {
-                        when (gameId) {
-                            "writing" -> onWriting()
-                            "boss" -> onBoss()
-                            "grammar" -> onGrammar()
-                            else -> onModeChange(gameId)
-                        }
-                    }
+            Spacer(Modifier.height(10.dp))
+        }
+
+        // On-demand HSK Level & Word/Question Count Picker Bottom Sheet
+        pendingTile?.let { tile ->
+            var draftLevel by remember(tile.id) { mutableIntStateOf(level) }
+            var draftCount by remember(tile.id) { mutableIntStateOf(count) }
+            val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
+            ModalBottomSheet(
+                onDismissRequest = { pendingTile = null },
+                sheetState = sheetState,
+                containerColor = PaperPure,
+                shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp)
+                        .padding(bottom = 26.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
                     Row(
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
+                        modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(14.dp)
+                        horizontalArrangement = Arrangement.spacedBy(14.dp),
                     ) {
-                        LevelBadge(
-                            text = badges[index],
-                            size = 44.dp,
-                            fontSize = 19.sp,
-                            solid = (index < 2)
-                        )
-                        Column(Modifier.weight(1f)) {
-                            Text(info.first, fontWeight = FontWeight.Bold, fontSize = 16.sp, color = InkBlack)
-                            Text(info.second, color = InkMuted, fontSize = 12.sp, modifier = Modifier.padding(top = 2.dp))
+                        Box(
+                            modifier = Modifier
+                                .size(52.dp)
+                                .clip(RoundedCornerShape(16.dp))
+                                .background(Brush.linearGradient(listOf(tile.c1, tile.c2)))
+                                .border(1.dp, tile.borderColor, RoundedCornerShape(16.dp)),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text(tile.glyph, fontSize = 24.sp, fontWeight = FontWeight.Black, color = InkBlack)
                         }
-                        Text("›", color = Brand, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(tile.title, fontSize = 19.sp, fontWeight = FontWeight.ExtraBold, color = InkBlack)
+                            Text(tile.desc, fontSize = 12.5.sp, color = InkMuted, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                        }
+                        CircleActionButton(
+                            onClick = { pendingTile = null },
+                            size = 34.dp,
+                            containerColor = PaperMuted,
+                        ) {
+                            Icon(Icons.Rounded.Close, contentDescription = "Đóng", tint = InkMuted, modifier = Modifier.size(17.dp))
+                        }
                     }
+
+                    HorizontalDivider(color = InkBorder.copy(alpha = 0.7f))
+
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text(
+                            "1. CHỌN CẤP ĐỘ HSK",
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = InkMuted,
+                            letterSpacing = 0.8.sp,
+                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            val subLabels = mapOf(1 to "Cơ bản", 2 to "Sơ cấp", 3 to "Trung cấp")
+                            (1..3).forEach { lvl ->
+                                val selected = draftLevel == lvl
+                                Surface(
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .clip(RoundedCornerShape(14.dp))
+                                        .clickable { draftLevel = lvl },
+                                    shape = RoundedCornerShape(14.dp),
+                                    color = if (selected) BrandSoft else PaperMuted,
+                                    border = BorderStroke(if (selected) 1.5.dp else 1.dp, if (selected) Brand else InkBorder),
+                                ) {
+                                    Column(
+                                        modifier = Modifier.padding(vertical = 10.dp),
+                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                    ) {
+                                        Text(
+                                            "HSK $lvl",
+                                            fontSize = 14.sp,
+                                            fontWeight = FontWeight.ExtraBold,
+                                            color = if (selected) BrandDark else InkBlack,
+                                        )
+                                        Text(
+                                            subLabels[lvl] ?: "",
+                                            fontSize = 10.5.sp,
+                                            color = if (selected) BrandDark.copy(alpha = 0.8f) else InkMuted,
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text(
+                            "2. CHỌN SỐ ${tile.unitLabel.uppercase()}",
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = InkMuted,
+                            letterSpacing = 0.8.sp,
+                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            listOf(5, 10, 15, 20).forEach { n ->
+                                val selected = draftCount == n
+                                Surface(
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .height(44.dp)
+                                        .clip(RoundedCornerShape(14.dp))
+                                        .clickable { draftCount = n },
+                                    shape = RoundedCornerShape(14.dp),
+                                    color = if (selected) InkBlack else PaperMuted,
+                                    border = BorderStroke(1.dp, if (selected) InkBlack else InkBorder),
+                                ) {
+                                    Box(contentAlignment = Alignment.Center) {
+                                        Text(
+                                            "$n ${tile.unitLabel.split(" ").first()}",
+                                            fontSize = 12.5.sp,
+                                            fontWeight = FontWeight.Bold,
+                                            color = if (selected) Color.White else InkBlack,
+                                            maxLines = 1,
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    Surface(
+                        shape = RoundedCornerShape(14.dp),
+                        color = BrandSoft.copy(alpha = 0.65f),
+                        border = BorderStroke(1.dp, BrandBorder),
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(horizontal = 14.dp, vertical = 10.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Text("Thiết lập đã chọn", fontSize = 12.sp, color = InkMuted, fontWeight = FontWeight.Medium)
+                            Text("HSK $draftLevel · $draftCount ${tile.unitLabel}", fontSize = 13.sp, color = BrandDark, fontWeight = FontWeight.Bold)
+                        }
+                    }
+
+                    InkPrimaryButton(
+                        text = "Bắt đầu chơi · HSK $draftLevel ($draftCount ${tile.unitLabel.split(" ").first()})",
+                        onClick = {
+                            val chosenId = tile.id
+                            level = draftLevel
+                            count = draftCount
+                            onLevelCountSelected(draftLevel, draftCount)
+                            pendingTile = null
+                            when (chosenId) {
+                                "writing" -> onLaunchWriting(draftLevel, draftCount)
+                                "boss" -> onLaunchBoss(draftLevel, draftCount)
+                                "grammar" -> onLaunchGrammar(draftLevel, draftCount)
+                                else -> {
+                                    round++
+                                    onModeChange(chosenId)
+                                }
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                    )
                 }
             }
         }
     } else {
-        // Redundant sub-header removed: Scaffold InkTopBar handles title, subtitle & back navigation!
         Box(Modifier.fillMaxSize().padding(16.dp)) {
             MiniExerciseFeature(
                 api = api,
@@ -1255,11 +1836,178 @@ internal fun PracticeHubFeature(
     }
 }
 
+private enum class BentoCardStyle { WideHero, MediumSquare, TallVertical, CompactStack }
+
+@Composable
+private fun BentoPracticeCard(
+    tile: BentoPracticeTile,
+    sizeStyle: BentoCardStyle,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed) 0.98f else 1f,
+        animationSpec = tween(120),
+        label = "bento-press-${tile.id}",
+    )
+
+    val pad = when (sizeStyle) {
+        BentoCardStyle.WideHero -> 18.dp
+        BentoCardStyle.CompactStack -> 13.dp
+        else -> 15.dp
+    }
+    val glyphSize = when (sizeStyle) {
+        BentoCardStyle.WideHero -> 98.sp
+        BentoCardStyle.TallVertical -> 96.sp
+        BentoCardStyle.CompactStack -> 60.sp
+        BentoCardStyle.MediumSquare -> 76.sp
+    }
+
+    Box(
+        modifier = modifier
+            .graphicsLayer {
+                scaleX = scale
+                scaleY = scale
+            }
+            .clip(RoundedCornerShape(24.dp))
+            .background(Brush.linearGradient(listOf(tile.c1, tile.c2)))
+            .border(1.dp, tile.borderColor, RoundedCornerShape(24.dp))
+            .clickable(interactionSource = interactionSource, indication = null, onClick = onClick)
+    ) {
+        Text(
+            text = tile.glyph,
+            color = Color.White.copy(alpha = 0.50f),
+            fontSize = glyphSize,
+            fontWeight = FontWeight.Black,
+            lineHeight = glyphSize,
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .offset(x = 4.dp, y = (-10).dp),
+        )
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(pad),
+            verticalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Column(
+                modifier = Modifier.fillMaxWidth(if (sizeStyle == BentoCardStyle.WideHero) 0.85f else 0.92f),
+                verticalArrangement = Arrangement.spacedBy(5.dp),
+            ) {
+                Surface(
+                    shape = CircleShape,
+                    color = Color.White.copy(alpha = 0.78f),
+                ) {
+                    Text(
+                        text = tile.badge,
+                        color = InkBlack,
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
+                    )
+                }
+
+                Text(
+                    text = tile.title,
+                    fontSize = when (sizeStyle) {
+                        BentoCardStyle.WideHero -> 19.sp
+                        BentoCardStyle.CompactStack -> 15.sp
+                        else -> 16.sp
+                    },
+                    fontWeight = FontWeight.ExtraBold,
+                    color = InkBlack,
+                    lineHeight = if (sizeStyle == BentoCardStyle.WideHero) 24.sp else 20.sp,
+                )
+
+                Text(
+                    text = tile.desc,
+                    fontSize = if (sizeStyle == BentoCardStyle.CompactStack) 11.5.sp else 12.5.sp,
+                    color = InkBlack.copy(alpha = 0.72f),
+                    lineHeight = if (sizeStyle == BentoCardStyle.CompactStack) 15.5.sp else 17.sp,
+                    maxLines = when (sizeStyle) {
+                        BentoCardStyle.CompactStack -> 2
+                        BentoCardStyle.TallVertical -> 4
+                        else -> 3
+                    },
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 10.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Surface(
+                    shape = CircleShape,
+                    color = Color.White.copy(alpha = 0.75f),
+                ) {
+                    Text(
+                        text = tile.duration,
+                        color = InkBlack,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        maxLines = 1,
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+                    )
+                }
+
+                Surface(
+                    modifier = Modifier.size(if (sizeStyle == BentoCardStyle.CompactStack) 28.dp else 32.dp),
+                    shape = CircleShape,
+                    color = Color.White.copy(alpha = 0.88f),
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        ArrowUpRightIcon(
+                            tint = InkBlack,
+                            modifier = Modifier.size(if (sizeStyle == BentoCardStyle.CompactStack) 13.dp else 15.dp),
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
 /**
  * Traditional Rice-Paper Calligraphy Grid (米字格 - Mi Zi Ge) & Ink Canvas.
  */
 @Composable
-internal fun WritingFeature(api: ApiClient) {
+internal fun WritingFeature(
+    api: ApiClient,
+    initialLevel: Int = 1,
+    initialCount: Int = 10,
+) {
+    val context = LocalContext.current
+    val tts = remember(context) { TextToSpeech(context) { } }
+    DisposableEffect(tts) { onDispose { tts.stop(); tts.shutdown() } }
+
+    var promptWords by remember(initialLevel, initialCount) { mutableStateOf<List<Word>>(emptyList()) }
+    var promptIndex by remember(initialLevel, initialCount) { mutableIntStateOf(0) }
+    var freeMode by remember { mutableStateOf(false) }
+
+    LaunchedEffect(initialLevel, initialCount) {
+        try {
+            promptWords = api.words(initialLevel, "")
+                .filter { it.hanzi.isNotBlank() }
+                .shuffled()
+                .take(initialCount)
+            promptIndex = 0
+        } catch (e: CancellationException) {
+            throw e
+        } catch (_: Exception) {
+            promptWords = emptyList()
+        }
+    }
+
+    val currentPrompt = if (!freeMode) promptWords.getOrNull(promptIndex) else null
+
     val strokes = remember { mutableStateListOf<List<Offset>>() }
     var current by remember { mutableStateOf<List<Offset>>(emptyList()) }
     var canvasSize by remember { mutableStateOf(IntSize.Zero) }
@@ -1275,16 +2023,103 @@ internal fun WritingFeature(api: ApiClient) {
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
-        Text("Dùng ngón tay viết chữ Hán vào ô kẻ 米字格 (Mễ tự cách) để nhận diện nét bút.", fontSize = 13.sp, color = InkMuted)
+        if (promptWords.isNotEmpty()) {
+            InkCard(
+                modifier = Modifier.fillMaxWidth(),
+                shapeRadius = 20.dp,
+                backgroundColor = if (freeMode) PaperMuted else BrandSoft.copy(alpha = 0.55f),
+                borderColor = if (freeMode) InkBorder else BrandBorder,
+            ) {
+                Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Row(
+                        Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            if (freeMode) "Chế độ viết tự do" else "Từ mẫu ${promptIndex + 1} / ${promptWords.size} · HSK $initialLevel",
+                            fontSize = 11.5.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = if (freeMode) InkMuted else BrandDark,
+                        )
+                        Surface(
+                            modifier = Modifier.clip(CircleShape).clickable { freeMode = !freeMode },
+                            shape = CircleShape,
+                            color = PaperPure,
+                            border = BorderStroke(1.dp, InkBorder),
+                        ) {
+                            Text(
+                                if (freeMode) "Theo từ mẫu" else "Viết tự do",
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                color = InkBlack,
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                            )
+                        }
+                    }
 
-        // Traditional Xuan Paper Mi-Grid Box
+                    currentPrompt?.let { promptWord ->
+                        Row(
+                            Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Column(Modifier.weight(1f)) {
+                                Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                                    Text(promptWord.hanzi, fontSize = 30.sp, fontWeight = FontWeight.Bold, color = InkBlack)
+                                    Text(promptWord.pinyin, fontSize = 14.sp, fontWeight = FontWeight.Bold, color = BrandDark, modifier = Modifier.padding(bottom = 3.dp))
+                                }
+                                Text(promptWord.meaningVi, fontSize = 12.5.sp, color = InkMuted, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                            }
+                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
+                                CircleActionButton(
+                                    onClick = {
+                                        tts.language = Locale.SIMPLIFIED_CHINESE
+                                        tts.speak(promptWord.hanzi, TextToSpeech.QUEUE_FLUSH, null, "writing-tts-${promptWord.id}")
+                                    },
+                                    size = 36.dp,
+                                    containerColor = PaperPure,
+                                    borderColor = BrandBorder,
+                                ) {
+                                    Icon(Icons.AutoMirrored.Rounded.VolumeUp, contentDescription = "Nghe phát âm", tint = BrandDark, modifier = Modifier.size(18.dp))
+                                }
+                                Surface(
+                                    modifier = Modifier
+                                        .clip(CircleShape)
+                                        .clickable {
+                                            strokes.clear()
+                                            current = emptyList()
+                                            result = null
+                                            error = null
+                                            promptIndex = (promptIndex + 1) % promptWords.size
+                                        },
+                                    shape = CircleShape,
+                                    color = InkBlack,
+                                ) {
+                                    Text(
+                                        "Từ tiếp ›",
+                                        fontSize = 11.5.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color.White,
+                                        modifier = Modifier.padding(horizontal = 11.dp, vertical = 7.dp),
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            Text("Dùng ngón tay viết chữ Hán vào ô kẻ 米字格 (Mễ tự cách) để AI nhận diện nét bút.", fontSize = 13.sp, color = InkMuted)
+        }
+
         Box(
             Modifier
                 .fillMaxWidth()
                 .height(320.dp)
-                .clip(RoundedCornerShape(22.dp))
-                .background(Paper)
-                .border(2.dp, VermilionBorder, RoundedCornerShape(22.dp))
+                .clip(RoundedCornerShape(24.dp))
+                .background(PaperPure)
+                .border(1.5.dp, BrandBorder, RoundedCornerShape(24.dp))
                 .onSizeChanged { canvasSize = it }
                 .pointerInput(canvasSize) {
                     detectDragGestures(
@@ -1296,28 +2131,23 @@ internal fun WritingFeature(api: ApiClient) {
                 },
         ) {
             Canvas(Modifier.fillMaxSize()) {
-                val gridColor = Color(0xFFE2DDD4)
+                val gridColor = BrandDark.copy(alpha = 0.25f)
                 val strokeDash = Stroke(width = 1.2.dp.toPx(), pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f))
                 val solidBorder = Stroke(width = 1.dp.toPx())
 
-                // Inner border
                 val pad = 12.dp.toPx()
                 val w = size.width - pad * 2
                 val h = size.height - pad * 2
-                drawRect(gridColor, Offset(pad, pad), androidx.compose.ui.geometry.Size(w, h), style = solidBorder)
+                drawRect(InkBorder, Offset(pad, pad), androidx.compose.ui.geometry.Size(w, h), style = solidBorder)
 
-                // Cross lines (+)
                 drawLine(gridColor, Offset(size.width / 2f, pad), Offset(size.width / 2f, size.height - pad), strokeDash.width, strokeDash.cap, strokeDash.pathEffect)
                 drawLine(gridColor, Offset(pad, size.height / 2f), Offset(size.width - pad, size.height / 2f), strokeDash.width, strokeDash.cap, strokeDash.pathEffect)
-
-                // Diagonal lines (X)
                 drawLine(gridColor, Offset(pad, pad), Offset(size.width - pad, size.height - pad), strokeDash.width, strokeDash.cap, strokeDash.pathEffect)
                 drawLine(gridColor, Offset(size.width - pad, pad), Offset(pad, size.height - pad), strokeDash.width, strokeDash.cap, strokeDash.pathEffect)
 
-                // Drawn Ink Strokes
                 (strokes.toList() + listOfNotNull(current.takeIf { it.isNotEmpty() })).forEach { points ->
                     points.zipWithNext().forEach { (a, b) ->
-                        drawLine(InkBlack, a, b, 8.5.dp.toPx(), cap = StrokeCap.Round)
+                        drawLine(InkBlack, a, b, 9.dp.toPx(), cap = StrokeCap.Round)
                     }
                 }
             }
@@ -1328,13 +2158,12 @@ internal fun WritingFeature(api: ApiClient) {
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    RedSeal("书", size = 44.dp, fontSize = 20.sp, solid = false)
+                    LevelBadge(currentPrompt?.hanzi?.take(1) ?: "书", size = 44.dp, fontSize = 20.sp, solid = false)
                     Text("Viết chữ Hán tại đây", color = InkLight, fontSize = 14.sp, fontWeight = FontWeight.Medium)
                 }
             }
         }
 
-        // Action Buttons
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             OutlinedButton(
                 onClick = { strokes.clear(); current = emptyList(); result = null; error = null },
@@ -1382,6 +2211,8 @@ internal fun WritingFeature(api: ApiClient) {
                             }
                             val base64 = withContext(Dispatchers.Default) { Base64.encodeToString(png, Base64.NO_WRAP) }
                             result = api.recognize("data:image/png;base64,$base64")
+                        } catch (e: CancellationException) {
+                            throw e
                         } catch (e: Exception) {
                             error = e.message ?: "Không nhận diện được chữ viết."
                         }
@@ -1398,9 +2229,17 @@ internal fun WritingFeature(api: ApiClient) {
 
         result?.let { response ->
             val candidates = response.optJSONArray("candidates").objects()
+            val matchedPrompt = currentPrompt != null && candidates.any { currentPrompt.hanzi.contains(it.optString("char")) }
             InkCard(modifier = Modifier.fillMaxWidth(), shapeRadius = 20.dp) {
                 Column(Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text("Kết quả nhận diện tự động", fontWeight = FontWeight.Bold, fontSize = 16.sp, color = InkBlack)
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                        Text("Kết quả nhận diện tự động", fontWeight = FontWeight.Bold, fontSize = 16.sp, color = InkBlack)
+                        if (matchedPrompt) {
+                            Surface(color = JadeSoft, shape = CircleShape, border = BorderStroke(1.dp, JadeBorder)) {
+                                Text("Khớp chữ mẫu ✓", color = JadeGreen, fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 9.dp, vertical = 3.dp))
+                            }
+                        }
+                    }
                     if (candidates.isEmpty()) {
                         Text("Chưa nhận diện được. Thử viết nét to và cân đối hơn nhé.", color = InkMuted, fontSize = 13.sp)
                     }
@@ -1415,17 +2254,17 @@ internal fun WritingFeature(api: ApiClient) {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                                RedSeal(char, size = 44.dp, fontSize = 22.sp)
+                                LevelBadge(char, size = 44.dp, fontSize = 22.sp)
                                 Text(char, fontSize = 26.sp, fontWeight = FontWeight.Bold, color = InkBlack)
                             }
                             Surface(
-                                color = VermilionSoft,
+                                color = BrandSoft,
                                 shape = RoundedCornerShape(10.dp),
-                                border = BorderStroke(1.dp, VermilionBorder)
+                                border = BorderStroke(1.dp, BrandBorder)
                             ) {
                                 Text(
                                     "$scorePct% khớp",
-                                    color = VermilionDark,
+                                    color = BrandDark,
                                     fontSize = 12.sp,
                                     fontWeight = FontWeight.Bold,
                                     modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
@@ -1440,9 +2279,13 @@ internal fun WritingFeature(api: ApiClient) {
 }
 
 @Composable
-internal fun PinyinBossFeature(api: ApiClient, level: Int) {
-    var words by remember(level) { mutableStateOf<List<Word>>(emptyList()) }
-    var index by remember(level) { mutableIntStateOf(0) }
+internal fun PinyinBossFeature(
+    api: ApiClient,
+    level: Int,
+    count: Int = 10,
+) {
+    var words by remember(level, count) { mutableStateOf<List<Word>>(emptyList()) }
+    var index by remember(level, count) { mutableIntStateOf(0) }
     var input by remember { mutableStateOf("") }
     var hp by remember { mutableIntStateOf(5) }
     var feedback by remember { mutableStateOf<String?>(null) }
@@ -1451,10 +2294,16 @@ internal fun PinyinBossFeature(api: ApiClient, level: Int) {
     var error by remember { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
 
-    LaunchedEffect(level) {
+    LaunchedEffect(level, count) {
         loading = true
+        error = null
         try {
-            words = api.words(level, "").filter { it.pinyin.isNotBlank() && it.hanzi.isNotBlank() }.shuffled().take(12)
+            words = api.words(level, "")
+                .filter { it.pinyin.isNotBlank() && it.hanzi.isNotBlank() }
+                .shuffled()
+                .take(count)
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             error = e.message ?: "Không tải được từ vựng."
         }
@@ -1470,7 +2319,7 @@ internal fun PinyinBossFeature(api: ApiClient, level: Int) {
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp)
     ) {
-        if (loading) FeatureLoading()
+        if (loading) FeatureLoading("Đang triệu hồi Pinyin Boss…")
         error?.let { FeatureError(it) }
 
         if (complete) {
@@ -1480,9 +2329,9 @@ internal fun PinyinBossFeature(api: ApiClient, level: Int) {
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    RedSeal("胜", size = 60.dp, fontSize = 28.sp)
+                    LevelBadge("胜", size = 60.dp, fontSize = 28.sp, solid = true)
                     Text("Đã hạ gục Pinyin Boss!", fontSize = 22.sp, fontWeight = FontWeight.Bold, color = InkBlack)
-                    Text("Bạn đã gõ chính xác toàn bộ pinyin của lượt này.", color = InkMuted, fontSize = 13.sp)
+                    Text("Bạn đã gõ chính xác toàn bộ ${words.size} từ của lượt này.", color = InkMuted, fontSize = 13.sp)
                     InkPrimaryButton(
                         text = "Thử thách lượt mới",
                         onClick = {
@@ -1509,31 +2358,28 @@ internal fun PinyinBossFeature(api: ApiClient, level: Int) {
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Surface(color = VermilionSoft, shape = RoundedCornerShape(8.dp), border = BorderStroke(0.8.dp, VermilionBorder)) {
-                            Text("BOSS HSK $level", color = VermilionDark, fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp))
+                        Surface(color = BrandSoft, shape = RoundedCornerShape(8.dp), border = BorderStroke(0.8.dp, BrandBorder)) {
+                            Text("BOSS HSK $level", color = BrandDark, fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp))
                         }
                         Text("Mục tiêu ${index + 1} / ${words.size}", color = InkMuted, fontSize = 12.sp, fontWeight = FontWeight.Medium)
                     }
 
-                    // Boss HP bar
-                    Column {
+                    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                            Text("MÁU QUÁI VẬT", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = Vermilion, letterSpacing = 1.sp)
-                            Text("$hp / 5 ❤️", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = Vermilion)
+                            Text("NĂNG LƯỢNG BOSS", fontSize = 10.sp, fontWeight = FontWeight.Bold, color = BrandDark, letterSpacing = 1.sp)
+                            Text("$hp / 5 HP", fontSize = 12.sp, fontWeight = FontWeight.Bold, color = BrandDark)
                         }
                         LinearProgressIndicator(
                             progress = { animatedHp },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(8.dp)
-                                .clip(CircleShape)
-                                .padding(top = 4.dp),
-                            color = Vermilion,
+                                .clip(CircleShape),
+                            color = Brand,
                             trackColor = PaperMuted
                         )
                     }
 
-                    // Target Hanzi
                     Text(
                         word.hanzi,
                         fontSize = 58.sp,
@@ -1550,16 +2396,15 @@ internal fun PinyinBossFeature(api: ApiClient, level: Int) {
                         modifier = Modifier.fillMaxWidth()
                     )
 
-                    // Pinyin Input
                     OutlinedTextField(
                         value = input,
                         onValueChange = { input = it; feedback = null },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
                         shape = RoundedCornerShape(14.dp),
-                        placeholder = { Text("Gõ pinyin có dấu (vd: nǐ hǎo)", fontSize = 13.sp, color = InkLight) },
+                        placeholder = { Text("Gõ pinyin (vd: ni hao)", fontSize = 13.sp, color = InkLight) },
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = Vermilion,
+                            focusedBorderColor = Brand,
                             unfocusedBorderColor = InkBorder,
                             focusedContainerColor = PaperPure,
                             unfocusedContainerColor = PaperPure,
@@ -1567,7 +2412,7 @@ internal fun PinyinBossFeature(api: ApiClient, level: Int) {
                     )
 
                     InkPrimaryButton(
-                        text = "Tấn công ⚔️",
+                        text = "Tấn công mục tiêu",
                         onClick = {
                             val normalizedInput = normalizePinyin(input)
                             val normalizedAnswer = normalizePinyin(word.pinyin)
@@ -1592,7 +2437,7 @@ internal fun PinyinBossFeature(api: ApiClient, level: Int) {
                                     input = ""
                                 }
                             } else {
-                                feedback = "Chưa trúng! Kiểm tra lại thanh điệu pinyin."
+                                feedback = "Chưa trúng! Kiểm tra lại phiên âm pinyin."
                             }
                         },
                         modifier = Modifier.fillMaxWidth()
@@ -1601,7 +2446,7 @@ internal fun PinyinBossFeature(api: ApiClient, level: Int) {
                     feedback?.let {
                         Text(
                             it,
-                            color = if (it.startsWith("Chính xác")) JadeGreen else Vermilion,
+                            color = if (it.startsWith("Chính xác")) JadeGreen else RedBad,
                             fontWeight = FontWeight.SemiBold,
                             fontSize = 13.sp,
                             textAlign = TextAlign.Center,
@@ -1621,6 +2466,7 @@ internal fun practiceTitle(mode: String) = when (mode) {
     "match" -> "Ghép từ"; "order" -> "Sắp xếp câu"; "cloze" -> "Điền từ"; "listen" -> "Nghe và chọn"; "dialogue" -> "Giao tiếp"; else -> "Quiz từ vựng"
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun MiniExerciseFeature(
     api: ApiClient,
@@ -1655,7 +2501,7 @@ private fun MiniExerciseFeature(
         error = null
         try {
             when (mode) {
-                "match" -> words = api.words(level, "").filter { it.meaningVi.isNotBlank() }.take(count).shuffled()
+                "match" -> words = api.words(level, "").filter { it.meaningVi.isNotBlank() }.shuffled().take(count)
                 "order" -> questions = api.exerciseOrder(level, count).objects()
                 "cloze" -> questions = api.exerciseCloze(level, count).objects()
                 "listen", "quiz" -> questions = JSONArray().apply {
@@ -1663,8 +2509,10 @@ private fun MiniExerciseFeature(
                         put(JSONObject().put("hanzi", q.word.hanzi).put("pinyin", q.word.pinyin).put("meaningVi", q.word.meaningVi).put("options", JSONArray(q.options.map { JSONObject().put("hanzi", it.hanzi).put("meaningVi", it.meaningVi) })))
                     }
                 }.objects()
-                "dialogue" -> questions = dialogueQuestions()
+                "dialogue" -> questions = dialogueQuestions(level, count)
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             error = e.message ?: "Không tải được bài luyện."
         }
@@ -1680,18 +2528,25 @@ private fun MiniExerciseFeature(
             picked = emptyList()
             answer = null
         }
+        if (mode == "listen" && q != null) {
+            val target = q.optString("hanzi")
+            if (target.isNotBlank()) {
+                tts.language = Locale.SIMPLIFIED_CHINESE
+                tts.speak(target, TextToSpeech.QUEUE_FLUSH, null, "listen-auto-$index")
+            }
+        }
     }
 
     Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(14.dp)) {
-        if (loading) { FeatureLoading(); return@Column }
+        if (loading) { FeatureLoading("Đang chuẩn bị bài luyện tập…"); return@Column }
         error?.let { FeatureError(it); InkPrimaryButton(text = "Thử lại", onClick = onAgain); return@Column }
 
         if (complete || (mode == "match" && words.isNotEmpty() && matched.size == words.size)) {
             InkCard(modifier = Modifier.fillMaxWidth(), shapeRadius = 24.dp) {
                 Column(Modifier.padding(26.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    RedSeal("完", size = 56.dp, fontSize = 24.sp)
+                    LevelBadge("完", size = 56.dp, fontSize = 24.sp, solid = true)
                     Text("Hoàn thành bài luyện tập!", fontSize = 20.sp, fontWeight = FontWeight.Bold, color = InkBlack)
-                    Text("Đúng $score / ${if (mode == "match") words.size else questions.size} câu", color = Brand, fontSize = 18.sp, fontWeight = FontWeight.Bold)
+                    Text("Đúng $score / ${if (mode == "match") words.size else questions.size} câu", color = BrandDark, fontSize = 18.sp, fontWeight = FontWeight.Bold)
                     InkPrimaryButton(text = "Luyện tập lượt khác", onClick = onAgain, modifier = Modifier.fillMaxWidth().padding(top = 8.dp))
                     TextButton(onClick = onExit) { Text("Quay lại danh mục", color = InkMuted) }
                 }
@@ -1704,7 +2559,7 @@ private fun MiniExerciseFeature(
             val remaining = words.filterNot { it.id in matched }
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Text("Ghép chữ Hán với nghĩa đúng", color = InkMuted, fontSize = 13.sp)
-                Text("${matched.size} / ${words.size} cặp", color = Brand, fontWeight = FontWeight.Bold, fontSize = 12.sp)
+                Text("${matched.size} / ${words.size} cặp", color = BrandDark, fontWeight = FontWeight.Bold, fontSize = 12.sp)
             }
 
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -1760,13 +2615,13 @@ private fun MiniExerciseFeature(
         val total = questions.size.coerceAtLeast(1)
 
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-            Text("CÂU ${index + 1} / $total", color = Brand, fontWeight = FontWeight.Bold, fontSize = 11.sp, letterSpacing = 1.sp)
+            Text("CÂU ${index + 1} / $total", color = BrandDark, fontWeight = FontWeight.Bold, fontSize = 11.sp, letterSpacing = 1.sp)
             Text("Đúng $score câu", color = JadeGreen, fontWeight = FontWeight.Bold, fontSize = 12.sp)
         }
         LinearProgressIndicator(
             progress = { (index + 1).toFloat() / total },
             modifier = Modifier.fillMaxWidth().height(6.dp).clip(CircleShape),
-            color = Brand,
+            color = BrandDark,
             trackColor = PaperMuted
         )
 
@@ -1780,7 +2635,6 @@ private fun MiniExerciseFeature(
                             fontWeight = FontWeight.Bold,
                             color = InkBlack
                         )
-                        // Vùng hiển thị câu đang ghép (Target area)
                         Surface(
                             modifier = Modifier.fillMaxWidth(),
                             color = PaperMuted,
@@ -1788,19 +2642,11 @@ private fun MiniExerciseFeature(
                             border = BorderStroke(1.dp, if (picked.isNotEmpty()) BrandBorder else InkBorder)
                         ) {
                             Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(14.dp),
+                                modifier = Modifier.fillMaxWidth().padding(14.dp),
                                 verticalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
                                 if (picked.isEmpty()) {
-                                    Text(
-                                        text = "Chạm các từ bên dưới để ghép câu…",
-                                        fontSize = 15.sp,
-                                        fontWeight = FontWeight.Normal,
-                                        color = InkLight,
-                                        modifier = Modifier.padding(vertical = 4.dp)
-                                    )
+                                    Text("Chạm các từ bên dưới để ghép câu…", fontSize = 15.sp, color = InkLight, modifier = Modifier.padding(vertical = 4.dp))
                                 } else {
                                     FlowRow(
                                         modifier = Modifier.fillMaxWidth(),
@@ -1810,7 +2656,6 @@ private fun MiniExerciseFeature(
                                         picked.forEachIndexed { pIdx, token ->
                                             Surface(
                                                 modifier = Modifier.clickable {
-                                                    // Nhấn vào từ đã chọn để gỡ ra trả về kho từ
                                                     if (answer == null) {
                                                         picked = picked.filterIndexed { i, _ -> i != pIdx }
                                                         bank = bank + token
@@ -1826,15 +2671,8 @@ private fun MiniExerciseFeature(
                                                     verticalAlignment = Alignment.CenterVertically,
                                                     horizontalArrangement = Arrangement.spacedBy(4.dp)
                                                 ) {
-                                                    Text(
-                                                        text = token,
-                                                        fontSize = 18.sp,
-                                                        fontWeight = FontWeight.SemiBold,
-                                                        color = BrandDark
-                                                    )
-                                                    if (answer == null) {
-                                                        Text("✕", fontSize = 10.sp, color = InkMuted)
-                                                    }
+                                                    Text(token, fontSize = 18.sp, fontWeight = FontWeight.SemiBold, color = BrandDark)
+                                                    if (answer == null) Text("✕", fontSize = 10.sp, color = InkMuted)
                                                 }
                                             }
                                         }
@@ -1843,16 +2681,9 @@ private fun MiniExerciseFeature(
                             }
                         }
 
-                        // Kho từ vựng có sẵn (FlowRow tự động xuống hàng thông minh)
                         if (bank.isNotEmpty() && answer == null) {
                             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                                Text(
-                                    text = "Từ vựng có sẵn:",
-                                    fontSize = 11.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = InkMuted,
-                                    letterSpacing = 0.5.sp
-                                )
+                                Text("Từ vựng có sẵn:", fontSize = 11.sp, fontWeight = FontWeight.Bold, color = InkMuted, letterSpacing = 0.5.sp)
                                 FlowRow(
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -1869,13 +2700,7 @@ private fun MiniExerciseFeature(
                                             border = BorderStroke(1.dp, InkBorder),
                                             shadowElevation = 1.dp
                                         ) {
-                                            Text(
-                                                text = token,
-                                                fontSize = 18.sp,
-                                                fontWeight = FontWeight.Medium,
-                                                modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
-                                                color = InkBlack
-                                            )
+                                            Text(token, fontSize = 18.sp, fontWeight = FontWeight.Medium, modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp), color = InkBlack)
                                         }
                                     }
                                 }
@@ -1906,19 +2731,19 @@ private fun MiniExerciseFeature(
                         Text("Nghe phát âm rồi chọn chữ Hán:", color = InkMuted, fontSize = 13.sp)
                         OutlinedButton(
                             onClick = { tts.language = Locale.SIMPLIFIED_CHINESE; tts.speak(target, TextToSpeech.QUEUE_FLUSH, null, "listen-audio") },
-                            modifier = Modifier.fillMaxWidth().padding(vertical = 10.dp).height(48.dp),
+                            modifier = Modifier.fillMaxWidth().padding(vertical = 10.dp).height(50.dp),
                             shape = RoundedCornerShape(14.dp),
                             border = BorderStroke(1.dp, BrandBorder),
                             colors = ButtonDefaults.outlinedButtonColors(containerColor = BrandSoft)
                         ) {
-                            Icon(Icons.Rounded.VolumeUp, null, tint = BrandDark)
+                            Icon(Icons.AutoMirrored.Rounded.VolumeUp, null, tint = BrandDark)
                             Spacer(Modifier.width(8.dp))
-                            Text("Phát âm lại từ này", color = BrandDark, fontWeight = FontWeight.Bold)
+                            Text("Nghe phát âm lại", color = BrandDark, fontWeight = FontWeight.Bold)
                         }
                     }
                     "quiz" -> {
                         Text(q.optString("hanzi"), fontSize = 54.sp, fontWeight = FontWeight.Medium, textAlign = TextAlign.Center, color = InkBlack, modifier = Modifier.fillMaxWidth())
-                        Text(q.optString("pinyin"), color = Brand, fontSize = 19.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
+                        Text(q.optString("pinyin"), color = BrandDark, fontSize = 19.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth())
                         Text("Chọn nghĩa tiếng Việt đúng:", color = InkMuted, fontSize = 13.sp, modifier = Modifier.padding(top = 6.dp))
                     }
                     "dialogue" -> {
@@ -2046,53 +2871,140 @@ private fun GameChoice(
     }
 }
 
-private fun dialogueQuestions() = listOf(
-    JSONObject().put("scenario", "Lần đầu gặp bạn mới").put("prompt", "你好！很高兴认识你。").put("promptVi", "Xin chào, rất vui được gặp bạn.").put("answer", "我也很高兴认识你。").put("options", JSONArray(listOf(JSONObject().put("hanzi", "我也很高兴认识你。"), JSONObject().put("hanzi", "我不吃米饭。"), JSONObject().put("hanzi", "现在三点。")))).put("explanation", "Đây là câu đáp tự nhiên khi làm quen."),
-    JSONObject().put("scenario", "Bạn nhận được lời cảm ơn").put("prompt", "谢谢你帮我！").put("promptVi", "Cảm ơn bạn đã giúp tôi!").put("answer", "不客气！").put("options", JSONArray(listOf(JSONObject().put("hanzi", "不客气！"), JSONObject().put("hanzi", "你几岁？"), JSONObject().put("hanzi", "我去学校。")))).put("explanation", "不客气 là câu đáp lịch sự cho lời cảm ơn."),
-    JSONObject().put("scenario", "Gọi đồ uống tại quán").put("prompt", "你想喝什么？").put("promptVi", "Bạn muốn uống gì?").put("answer", "我想喝茶。").put("options", JSONArray(listOf(JSONObject().put("hanzi", "我想喝茶。"), JSONObject().put("hanzi", "我姓王。"), JSONObject().put("hanzi", "今天星期一。")))).put("explanation", "我想喝茶 nghĩa là tôi muốn uống trà."),
-)
+private fun dialogueQuestions(level: Int, count: Int): List<JSONObject> {
+    fun q(lvl: Int, sc: String, pr: String, vi: String, ans: String, d1: String, d2: String) = JSONObject()
+        .put("level", lvl)
+        .put("scenario", sc)
+        .put("prompt", pr)
+        .put("promptVi", vi)
+        .put("answer", ans)
+        .put("options", JSONArray(listOf(ans, d1, d2).shuffled().map { JSONObject().put("hanzi", it) }))
+    val pool = listOf(
+        q(1, "Lần đầu gặp bạn mới", "你好！很高兴认识你。", "Xin chào, rất vui được gặp bạn.", "我也很高兴认识你。", "我不吃米饭。", "现在三点。"),
+        q(1, "Bạn nhận được lời cảm ơn", "谢谢你帮我！", "Cảm ơn bạn đã giúp tôi!", "不客气！", "你几岁？", "我去学校。"),
+        q(1, "Gọi đồ uống tại quán", "你想喝什么？", "Bạn muốn uống gì?", "我想喝茶。", "我姓王。", "今天星期一。"),
+        q(1, "Hỏi thăm tên tuổi", "你叫什么名字？", "Bạn tên là gì?", "我叫明大。", "今天很冷。", "我在看书。"),
+        q(1, "Hỏi giờ hiện tại", "现在几点了？", "Bây giờ là mấy giờ rồi?", "现在上午九点。", "我不认识他。", "这个很好看。"),
+        q(2, "Tại cửa hàng quần áo", "这件衣服多少钱？", "Cái áo này bao nhiêu tiền?", "两百块，可以试试。", "我昨天去北京了。", "我也喜欢游泳。"),
+        q(2, "Hẹn lịch gặp mặt", "我们星期六去打篮球好吗？", "Thứ Bảy chúng mình đi chơi bóng rổ nhé?", "好的，几点见面？", "因为今天下雨。", "这本书是我的。"),
+        q(2, "Hỏi thăm sức khỏe", "你看起来有点累，怎么了？", "Bạn trông hơi mệt, có chuyện gì thế?", "昨晚睡得太晚了。", "我已经吃了午饭。", "他在医院工作。"),
+        q(2, "Di chuyển bằng phương tiện", "你怎么去机场？", "Bạn đi sân bay bằng gì?", "我坐地铁去，很快。", "机票已经买好了。", "这件比那件大。"),
+        q(2, "Đề nghị giúp đỡ", "门太重了，我帮你拿吧！", "Cửa nặng quá, để mình xách giúp bạn!", "太谢谢你了，麻烦你！", "我每天早上跑步。", "今天比昨天热。"),
+        q(3, "Trao đổi lịch trình công việc", "下周的会议安排好时间了吗？", "Cuộc họp tuần sau đã sắp xếp xong thời gian chưa?", "已经决定了，星期三上午开会。", "我把词典忘在教室了。", "外面刮风了。"),
+        q(3, "Nhận xét về môi trường mới", "你觉得这个城市的环境怎么样？", "Bạn thấy môi trường của thành phố này thế nào?", "又干净又安静，我非常满意。", "我打算先复习一遍。", "他刚刚走出图书馆。"),
+        q(3, "Xin lỗi vì đến muộn", "真抱歉，路上太堵，我迟到了。", "Thật xin lỗi, đường kẹt quá nên mình đến muộn.", "没关系，我们也刚到一会儿。", "请把空调关掉吧。", "这双鞋太小了。"),
+        q(3, "Hỏi mượn đồ dùng", "请问，我可以用一下你的电脑吗？", "Xin hỏi tôi có thể dùng nhờ máy tính của bạn một lát không?", "当然可以，密码在桌子上。", "我对音乐很感兴趣。", "他们越跑越快。"),
+        q(3, "Bày tỏ thói quen hàng ngày", "周末你一般怎么放松？", "Cuối tuần bạn thường thư giãn thế nào?", "我经常听音乐或者去爬山。", "为了学好中文要多读。", "其实这个问题很简单。"),
+    )
+    val matching = pool.filter { it.optInt("level") == level }.shuffled()
+    val others = pool.filter { it.optInt("level") != level }.shuffled()
+    return (matching + others).take(count.coerceAtLeast(1))
+}
 
 @Composable
 internal fun FeatureWordRow(word: Word, modifier: Modifier = Modifier, onClick: () -> Unit) {
-    InkCard(modifier = modifier, shapeRadius = 18.dp, onClick = onClick) {
+    InkCard(modifier = modifier, shapeRadius = 20.dp, onClick = onClick) {
         Row(
             Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 13.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(Modifier.width(96.dp)) {
                 Text(word.hanzi, fontSize = 26.sp, fontWeight = FontWeight.Medium, color = InkBlack)
-                Text(word.pinyin, color = Vermilion, fontWeight = FontWeight.Bold, fontSize = 12.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(word.pinyin, color = BrandDark, fontWeight = FontWeight.Bold, fontSize = 12.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
             }
             Box(Modifier.height(36.dp).width(1.dp).background(InkBorder))
             Column(Modifier.weight(1f).padding(start = 12.dp)) {
                 Text(word.meaningVi.ifBlank { "Chưa có nghĩa" }, fontSize = 13.sp, fontWeight = FontWeight.Medium, color = InkBlack, maxLines = 2, overflow = TextOverflow.Ellipsis)
                 Text("HSK ${word.hskLevel}", color = InkMuted, fontSize = 10.sp, modifier = Modifier.padding(top = 2.dp))
             }
-            Text("›", color = Vermilion, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+            ArrowUpRightIcon(tint = BrandDark, modifier = Modifier.size(16.dp))
         }
     }
 }
 
+/**
+ * Shared Interactive Word Detail Dialog with Chinese TTS Audio & Favorite Bookmark Toggle.
+ */
 @Composable
-private fun FeatureWordDialog(word: Word, onDismiss: () -> Unit) {
+internal fun FeatureWordDialog(
+    word: Word,
+    api: ApiClient? = null,
+    isFavorite: Boolean = false,
+    onFavoriteToggled: ((Boolean) -> Unit)? = null,
+    onDismiss: () -> Unit,
+) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val tts = remember(context) { TextToSpeech(context) { } }
+    DisposableEffect(tts) { onDispose { tts.stop(); tts.shutdown() } }
+
+    var fav by remember(word.id, isFavorite) { mutableStateOf(isFavorite) }
+    var togglingFav by remember { mutableStateOf(false) }
+
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                Text(word.hanzi, fontSize = 40.sp, fontWeight = FontWeight.Bold, color = InkBlack)
-                RedSeal("HSK${word.hskLevel}", size = 32.dp, fontSize = 11.sp)
+            Row(
+                Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    Text(word.hanzi, fontSize = 40.sp, fontWeight = FontWeight.Bold, color = InkBlack)
+                    LevelBadge("HSK${word.hskLevel}", size = 34.dp, fontSize = 10.sp)
+                }
+                Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
+                    CircleActionButton(
+                        onClick = {
+                            tts.language = Locale.SIMPLIFIED_CHINESE
+                            tts.speak(word.hanzi, TextToSpeech.QUEUE_FLUSH, null, "word-tts-${word.id}")
+                        },
+                        size = 38.dp,
+                        containerColor = BrandSoft,
+                        borderColor = BrandBorder,
+                    ) {
+                        Icon(Icons.AutoMirrored.Rounded.VolumeUp, contentDescription = "Nghe phát âm", tint = BrandDark, modifier = Modifier.size(19.dp))
+                    }
+                    if (api != null) {
+                        CircleActionButton(
+                            onClick = {
+                                if (!togglingFav) {
+                                    togglingFav = true
+                                    scope.launch {
+                                        val next = !fav
+                                        runCatching { api.setFavorite(word.id, next) }.onSuccess {
+                                            fav = next
+                                            onFavoriteToggled?.invoke(next)
+                                        }
+                                        togglingFav = false
+                                    }
+                                }
+                            },
+                            size = 38.dp,
+                            containerColor = if (fav) AmberSoft else PaperMuted,
+                            borderColor = if (fav) AmberBorder else InkBorder,
+                        ) {
+                            Icon(
+                                imageVector = if (fav) Icons.Rounded.Bookmark else Icons.Rounded.BookmarkBorder,
+                                contentDescription = if (fav) "Bỏ lưu" else "Lưu sổ từ",
+                                tint = if (fav) AmberGold else InkMuted,
+                                modifier = Modifier.size(19.dp),
+                            )
+                        }
+                    }
+                }
             }
         },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text(word.pinyin, color = Vermilion, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                Text(word.pinyin, color = BrandDark, fontWeight = FontWeight.Bold, fontSize = 20.sp)
                 Text(word.meaningVi.ifBlank { "Chưa có nghĩa tiếng Việt." }, fontSize = 15.sp, color = InkBlack)
                 word.hanviet?.let { Text("Âm Hán Việt: $it", color = InkMuted, fontSize = 13.sp) }
                 Text("Cấp độ: HSK ${word.hskLevel}", color = InkMuted, fontSize = 12.sp)
             }
         },
         confirmButton = {
-            TextButton(onClick = onDismiss) { Text("Đóng", color = Vermilion, fontWeight = FontWeight.Bold) }
+            TextButton(onClick = onDismiss) { Text("Đóng", color = BrandDark, fontWeight = FontWeight.Bold) }
         },
         containerColor = PaperPure,
         shape = RoundedCornerShape(22.dp)
@@ -2101,37 +3013,39 @@ private fun FeatureWordDialog(word: Word, onDismiss: () -> Unit) {
 
 @Composable
 private fun FeatureMetric(label: String, value: String, unit: String, modifier: Modifier = Modifier) {
-    InkCard(modifier = modifier, shapeRadius = 16.dp) {
-        Column(Modifier.padding(horizontal = 14.dp, vertical = 12.dp)) {
+    InkCard(modifier = modifier, shapeRadius = 18.dp) {
+        Column(Modifier.padding(horizontal = 14.dp, vertical = 14.dp)) {
             Text(label, color = InkMuted, fontSize = 11.sp, fontWeight = FontWeight.Medium)
-            Text(value, fontSize = 22.sp, fontWeight = FontWeight.Bold, color = InkBlack, modifier = Modifier.padding(top = 2.dp))
-            Text(unit, color = Vermilion, fontSize = 10.sp, fontWeight = FontWeight.Bold)
+            Text(value, fontSize = 24.sp, fontWeight = FontWeight.ExtraBold, color = InkBlack, modifier = Modifier.padding(top = 2.dp))
+            Text(unit, color = BrandDark, fontSize = 10.5.sp, fontWeight = FontWeight.SemiBold)
         }
     }
 }
 
 @Composable
-private fun FeatureLoading() {
-    Box(Modifier.fillMaxWidth().height(120.dp), contentAlignment = Alignment.Center) {
-        CircularProgressIndicator(color = Vermilion, strokeWidth = 2.5.dp)
-    }
+private fun FeatureLoading(message: String? = null) {
+    ChainaStrokeLoading(
+        mode = ChainaLoadingMode.INLINE,
+        size = ChainaLoadingSize.SM,
+        message = message,
+    )
 }
 
 @Composable
 private fun FeatureError(text: String) {
     Surface(
         Modifier.fillMaxWidth(),
-        color = VermilionSoft,
+        color = RedSoft,
         shape = RoundedCornerShape(14.dp),
-        border = BorderStroke(1.dp, VermilionBorder)
+        border = BorderStroke(1.dp, RedBorder)
     ) {
-        Text(text, color = VermilionDark, fontSize = 12.sp, fontWeight = FontWeight.Medium, modifier = Modifier.padding(13.dp))
+        Text(text, color = RedBad, fontSize = 12.sp, fontWeight = FontWeight.Medium, modifier = Modifier.padding(13.dp))
     }
 }
 
 @Composable
 private fun FeatureEmpty(text: String) {
-    InkCard(modifier = Modifier.fillMaxWidth(), shapeRadius = 16.dp) {
+    InkCard(modifier = Modifier.fillMaxWidth(), shapeRadius = 18.dp) {
         Text(text, color = InkMuted, fontSize = 13.sp, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth().padding(22.dp))
     }
 }

@@ -6,6 +6,7 @@ import type { FeedbackBoardData, FeedbackCategory, FeedbackNote } from '@/lib/ty
 import StickyNote, { CATEGORY_CONFIG, CATEGORY_LABELS } from './StickyNote';
 import FeedbackDraftModal from './FeedbackDraftModal';
 import FeedbackAdminModal from './FeedbackAdminModal';
+import ChainaStrokeLoading from '@/components/ChainaStrokeLoading';
 
 export default function NoticeBoard() {
   const { user } = useUser();
@@ -273,9 +274,8 @@ export default function NoticeBoard() {
 
         {/* Nội dung khung */}
         {loading ? (
-          <div className="py-24 text-center text-stone-400 text-xs font-medium flex flex-col items-center justify-center gap-2">
-            <div className="w-5 h-5 border-2 border-stone-300 border-t-brand-ink rounded-full animate-spin" />
-            <span>Đang tải các tờ ghi chú...</span>
+          <div className="flex min-h-[20rem] items-center justify-center py-12">
+            <ChainaStrokeLoading mode="INLINE" size="md" message="Đang tải các tờ ghi chú…" />
           </div>
         ) : filteredNotes.length === 0 ? (
           <div className="py-24 px-4 text-center space-y-3">

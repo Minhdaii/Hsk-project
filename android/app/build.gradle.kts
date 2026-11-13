@@ -5,6 +5,7 @@ plugins {
 }
 
 val apiUrl = providers.gradleProperty("hskApiUrl").orElse("https://backend-i24v.onrender.com").get()
+val googleWebClientId = providers.gradleProperty("googleWebClientId").orElse("").get()
 
 android {
     namespace = "com.chaina.hsk"
@@ -17,6 +18,7 @@ android {
         versionCode = 1
         versionName = "1.0.0"
         buildConfigField("String", "API_BASE_URL", "\"$apiUrl\"")
+        buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"$googleWebClientId\"")
     }
 
     buildFeatures {
@@ -60,5 +62,19 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.material:material-icons-extended")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
+
+    val cameraxVersion = "1.4.2"
+    implementation("androidx.camera:camera-core:$cameraxVersion")
+    implementation("androidx.camera:camera-camera2:$cameraxVersion")
+    implementation("androidx.camera:camera-lifecycle:$cameraxVersion")
+    implementation("androidx.camera:camera-view:$cameraxVersion")
+    implementation("androidx.camera:camera-mlkit-vision:$cameraxVersion")
+    implementation("com.google.mlkit:text-recognition-chinese:16.0.1")
+
+    // Google Sign-In via Credential Manager
+    implementation("androidx.credentials:credentials:1.3.0")
+    implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+
     debugImplementation("androidx.compose.ui:ui-tooling")
 }

@@ -8,7 +8,7 @@ import { speak } from '@/lib/speak';
 import { intervalLabel, nextIntervalDays, type Rating } from '@/lib/sm2preview';
 import type { Activity, Card, CardOption, ProgressRow, ReviewResult, StreakStatus } from '@/lib/types';
 import FlipCard from '@/components/FlipCard';
-import Skeleton from '@/components/Skeleton';
+import ChainaStrokeLoading from '@/components/ChainaStrokeLoading';
 import StreakCelebration from '@/components/StreakCelebration';
 import Anim from '@/components/motion/Anim';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
@@ -123,7 +123,7 @@ function StudyInner() {
     if (dx < -70 && Math.abs(dy) < 60) next();
   };
 
-  if (loading) return <Skeleton className="mx-auto h-[24rem] max-w-5xl" />;
+  if (loading) return <ChainaStrokeLoading mode="PAGE" message="Đang tải buổi học…" />;
   if (!user) {
     return (
       <div className="editorial-card mx-auto max-w-md p-8 text-center">
@@ -230,7 +230,9 @@ function StudyInner() {
       )}
 
       {!ready ? (
-        <Skeleton className="h-[24rem]" />
+        <div className="editorial-card flex min-h-[24rem] items-center justify-center p-6">
+          <ChainaStrokeLoading mode="INLINE" size="lg" message="Đang chuẩn bị thẻ flashcard…" />
+        </div>
       ) : !card ? (
         <div className="editorial-card animate-pop space-y-4 py-12 text-center">
           <p lang="zh-Hans" aria-hidden className="hanzi text-5xl font-bold text-brand-ink">完成</p>
@@ -390,7 +392,7 @@ function StudyInner() {
 
 export default function StudyPage() {
   return (
-    <Suspense fallback={<Skeleton className="mx-auto h-[24rem] max-w-5xl" />}>
+    <Suspense fallback={<ChainaStrokeLoading mode="PAGE" message="Đang tải buổi học…" />}>
       <StudyInner />
     </Suspense>
   );

@@ -6,7 +6,7 @@ import { api } from '@/lib/api';
 import type { Word } from '@/lib/types';
 import SpeakButton from '@/components/SpeakButton';
 import FavoriteButton from '@/components/FavoriteButton';
-import { RowSkeleton } from '@/components/Skeleton';
+import ChainaStrokeLoading from '@/components/ChainaStrokeLoading';
 import PageHeader from '@/components/PageHeader';
 import Anim from '@/components/motion/Anim';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
@@ -103,7 +103,11 @@ function WordsInner() {
         </p>
       )}
 
-      {loading && words.length === 0 && <RowSkeleton />}
+      {loading && words.length === 0 && (
+        <div className="editorial-card flex min-h-[18rem] items-center justify-center p-6">
+          <ChainaStrokeLoading mode="INLINE" size="md" delayMs={120} message="Đang tải kho từ vựng…" />
+        </div>
+      )}
 
       {(words.length > 0 || (!loading && !error)) && (
         <div className="editorial-card overflow-hidden">
@@ -186,7 +190,7 @@ function WordsInner() {
 
 export default function WordsPage() {
   return (
-    <Suspense fallback={<p className="text-xs text-stone-500">Đang tải kho từ vựng…</p>}>
+    <Suspense fallback={<ChainaStrokeLoading mode="PAGE" message="Đang tải kho từ vựng…" />}>
       <WordsInner />
     </Suspense>
   );
